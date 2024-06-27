@@ -78,3 +78,92 @@ func DefineBinaryFunction(program *Program, name string) (*ir.Block, *ir.Func, *
 
 	return binFnBody, binFn, op1, op2
 }
+
+func DefineDupFunc(program *Program) *ir.Func {
+	stackSize := 100
+	stackType := types.NewArray(uint64(stackSize), types.I32)
+
+	dupFn := program.Module.NewFunc("dup", types.Void)
+	dupFnBody := dupFn.NewBlock("entry")
+
+	currentTop := dupFnBody.NewLoad(types.I32, program.Globals["top"])
+	newTop := dupFnBody.NewSub(currentTop, constant.NewInt(types.I32, 1))
+
+	stackPtr := dupFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I32, 0), newTop)
+	value := dupFnBody.NewLoad(types.I32, stackPtr)
+
+	dupFnBody.NewCall(program.Funcs["push"].IrFunc, value)
+	dupFnBody.NewRet(nil)
+	return dupFn
+}
+func DefineSwapFunction(program *Program) *ir.Func {
+	stackSize := 100
+	stackType := types.NewArray(uint64(stackSize), types.I32)
+
+	swapFn := program.Module.NewFunc("swap", types.Void)
+	swapFnBody := swapFn.NewBlock("entry")
+
+	currentTop := swapFnBody.NewLoad(types.I32, program.Globals["top"])
+	newTop := swapFnBody.NewSub(currentTop, constant.NewInt(types.I32, 1))
+
+	stackPtr1 := swapFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I32, 0), newTop)
+	value1 := swapFnBody.NewLoad(types.I32, stackPtr1)
+
+	newTop = swapFnBody.NewSub(currentTop, constant.NewInt(types.I32, 2))
+
+	stackPtr2 := swapFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I32, 0), newTop)
+	value2 := swapFnBody.NewLoad(types.I32, stackPtr2)
+
+	swapFnBody.NewStore(value1, stackPtr2)
+	swapFnBody.NewStore(value2, stackPtr1)
+
+	swapFnBody.NewRet(nil)
+	return swapFn
+}
+func DefineOverFunction(program *Program) *ir.Func {
+	stackSize := 100
+	stackType := types.NewArray(uint64(stackSize), types.I32)
+
+	overFn := program.Module.NewFunc("over", types.Void)
+	overFnBody := overFn.NewBlock("entry")
+
+	currentTop := overFnBody.NewLoad(types.I32, program.Globals["top"])
+	newTop := overFnBody.NewSub(currentTop, constant.NewInt(types.I32, 2))
+
+	stackPtr := overFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I32, 0), newTop)
+	value := overFnBody.NewLoad(types.I32, stackPtr)
+
+	overFnBody.NewCall(program.Funcs["push"].IrFunc, value)
+	overFnBody.NewRet(nil)
+	return overFn
+}
+func DefineRotFunction(program *Program) *ir.Func {
+	stackSize := 100
+	stackType := types.NewArray(uint64(stackSize), types.I32)
+
+	rotFn := program.Module.NewFunc("rot", types.Void)
+	rotFnBody := rotFn.NewBlock("entry")
+
+	currentTop := rotFnBody.NewLoad(types.I32, program.Globals["top"])
+	newTop := rotFnBody.NewSub(currentTop, constant.NewInt(types.I32, 1))
+
+	stackPtr1 := rotFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I32, 0), newTop)
+	value1 := rotFnBody.NewLoad(types.I32, stackPtr1)
+
+	newTop = rotFnBody.NewSub(currentTop, constant.NewInt(types.I32, 2))
+
+	stackPtr2 := rotFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I32, 0), newTop)
+	value2 := rotFnBody.NewLoad(types.I32, stackPtr2)
+
+	newTop = rotFnBody.NewSub(currentTop, constant.NewInt(types.I32, 3))
+
+	stackPtr3 := rotFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I32, 0), newTop)
+	value3 := rotFnBody.NewLoad(types.I32, stackPtr3)
+
+	rotFnBody.NewStore(value1, stackPtr2)
+	rotFnBody.NewStore(value2, stackPtr3)
+	rotFnBody.NewStore(value3, stackPtr1)
+
+	rotFnBody.NewRet(nil)
+	return rotFn
+}

@@ -49,6 +49,10 @@ func DefineFuncs(program *Program) {
 	program.Funcs["printI8"] = &Func{IrFunc: DefinePrintCharFunction(program)}
 	program.Funcs["input"] = &Func{IrFunc: DefineInputFunction(program)}
 
+	program.Funcs["dup"] = &Func{IrFunc: DefineDupFunc(program)}
+	program.Funcs["swap"] = &Func{IrFunc: DefineSwapFunction(program)}
+	program.Funcs["rot"] = &Func{IrFunc: DefineRotFunction(program)}
+	program.Funcs["over"] = &Func{IrFunc: DefineOverFunction(program)}
 }
 
 func DefineGlobals(m *ir.Module) map[string]*ir.Global {
@@ -85,7 +89,7 @@ func LoadProgram(program *Program, arr []lexer.Token) {
 	for i := 0; i < len(arr); i++ {
 		switch arr[i].TokenType {
 		case lexer.PushT:
-			mainFnBody.NewCall(program.Funcs["push"].IrFunc, constant.NewInt(types.I32, int64(arr[i].Value)))
+			mainFnBody.NewCall(program.Funcs["push"].IrFunc, constant.NewInt(types.I32, int64(arr[i].Value.(int))))
 			break
 		case lexer.PopT:
 			mainFnBody.NewCall(program.Funcs["pop"].IrFunc)
@@ -107,6 +111,18 @@ func LoadProgram(program *Program, arr []lexer.Token) {
 			break
 		case lexer.InputT:
 			mainFnBody.NewCall(program.Funcs["input"].IrFunc)
+			break
+		case lexer.DupT:
+			mainFnBody.NewCall(program.Funcs["dup"].IrFunc)
+			break
+		case lexer.SwapT:
+			mainFnBody.NewCall(program.Funcs["swap"].IrFunc)
+			break
+		case lexer.RotT:
+			mainFnBody.NewCall(program.Funcs["rot"].IrFunc)
+			break
+		case lexer.OverT:
+			mainFnBody.NewCall(program.Funcs["over"].IrFunc)
 			break
 		}
 	}
