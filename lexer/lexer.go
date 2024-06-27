@@ -1,4 +1,4 @@
-package main
+package lexer
 
 import (
 	"log"
@@ -16,6 +16,8 @@ const (
 	SubT
 	MulT
 	PrintT
+	PrintI8T
+	InputT
 )
 
 type Token struct {
@@ -50,6 +52,12 @@ func NewToken(token string) Token {
 	}
 	if token == "print" {
 		return Token{TokenType: PrintT}
+	}
+	if token == "puts" {
+		return Token{TokenType: PrintI8T}
+	}
+	if token == "input" {
+		return Token{TokenType: InputT}
 	}
 	num, err := strconv.Atoi(token)
 	if err != nil {
