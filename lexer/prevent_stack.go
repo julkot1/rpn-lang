@@ -1,10 +1,12 @@
 package lexer
 
-func LexPrevent(tokens []Token) []Token {
-	newTokens := make([]Token, 0)
+import "rpn/lang"
+
+func LexPrevent(tokens []lang.Token) []lang.Token {
+	newTokens := make([]lang.Token, 0)
 	idx := 0
 	for _, tok := range tokens {
-		if tok.TokenType == StackPreventT {
+		if tok.TokenType == lang.StackPreventT {
 			if newTokens[idx-1].CanPrevent() == false {
 				panic("Syntax Error: \n Can not stack prevent operation: " + newTokens[idx-1].String())
 			}

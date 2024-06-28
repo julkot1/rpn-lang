@@ -1,44 +1,47 @@
 package lexer
 
 import (
-	"fmt"
 	"github.com/timtadh/lexmachine"
 	"github.com/timtadh/lexmachine/machines"
 	"log"
 	"os"
+	"rpn/lang"
 	"strconv"
 )
 
-func AddOperation(name string, typ TokenType, lexer *lexmachine.Lexer) {
+func AddOperation(name string, typ lang.TokenType, lexer *lexmachine.Lexer) {
 	lexer.Add([]byte(name), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
-		return Token{typ, 0, false, match}, nil
+		return lang.Token{typ, 0, false, match}, nil
 	})
 }
 func CreateLexer() *lexmachine.Lexer {
 	lex := lexmachine.NewLexer()
 
-	AddOperation(`pop`, PopT, lex)
-	AddOperation(`\+`, AddT, lex)
-	AddOperation(`\-`, SubT, lex)
-	AddOperation(`\*`, MulT, lex)
-	AddOperation(`\/`, DivT, lex)
-	AddOperation(`\|\>`, DupT, lex)
-	AddOperation(`\|s`, SwapT, lex)
-	AddOperation(`\|r`, RotT, lex)
-	AddOperation(`\|o`, OverT, lex)
-	AddOperation(`puts`, PrintI8T, lex)
-	AddOperation(`print`, PrintT, lex)
-	AddOperation(`input`, InputT, lex)
-	AddOperation(`!`, StackPreventT, lex)
+	AddOperation(PopToken, lang.PopT, lex)
+	AddOperation(AddToken, lang.AddT, lex)
+	AddOperation(SubToken, lang.SubT, lex)
+	AddOperation(MulToken, lang.MulT, lex)
+	AddOperation(DivToken, lang.DivT, lex)
+	AddOperation(DupToken, lang.DupT, lex)
+	AddOperation(SwapToken, lang.SwapT, lex)
+	AddOperation(RotToken, lang.RotT, lex)
+	AddOperation(OverToken, lang.OverT, lex)
+	AddOperation(PrintI8Token, lang.PrintI8T, lex)
+	AddOperation(PrintToken, lang.PrintT, lex)
+	AddOperation(InputToken, lang.InputT, lex)
+	AddOperation(StackPreventToken, lang.StackPreventT, lex)
+	AddOperation(FunctionDefToken, lang.FunctionDefT, lex)
+	AddOperation(BlockOpenToken, lang.BlockOpenT, lex)
+	AddOperation(BlockCloseToken, lang.BlockCloseT, lex)
 
+	lex.Add([]byte(IdentifierToken), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
+		return lang.Token{TokenType: lang.IdentifierT, Value: string(match.Bytes), Match: match}, nil
+	})
 	lex.Add([]byte(`[0-9]+`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
 		num, err := strconv.Atoi(string(match.Bytes))
-		return Token{PushT, num, false, match}, err
+		return lang.Token{TokenType: lang.PushT, Value: num, Match: match}, err
 	})
-	lex.Add([]byte(`\!`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
-		fmt.Println("foo")
-		return nil, nil
-	})
+
 	lex.Add([]byte(`[ \t\r\n]+`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
 		return nil, nil
 	})
@@ -54,7 +57,7 @@ func CreateLexer() *lexmachine.Lexer {
 	return lex
 }
 
-func Parse(file string) []Token {
+func Parse(file string) []lang.Token {
 	content, err := os.ReadFile(file)
 	if err != nil {
 		log.Fatalf("failed to read file: %s", err)
@@ -67,15 +70,16 @@ func Parse(file string) []Token {
 	if scanErr != nil {
 		log.Fatalf("Scanner error: %v", scanErr)
 	}
-	var tokens []Token
+	var tokens []lang.Token
 	for tok, err, eos := scan.Next(); !eos; tok, err, eos = scan.Next() {
 		if err != nil {
 			log.Fatalf("Scan error: %v", err)
 		}
-		tokens = append(tokens, tok.(Token))
+		tokens = append(tokens, tok.(lang.Token))
 	}
 
 	tokens = LexPrevent(tokens)
-
+	tokens = CreateBlocks(tokens)
+	tokens = CreateGlobalFunctions(tokens)
 	return tokens
 }

@@ -1,1 +1,3 @@
-65 puts! 1 + puts! 1 + puts
+fun main {
+   1 print
+}

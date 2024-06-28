@@ -1,4 +1,4 @@
-package lexer
+package lang
 
 import (
 	"fmt"
@@ -22,6 +22,12 @@ const (
 	OverT
 	RotT
 	StackPreventT
+	IdentifierT
+	FunctionDefT
+	FunctionT
+	BlockOpenT
+	BlockCloseT
+	BlockT
 )
 
 type Token struct {

@@ -1,11 +1,12 @@
 package irCompiler
 
 import (
+	"fmt"
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/enum"
 	"github.com/llir/llvm/ir/types"
-	"rpn/lexer"
+	"rpn/lang"
 )
 
 type Func struct {
@@ -82,7 +83,7 @@ func DefineGlobals(m *ir.Module) map[string]*ir.Global {
 	return globals
 }
 
-func CallFunc(function *ir.Func, block *ir.Block, program *Program, tok lexer.Token) {
+func CallFunc(function *ir.Func, block *ir.Block, program *Program, tok lang.Token) {
 	if tok.StackPrevent == true {
 		argc := tok.ArgsC()
 		if argc == 0 {
@@ -113,50 +114,52 @@ func CallFunc(function *ir.Func, block *ir.Block, program *Program, tok lexer.To
 
 }
 
-func LoadProgram(program *Program, arr []lexer.Token) {
+func LoadProgram(program *Program, arr []lang.Token) {
 	mainFn := program.Module.NewFunc("main", types.I32)
 	mainFnBody := mainFn.NewBlock("entry")
-
-	for i := 0; i < len(arr); i++ {
-		switch arr[i].TokenType {
-		case lexer.PushT:
-			mainFnBody.NewCall(program.Funcs["push"].IrFunc, constant.NewInt(types.I32, int64(arr[i].Value.(int))))
+	mainFunctionBlock := arr[0].Value.(*lang.Function).Blocks[0]
+	for i := 0; i < len(mainFunctionBlock.Tokens); i++ {
+		tok := mainFunctionBlock.Tokens[i]
+		switch tok.TokenType {
+		case lang.PushT:
+			mainFnBody.NewCall(program.Funcs["push"].IrFunc, constant.NewInt(types.I32, int64(tok.Value.(int))))
 			break
-		case lexer.PopT:
-			CallFunc(program.Funcs["pop"].IrFunc, mainFnBody, program, arr[i])
+		case lang.PopT:
+			CallFunc(program.Funcs["pop"].IrFunc, mainFnBody, program, tok)
 			break
-		case lexer.AddT:
-			CallFunc(program.Funcs["add"].IrFunc, mainFnBody, program, arr[i])
+		case lang.AddT:
+			CallFunc(program.Funcs["add"].IrFunc, mainFnBody, program, tok)
 			break
-		case lexer.SubT:
-			CallFunc(program.Funcs["sub"].IrFunc, mainFnBody, program, arr[i])
+		case lang.SubT:
+			CallFunc(program.Funcs["sub"].IrFunc, mainFnBody, program, tok)
 			break
-		case lexer.MulT:
-			CallFunc(program.Funcs["mul"].IrFunc, mainFnBody, program, arr[i])
+		case lang.MulT:
+			CallFunc(program.Funcs["mul"].IrFunc, mainFnBody, program, tok)
 			break
-		case lexer.PrintT:
-			CallFunc(program.Funcs["print"].IrFunc, mainFnBody, program, arr[i])
+		case lang.PrintT:
+			CallFunc(program.Funcs["print"].IrFunc, mainFnBody, program, tok)
 			break
-		case lexer.PrintI8T:
-			CallFunc(program.Funcs["printI8"].IrFunc, mainFnBody, program, arr[i])
+		case lang.PrintI8T:
+			CallFunc(program.Funcs["printI8"].IrFunc, mainFnBody, program, tok)
 			break
-		case lexer.InputT:
-			CallFunc(program.Funcs["input"].IrFunc, mainFnBody, program, arr[i])
+		case lang.InputT:
+			CallFunc(program.Funcs["input"].IrFunc, mainFnBody, program, tok)
 			break
-		case lexer.DupT:
-			CallFunc(program.Funcs["dup"].IrFunc, mainFnBody, program, arr[i])
+		case lang.DupT:
+			CallFunc(program.Funcs["dup"].IrFunc, mainFnBody, program, tok)
 			break
-		case lexer.SwapT:
-			CallFunc(program.Funcs["swap"].IrFunc, mainFnBody, program, arr[i])
+		case lang.SwapT:
+			CallFunc(program.Funcs["swap"].IrFunc, mainFnBody, program, tok)
 			break
-		case lexer.RotT:
-			CallFunc(program.Funcs["rot"].IrFunc, mainFnBody, program, arr[i])
+		case lang.RotT:
+			CallFunc(program.Funcs["rot"].IrFunc, mainFnBody, program, tok)
 			break
-		case lexer.OverT:
-			CallFunc(program.Funcs["over"].IrFunc, mainFnBody, program, arr[i])
+		case lang.OverT:
+			CallFunc(program.Funcs["over"].IrFunc, mainFnBody, program, tok)
 			break
 		default:
-			panic("unhandled default case")
+			fmt.Println(arr[i])
+			//panic("unhandled default case")
 		}
 	}
 	mainFnBody.NewRet(constant.NewInt(types.I32, 0))

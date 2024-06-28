@@ -39,4 +39,5 @@ func main() {
 	program := irCompiler.NewProgram()
 	irCompiler.LoadProgram(program, tokens)
 	Save(program)
+
 }
