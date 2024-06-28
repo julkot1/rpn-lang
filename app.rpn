@@ -1,4 +1,1 @@
-65 |> puts
-1 + |> puts
-1 + puts
-// prints A B C
+65 puts! 1 + puts! 1 + puts

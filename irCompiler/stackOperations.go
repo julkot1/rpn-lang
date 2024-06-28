@@ -43,6 +43,29 @@ func DefinePopFunction(program *Program) *ir.Func {
 	return popFn
 }
 
+func GetPreventValues(program *Program, argc int, block *ir.Block) []*ir.InstLoad {
+	stackSize := 100
+	stackType := types.NewArray(uint64(stackSize), types.I32)
+
+	args := make([]*ir.InstLoad, argc)
+	for i := 0; i < argc; i++ {
+		currentTop := block.NewLoad(types.I32, program.Globals["top"])
+		newTop := block.NewSub(currentTop, constant.NewInt(types.I32, 1+int64(i)))
+		stackPtr := block.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I32, 0), newTop)
+		val := block.NewLoad(types.I32, stackPtr)
+		args[i] = val
+	}
+	return args
+}
+func GetValues(program *Program, argc int, block *ir.Block) []*ir.InstCall {
+
+	args := make([]*ir.InstCall, argc)
+	for i := 0; i < argc; i++ {
+		args[i] = block.NewCall(program.Funcs["pop"].IrFunc)
+	}
+	return args
+}
+
 func DefineAddFunc(program *Program) *ir.Func {
 	binFnBody, binFn, a, b := DefineBinaryFunction(program, "add")
 	result := binFnBody.NewAdd(a, b)
@@ -68,13 +91,13 @@ func DefineMulFunc(program *Program) *ir.Func {
 	return binFn
 }
 
-func DefineBinaryFunction(program *Program, name string) (*ir.Block, *ir.Func, *ir.InstCall, *ir.InstCall) {
+func DefineBinaryFunction(program *Program, name string) (*ir.Block, *ir.Func, *ir.Param, *ir.Param) {
 
-	binFn := program.Module.NewFunc(name, types.Void)
+	binFn := program.Module.NewFunc(name, types.Void, ir.NewParam("a", types.I32), ir.NewParam("b", types.I32))
 	binFnBody := binFn.NewBlock("entry")
 
-	op1 := binFnBody.NewCall(program.Funcs["pop"].IrFunc)
-	op2 := binFnBody.NewCall(program.Funcs["pop"].IrFunc)
+	op1 := binFn.Params[0]
+	op2 := binFn.Params[1]
 
 	return binFnBody, binFn, op1, op2
 }

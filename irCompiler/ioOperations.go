@@ -22,10 +22,10 @@ func DefineScanFnFunction(program *Program) *Func {
 
 func DefinePrintFunction(program *Program) *ir.Func {
 
-	printFn := program.Module.NewFunc("print", types.Void)
+	printFn := program.Module.NewFunc("print", types.Void, ir.NewParam("a", types.I32))
 	printFnBody := printFn.NewBlock("entry")
 
-	op1 := printFnBody.NewCall(program.Funcs["pop"].IrFunc)
+	op1 := printFn.Params[0]
 
 	formatPtr := printFnBody.NewGetElementPtr(types.NewArray(4, types.I8), program.Globals["format"], constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 0))
 	printFnBody.NewCall(program.Funcs["printf"].IrFunc, formatPtr, op1)
@@ -35,10 +35,10 @@ func DefinePrintFunction(program *Program) *ir.Func {
 }
 
 func DefinePrintCharFunction(program *Program) *ir.Func {
-	printFn := program.Module.NewFunc("printI8", types.Void)
+	printFn := program.Module.NewFunc("printI8", types.Void, ir.NewParam("a", types.I32))
 	printFnBody := printFn.NewBlock("entry")
 
-	op1 := printFnBody.NewCall(program.Funcs["pop"].IrFunc)
+	op1 := printFn.Params[0]
 	truncated := printFnBody.NewTrunc(op1, types.I8)
 
 	formatPtr := printFnBody.NewGetElementPtr(types.NewArray(4, types.I8), program.Globals["formatChar"], constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 0))

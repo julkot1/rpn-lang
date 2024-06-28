@@ -1,6 +1,7 @@
 package lexer
 
 import (
+	"fmt"
 	"github.com/timtadh/lexmachine"
 	"github.com/timtadh/lexmachine/machines"
 	"log"
@@ -8,33 +9,9 @@ import (
 	"strconv"
 )
 
-type TokenType int
-
-const (
-	PushT TokenType = iota
-	PopT
-	AddT
-	SubT
-	MulT
-	PrintT
-	DivT
-	PrintI8T
-	InputT
-	DupT
-	SwapT
-	OverT
-	RotT
-)
-
-type Token struct {
-	TokenType TokenType
-	Value     interface{}
-	Match     *machines.Match
-}
-
 func AddOperation(name string, typ TokenType, lexer *lexmachine.Lexer) {
 	lexer.Add([]byte(name), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
-		return Token{typ, 0, match}, nil
+		return Token{typ, 0, false, match}, nil
 	})
 }
 func CreateLexer() *lexmachine.Lexer {
@@ -52,10 +29,15 @@ func CreateLexer() *lexmachine.Lexer {
 	AddOperation(`puts`, PrintI8T, lex)
 	AddOperation(`print`, PrintT, lex)
 	AddOperation(`input`, InputT, lex)
+	AddOperation(`!`, StackPreventT, lex)
 
 	lex.Add([]byte(`[0-9]+`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
 		num, err := strconv.Atoi(string(match.Bytes))
-		return Token{PushT, num, match}, err
+		return Token{PushT, num, false, match}, err
+	})
+	lex.Add([]byte(`\!`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
+		fmt.Println("foo")
+		return nil, nil
 	})
 	lex.Add([]byte(`[ \t\r\n]+`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
 		return nil, nil
@@ -93,43 +75,7 @@ func Parse(file string) []Token {
 		tokens = append(tokens, tok.(Token))
 	}
 
-	return tokens
-}
+	tokens = LexPrevent(tokens)
 
-func NewToken(token string) Token {
-	if token == "+" {
-		return Token{TokenType: AddT}
-	}
-	if token == "-" {
-		return Token{TokenType: SubT}
-	}
-	if token == "*" {
-		return Token{TokenType: MulT}
-	}
-	if token == "print" {
-		return Token{TokenType: PrintT}
-	}
-	if token == "puts" {
-		return Token{TokenType: PrintI8T}
-	}
-	if token == "input" {
-		return Token{TokenType: InputT}
-	}
-	if token == "|>" {
-		return Token{TokenType: DupT}
-	}
-	if token == "|s" {
-		return Token{TokenType: SwapT}
-	}
-	if token == "|r" {
-		return Token{TokenType: RotT}
-	}
-	if token == "|o" {
-		return Token{TokenType: OverT}
-	}
-	num, err := strconv.Atoi(token)
-	if err != nil {
-		log.Printf("Error converting string to int: %v\n", err)
-	}
-	return Token{TokenType: PushT, Value: num}
+	return tokens
 }

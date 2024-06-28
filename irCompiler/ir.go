@@ -19,7 +19,7 @@ type Program struct {
 	Funcs   map[string]*Func
 }
 
-func DefineTypes(m *ir.Module) {
+func DefineTypes() {
 	types.I8Ptr = types.NewPointer(types.I8)
 }
 
@@ -27,7 +27,7 @@ func NewProgram() *Program {
 	program := &Program{}
 	program.Module = ir.NewModule()
 
-	DefineTypes(program.Module)
+	DefineTypes()
 
 	program.Globals = DefineGlobals(program.Module)
 
@@ -82,6 +82,37 @@ func DefineGlobals(m *ir.Module) map[string]*ir.Global {
 	return globals
 }
 
+func CallFunc(function *ir.Func, block *ir.Block, program *Program, tok lexer.Token) {
+	if tok.StackPrevent == true {
+		argc := tok.ArgsC()
+		if argc == 0 {
+			block.NewCall(function)
+		} else {
+			args := GetPreventValues(program, argc, block)
+			if argc == 1 {
+				block.NewCall(function, args[0])
+			}
+			if argc == 2 {
+				block.NewCall(function, args[0], args[1])
+			}
+		}
+	} else {
+		argc := tok.ArgsC()
+		if argc == 0 {
+			block.NewCall(function)
+		} else {
+			args := GetValues(program, argc, block)
+			if argc == 1 {
+				block.NewCall(function, args[0])
+			}
+			if argc == 2 {
+				block.NewCall(function, args[0], args[1])
+			}
+		}
+	}
+
+}
+
 func LoadProgram(program *Program, arr []lexer.Token) {
 	mainFn := program.Module.NewFunc("main", types.I32)
 	mainFnBody := mainFn.NewBlock("entry")
@@ -92,38 +123,40 @@ func LoadProgram(program *Program, arr []lexer.Token) {
 			mainFnBody.NewCall(program.Funcs["push"].IrFunc, constant.NewInt(types.I32, int64(arr[i].Value.(int))))
 			break
 		case lexer.PopT:
-			mainFnBody.NewCall(program.Funcs["pop"].IrFunc)
+			CallFunc(program.Funcs["pop"].IrFunc, mainFnBody, program, arr[i])
 			break
 		case lexer.AddT:
-			mainFnBody.NewCall(program.Funcs["add"].IrFunc)
+			CallFunc(program.Funcs["add"].IrFunc, mainFnBody, program, arr[i])
 			break
 		case lexer.SubT:
-			mainFnBody.NewCall(program.Funcs["sub"].IrFunc)
+			CallFunc(program.Funcs["sub"].IrFunc, mainFnBody, program, arr[i])
 			break
 		case lexer.MulT:
-			mainFnBody.NewCall(program.Funcs["mul"].IrFunc)
+			CallFunc(program.Funcs["mul"].IrFunc, mainFnBody, program, arr[i])
 			break
 		case lexer.PrintT:
-			mainFnBody.NewCall(program.Funcs["print"].IrFunc)
+			CallFunc(program.Funcs["print"].IrFunc, mainFnBody, program, arr[i])
 			break
 		case lexer.PrintI8T:
-			mainFnBody.NewCall(program.Funcs["printI8"].IrFunc)
+			CallFunc(program.Funcs["printI8"].IrFunc, mainFnBody, program, arr[i])
 			break
 		case lexer.InputT:
-			mainFnBody.NewCall(program.Funcs["input"].IrFunc)
+			CallFunc(program.Funcs["input"].IrFunc, mainFnBody, program, arr[i])
 			break
 		case lexer.DupT:
-			mainFnBody.NewCall(program.Funcs["dup"].IrFunc)
+			CallFunc(program.Funcs["dup"].IrFunc, mainFnBody, program, arr[i])
 			break
 		case lexer.SwapT:
-			mainFnBody.NewCall(program.Funcs["swap"].IrFunc)
+			CallFunc(program.Funcs["swap"].IrFunc, mainFnBody, program, arr[i])
 			break
 		case lexer.RotT:
-			mainFnBody.NewCall(program.Funcs["rot"].IrFunc)
+			CallFunc(program.Funcs["rot"].IrFunc, mainFnBody, program, arr[i])
 			break
 		case lexer.OverT:
-			mainFnBody.NewCall(program.Funcs["over"].IrFunc)
+			CallFunc(program.Funcs["over"].IrFunc, mainFnBody, program, arr[i])
 			break
+		default:
+			panic("unhandled default case")
 		}
 	}
 	mainFnBody.NewRet(constant.NewInt(types.I32, 0))
