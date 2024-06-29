@@ -1,14 +1,18 @@
 package lang
 
+import "github.com/llir/llvm/ir"
+
 type Block struct {
+	Id     int
 	Func   *Function
+	Ir     *ir.Block
 	Parent *Block
 	Tokens []Token
 	Vars   []*Var
 }
 
-func NewBlock(fn *Function, parent *Block) *Block {
-	return &Block{Func: fn, Parent: parent}
+func NewBlock(id int) *Block {
+	return &Block{Id: id}
 }
 func (block *Block) GetVars() []*Var {
 	vars := make([]*Var, 0)

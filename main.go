@@ -5,11 +5,12 @@ import (
 	"log"
 	"os"
 	"rpn/irCompiler"
+	"rpn/lang"
 	"rpn/lexer"
 	"strings"
 )
 
-func Save(program *irCompiler.Program) {
+func Save(program *lang.Program) {
 	file, err := os.Create("output.ll")
 	if err != nil {
 		log.Fatalf("failed to create file: %s", err)
@@ -35,9 +36,8 @@ func Save(program *irCompiler.Program) {
 
 func main() {
 
-	tokens := lexer.Parse("app.rpn")
-	program := irCompiler.NewProgram()
-	irCompiler.LoadProgram(program, tokens)
+	program := lexer.Parse("app.rpn")
+	irCompiler.LoadProgram(program)
 	Save(program)
 
 }

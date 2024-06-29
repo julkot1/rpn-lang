@@ -57,7 +57,7 @@ func CreateLexer() *lexmachine.Lexer {
 	return lex
 }
 
-func Parse(file string) []lang.Token {
+func Parse(file string) *lang.Program {
 	content, err := os.ReadFile(file)
 	if err != nil {
 		log.Fatalf("failed to read file: %s", err)
@@ -78,8 +78,12 @@ func Parse(file string) []lang.Token {
 		tokens = append(tokens, tok.(lang.Token))
 	}
 
+	program := lang.NewProgram()
+
 	tokens = LexPrevent(tokens)
-	tokens = CreateBlocks(tokens)
+	tokens = CreateBlocks(tokens, program)
 	tokens = CreateGlobalFunctions(tokens)
-	return tokens
+	LoadFunctions(program, tokens)
+
+	return program
 }

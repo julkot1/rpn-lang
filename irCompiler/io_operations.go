@@ -4,23 +4,24 @@ import (
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/types"
+	"rpn/lang"
 )
 
-func DefinePrintFnFunction(program *Program) *Func {
+func DefinePrintFnFunction(program *lang.Program) *lang.DefaultFunc {
 	printfType := types.NewFunc(types.I32, types.NewPointer(types.I8))
 	printf := program.Module.NewFunc("printf", printfType)
 	printfType.Variadic = true
-	return &Func{printf, printfType}
+	return &lang.DefaultFunc{IrFunc: printf, Type: printfType}
 }
 
-func DefineScanFnFunction(program *Program) *Func {
+func DefineScanFnFunction(program *lang.Program) *lang.DefaultFunc {
 	scanfType := types.NewFunc(types.I32, types.NewPointer(types.I8))
 	scanf := program.Module.NewFunc("scanf", scanfType)
 	scanfType.Variadic = true
-	return &Func{scanf, scanfType}
+	return &lang.DefaultFunc{IrFunc: scanf, Type: scanfType}
 }
 
-func DefinePrintFunction(program *Program) *ir.Func {
+func DefinePrintFunction(program *lang.Program) *ir.Func {
 
 	printFn := program.Module.NewFunc("print", types.Void, ir.NewParam("a", types.I32))
 	printFnBody := printFn.NewBlock("entry")
@@ -34,7 +35,7 @@ func DefinePrintFunction(program *Program) *ir.Func {
 	return printFn
 }
 
-func DefinePrintCharFunction(program *Program) *ir.Func {
+func DefinePrintCharFunction(program *lang.Program) *ir.Func {
 	printFn := program.Module.NewFunc("printI8", types.Void, ir.NewParam("a", types.I32))
 	printFnBody := printFn.NewBlock("entry")
 
@@ -48,7 +49,7 @@ func DefinePrintCharFunction(program *Program) *ir.Func {
 	return printFn
 }
 
-func DefineInputFunction(program *Program) *ir.Func {
+func DefineInputFunction(program *lang.Program) *ir.Func {
 	inputFn := program.Module.NewFunc("input", types.Void)
 	inputFnBody := inputFn.NewBlock("entry")
 	inputPtr := inputFnBody.NewAlloca(types.I32)

@@ -4,9 +4,10 @@ import (
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/types"
+	"rpn/lang"
 )
 
-func DefinePushFunction(program *Program) *ir.Func {
+func DefinePushFunction(program *lang.Program) *ir.Func {
 	pushFn := program.Module.NewFunc("push", types.Void, ir.NewParam("value", types.I32))
 	pushFnBody := pushFn.NewBlock("entry")
 
@@ -23,7 +24,7 @@ func DefinePushFunction(program *Program) *ir.Func {
 	return pushFn
 }
 
-func DefinePopFunction(program *Program) *ir.Func {
+func DefinePopFunction(program *lang.Program) *ir.Func {
 	stackSize := 100
 	stackType := types.NewArray(uint64(stackSize), types.I32)
 
@@ -43,7 +44,7 @@ func DefinePopFunction(program *Program) *ir.Func {
 	return popFn
 }
 
-func GetPreventValues(program *Program, argc int, block *ir.Block) []*ir.InstLoad {
+func GetPreventValues(program *lang.Program, argc int, block *ir.Block) []*ir.InstLoad {
 	stackSize := 100
 	stackType := types.NewArray(uint64(stackSize), types.I32)
 
@@ -57,7 +58,7 @@ func GetPreventValues(program *Program, argc int, block *ir.Block) []*ir.InstLoa
 	}
 	return args
 }
-func GetValues(program *Program, argc int, block *ir.Block) []*ir.InstCall {
+func GetValues(program *lang.Program, argc int, block *ir.Block) []*ir.InstCall {
 
 	args := make([]*ir.InstCall, argc)
 	for i := 0; i < argc; i++ {
@@ -66,7 +67,7 @@ func GetValues(program *Program, argc int, block *ir.Block) []*ir.InstCall {
 	return args
 }
 
-func DefineAddFunc(program *Program) *ir.Func {
+func DefineAddFunc(program *lang.Program) *ir.Func {
 	binFnBody, binFn, a, b := DefineBinaryFunction(program, "add")
 	result := binFnBody.NewAdd(a, b)
 
@@ -74,7 +75,7 @@ func DefineAddFunc(program *Program) *ir.Func {
 	binFnBody.NewRet(nil)
 	return binFn
 }
-func DefineSubFunc(program *Program) *ir.Func {
+func DefineSubFunc(program *lang.Program) *ir.Func {
 	binFnBody, binFn, a, b := DefineBinaryFunction(program, "div")
 	result := binFnBody.NewSub(a, b)
 
@@ -82,7 +83,7 @@ func DefineSubFunc(program *Program) *ir.Func {
 	binFnBody.NewRet(nil)
 	return binFn
 }
-func DefineMulFunc(program *Program) *ir.Func {
+func DefineMulFunc(program *lang.Program) *ir.Func {
 	binFnBody, binFn, a, b := DefineBinaryFunction(program, "mul")
 	result := binFnBody.NewMul(a, b)
 
@@ -91,7 +92,7 @@ func DefineMulFunc(program *Program) *ir.Func {
 	return binFn
 }
 
-func DefineBinaryFunction(program *Program, name string) (*ir.Block, *ir.Func, *ir.Param, *ir.Param) {
+func DefineBinaryFunction(program *lang.Program, name string) (*ir.Block, *ir.Func, *ir.Param, *ir.Param) {
 
 	binFn := program.Module.NewFunc(name, types.Void, ir.NewParam("a", types.I32), ir.NewParam("b", types.I32))
 	binFnBody := binFn.NewBlock("entry")
@@ -102,7 +103,7 @@ func DefineBinaryFunction(program *Program, name string) (*ir.Block, *ir.Func, *
 	return binFnBody, binFn, op1, op2
 }
 
-func DefineDupFunc(program *Program) *ir.Func {
+func DefineDupFunc(program *lang.Program) *ir.Func {
 	stackSize := 100
 	stackType := types.NewArray(uint64(stackSize), types.I32)
 
@@ -119,7 +120,7 @@ func DefineDupFunc(program *Program) *ir.Func {
 	dupFnBody.NewRet(nil)
 	return dupFn
 }
-func DefineSwapFunction(program *Program) *ir.Func {
+func DefineSwapFunction(program *lang.Program) *ir.Func {
 	stackSize := 100
 	stackType := types.NewArray(uint64(stackSize), types.I32)
 
@@ -143,7 +144,7 @@ func DefineSwapFunction(program *Program) *ir.Func {
 	swapFnBody.NewRet(nil)
 	return swapFn
 }
-func DefineOverFunction(program *Program) *ir.Func {
+func DefineOverFunction(program *lang.Program) *ir.Func {
 	stackSize := 100
 	stackType := types.NewArray(uint64(stackSize), types.I32)
 
@@ -160,7 +161,7 @@ func DefineOverFunction(program *Program) *ir.Func {
 	overFnBody.NewRet(nil)
 	return overFn
 }
-func DefineRotFunction(program *Program) *ir.Func {
+func DefineRotFunction(program *lang.Program) *ir.Func {
 	stackSize := 100
 	stackType := types.NewArray(uint64(stackSize), types.I32)
 
