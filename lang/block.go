@@ -3,7 +3,7 @@ package lang
 import "github.com/llir/llvm/ir"
 
 type Block struct {
-	Id     int
+	Name   string
 	Func   *Function
 	Ir     *ir.Block
 	Parent *Block
@@ -11,8 +11,8 @@ type Block struct {
 	Vars   []*Var
 }
 
-func NewBlock(id int) *Block {
-	return &Block{Id: id}
+func NewBlock(name string) *Block {
+	return &Block{Name: name}
 }
 func (block *Block) GetVars() []*Var {
 	vars := make([]*Var, 0)

@@ -8,7 +8,6 @@ import (
 	"github.com/llir/llvm/ir/types"
 	"rpn/lang"
 	"rpn/lexer"
-	"strconv"
 )
 
 func DefineFuncs(program *lang.Program) {
@@ -131,9 +130,10 @@ func CallFunc(function *ir.Func, block *ir.Block, program *lang.Program, tok lan
 
 }
 
-func LoadBlock(program *lang.Program, block *lang.Block) {
-	irBlock := block.Func.Ir.NewBlock("block" + strconv.Itoa(block.Id))
+func LoadBlock(program *lang.Program, block *lang.Block, fun *lang.Function) *lang.Block {
+	irBlock := fun.Ir.NewBlock(block.Name)
 	block.Ir = irBlock
+	lastBlock := block
 	for i := 0; i < len(block.Tokens); i++ {
 		tok := block.Tokens[i]
 		if tok.TokenType == lang.PushT {
@@ -142,24 +142,30 @@ func LoadBlock(program *lang.Program, block *lang.Block) {
 		if lexer.ConstTokens[tok.TokenType].DefaultFunction {
 			CallFunc(lexer.ConstTokens[tok.TokenType].Ir, irBlock, program, tok)
 		} else {
-			if tok.TokenType == lang.BlockT {
-				LoadBlock(program, tok.Value.(*lang.Block))
-			} else {
+			switch tok.TokenType {
+			case lang.BlockT:
+				lastBlock = LoadBlock(program, tok.Value.(*lang.Block), fun)
+				break
+			case lang.IfT:
+				lastBlock = LoadIf(program, tok.Value.(*lang.IfStatement), fun, irBlock, block.Tokens[i+1].Value.(*lang.Block))
+				break
+			default:
 				fmt.Println(tok)
 				panic("unhandled default case")
 			}
 
 		}
 	}
-
+	return lastBlock
 }
 
 func LoadFunction(program *lang.Program, fun *lang.Function) {
 	funFn := program.Module.NewFunc(fun.Name, types.I32)
 	funFunctionBlock := program.MainFunction.Blocks[0]
 	funFunctionBlock.Func.Ir = funFn
-	LoadBlock(program, funFunctionBlock)
-	funFunctionBlock.Ir.NewRet(constant.NewInt(types.I32, 0))
+	block := LoadBlock(program, funFunctionBlock, fun)
+	block.Ir.NewRet(constant.NewInt(types.I32, 0))
+
 }
 
 func LoadProgram(program *lang.Program) {

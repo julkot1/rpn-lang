@@ -3,6 +3,7 @@ package lexer
 import (
 	"rpn/lang"
 	"rpn/util"
+	"strconv"
 )
 
 func CreateBlocks(tokens []lang.Token, program *lang.Program) []lang.Token {
@@ -13,7 +14,7 @@ func CreateBlocks(tokens []lang.Token, program *lang.Program) []lang.Token {
 		tok := tokens[idx]
 		if tok.TokenType == lang.BlockOpenT {
 
-			newBlock := lang.NewBlock(program.NewBlockIndex())
+			newBlock := lang.NewBlock("block" + strconv.Itoa(program.NewBlockIndex()))
 			newBlock.Tokens = make([]lang.Token, 0)
 			blocksStack.Push(newBlock)
 		} else if tok.TokenType == lang.BlockCloseT {
@@ -30,7 +31,7 @@ func CreateBlocks(tokens []lang.Token, program *lang.Program) []lang.Token {
 				if nextToken.TokenType != lang.BlockOpenT && nextToken.TokenType != lang.FunctionDefT {
 					closeCount++
 					if closeCount%2 == 1 {
-						newBlock := lang.NewBlock(program.NewBlockIndex())
+						newBlock := lang.NewBlock("block" + strconv.Itoa(program.NewBlockIndex()))
 						newBlock.Tokens = make([]lang.Token, 0)
 						blocksStack.Push(newBlock)
 					} else {

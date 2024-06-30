@@ -11,8 +11,8 @@ func CreateIf(tokens []lang.Token, program *lang.Program) []lang.Token {
 				if tokens[idx+1].TokenType != lang.BlockT {
 					panic("invalid if construction")
 				}
-				tokens[idx+1].Value.(*lang.Block).Tokens = CreateIf(token.Value.(*lang.Block).Tokens, program)
-				ifConstruct := lang.IfStatement{TrueBlock: tokens[idx+1].Value.(*lang.Block), FalseBlock: nil}
+				tokens[idx+1].Value.(*lang.Block).Tokens = CreateIf(tokens[idx+1].Value.(*lang.Block).Tokens, program)
+				ifConstruct := &lang.IfStatement{TrueBlock: tokens[idx+1].Value.(*lang.Block), FalseBlock: nil}
 				newTokens = append(newTokens, lang.Token{TokenType: lang.IfT, Value: ifConstruct, Match: token.Match})
 				idx++
 			} else {
