@@ -33,6 +33,16 @@ func CreateLexer() *lexmachine.Lexer {
 	AddOperation(FunctionDefToken, lang.FunctionDefT, lex)
 	AddOperation(BlockOpenToken, lang.BlockOpenT, lex)
 	AddOperation(BlockCloseToken, lang.BlockCloseT, lex)
+	AddOperation(IfToken, lang.IfT, lex)
+	AddOperation(GreaterOrEqToken, lang.GreaterOrEqT, lex)
+	AddOperation(LessOrEqToken, lang.LessOrEqT, lex)
+	AddOperation(NotEqualToken, lang.NotEqualT, lex)
+	AddOperation(GreaterToken, lang.GreaterT, lex)
+	AddOperation(LessToken, lang.LessT, lex)
+	AddOperation(EqualsToken, lang.EqualsT, lex)
+	AddOperation(NotToken, lang.NotT, lex)
+	AddOperation(OrToken, lang.OrT, lex)
+	AddOperation(AndToken, lang.AndT, lex)
 
 	lex.Add([]byte(IdentifierToken), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
 		return lang.Token{TokenType: lang.IdentifierT, Value: string(match.Bytes), Match: match}, nil
@@ -82,6 +92,7 @@ func Parse(file string) *lang.Program {
 
 	tokens = LexPrevent(tokens)
 	tokens = CreateBlocks(tokens, program)
+	tokens = CreateIf(tokens, program)
 	tokens = CreateGlobalFunctions(tokens)
 	LoadFunctions(program, tokens)
 

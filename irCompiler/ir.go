@@ -7,6 +7,7 @@ import (
 	"github.com/llir/llvm/ir/enum"
 	"github.com/llir/llvm/ir/types"
 	"rpn/lang"
+	"rpn/lexer"
 	"strconv"
 )
 
@@ -14,11 +15,13 @@ func DefineFuncs(program *lang.Program) {
 	program.Funcs = make(map[string]*lang.DefaultFunc)
 	program.Funcs["printf"] = DefinePrintFnFunction(program)
 	program.Funcs["scanf"] = DefineScanFnFunction(program)
+
 	program.Funcs["push"] = &lang.DefaultFunc{IrFunc: DefinePushFunction(program)}
 	program.Funcs["pop"] = &lang.DefaultFunc{IrFunc: DefinePopFunction(program)}
 	program.Funcs["add"] = &lang.DefaultFunc{IrFunc: DefineAddFunc(program)}
 	program.Funcs["sub"] = &lang.DefaultFunc{IrFunc: DefineSubFunc(program)}
 	program.Funcs["mul"] = &lang.DefaultFunc{IrFunc: DefineMulFunc(program)}
+
 	program.Funcs["print"] = &lang.DefaultFunc{IrFunc: DefinePrintFunction(program)}
 	program.Funcs["printI8"] = &lang.DefaultFunc{IrFunc: DefinePrintCharFunction(program)}
 	program.Funcs["input"] = &lang.DefaultFunc{IrFunc: DefineInputFunction(program)}
@@ -27,6 +30,47 @@ func DefineFuncs(program *lang.Program) {
 	program.Funcs["swap"] = &lang.DefaultFunc{IrFunc: DefineSwapFunction(program)}
 	program.Funcs["rot"] = &lang.DefaultFunc{IrFunc: DefineRotFunction(program)}
 	program.Funcs["over"] = &lang.DefaultFunc{IrFunc: DefineOverFunction(program)}
+
+	program.Funcs["equals"] = &lang.DefaultFunc{IrFunc: DefineEqualsFunction(program)}
+	program.Funcs["not_equals"] = &lang.DefaultFunc{IrFunc: DefineNotEqualsFunction(program)}
+	program.Funcs["greater"] = &lang.DefaultFunc{IrFunc: DefineGreaterFunction(program)}
+	program.Funcs["less"] = &lang.DefaultFunc{IrFunc: DefineLessFunction(program)}
+	program.Funcs["greater_eq"] = &lang.DefaultFunc{IrFunc: DefineGreaterOrEqFunction(program)}
+	program.Funcs["less_eq"] = &lang.DefaultFunc{IrFunc: DefineLessOrEqFunction(program)}
+
+	program.Funcs["not"] = &lang.DefaultFunc{IrFunc: DefineNotOperation(program)}
+	program.Funcs["and"] = &lang.DefaultFunc{IrFunc: DefineAndOperation(program)}
+	program.Funcs["or"] = &lang.DefaultFunc{IrFunc: DefineOrOperation(program)}
+
+	AssignToConstTokens(program.Funcs)
+}
+
+func AssignToConstTokens(funcs map[string]*lang.DefaultFunc) {
+	lexer.ConstTokens[lang.PushT].Ir = funcs["push"].IrFunc
+	lexer.ConstTokens[lang.PopT].Ir = funcs["pop"].IrFunc
+	lexer.ConstTokens[lang.AddT].Ir = funcs["add"].IrFunc
+	lexer.ConstTokens[lang.SubT].Ir = funcs["sub"].IrFunc
+	lexer.ConstTokens[lang.MulT].Ir = funcs["mul"].IrFunc
+
+	lexer.ConstTokens[lang.PrintT].Ir = funcs["print"].IrFunc
+	lexer.ConstTokens[lang.PrintI8T].Ir = funcs["printI8"].IrFunc
+	lexer.ConstTokens[lang.InputT].Ir = funcs["input"].IrFunc
+
+	lexer.ConstTokens[lang.DupT].Ir = funcs["dup"].IrFunc
+	lexer.ConstTokens[lang.SwapT].Ir = funcs["swap"].IrFunc
+	lexer.ConstTokens[lang.RotT].Ir = funcs["rot"].IrFunc
+	lexer.ConstTokens[lang.OverT].Ir = funcs["over"].IrFunc
+
+	lexer.ConstTokens[lang.EqualsT].Ir = funcs["equals"].IrFunc
+	lexer.ConstTokens[lang.NotEqualT].Ir = funcs["not_equals"].IrFunc
+	lexer.ConstTokens[lang.GreaterT].Ir = funcs["greater"].IrFunc
+	lexer.ConstTokens[lang.LessT].Ir = funcs["less"].IrFunc
+	lexer.ConstTokens[lang.GreaterOrEqT].Ir = funcs["greater_eq"].IrFunc
+	lexer.ConstTokens[lang.LessOrEqT].Ir = funcs["less_eq"].IrFunc
+
+	lexer.ConstTokens[lang.NotT].Ir = funcs["not"].IrFunc
+	lexer.ConstTokens[lang.OrT].Ir = funcs["or"].IrFunc
+	lexer.ConstTokens[lang.AndT].Ir = funcs["and"].IrFunc
 }
 
 func DefineGlobals(m *ir.Module) map[string]*ir.Global {
@@ -58,7 +102,7 @@ func DefineGlobals(m *ir.Module) map[string]*ir.Global {
 
 func CallFunc(function *ir.Func, block *ir.Block, program *lang.Program, tok lang.Token) {
 	if tok.StackPrevent == true {
-		argc := tok.ArgsC()
+		argc := lexer.ConstTokens[tok.TokenType].Argc
 		if argc == 0 {
 			block.NewCall(function)
 		} else {
@@ -67,11 +111,11 @@ func CallFunc(function *ir.Func, block *ir.Block, program *lang.Program, tok lan
 				block.NewCall(function, args[0])
 			}
 			if argc == 2 {
-				block.NewCall(function, args[0], args[1])
+				block.NewCall(function, args[1], args[0])
 			}
 		}
 	} else {
-		argc := tok.ArgsC()
+		argc := lexer.ConstTokens[tok.TokenType].Argc
 		if argc == 0 {
 			block.NewCall(function)
 		} else {
@@ -80,7 +124,7 @@ func CallFunc(function *ir.Func, block *ir.Block, program *lang.Program, tok lan
 				block.NewCall(function, args[0])
 			}
 			if argc == 2 {
-				block.NewCall(function, args[0], args[1])
+				block.NewCall(function, args[1], args[0])
 			}
 		}
 	}
@@ -92,48 +136,19 @@ func LoadBlock(program *lang.Program, block *lang.Block) {
 	block.Ir = irBlock
 	for i := 0; i < len(block.Tokens); i++ {
 		tok := block.Tokens[i]
-		switch tok.TokenType {
-		case lang.PushT:
+		if tok.TokenType == lang.PushT {
 			irBlock.NewCall(program.Funcs["push"].IrFunc, constant.NewInt(types.I32, int64(tok.Value.(int))))
-			break
-		case lang.PopT:
-			CallFunc(program.Funcs["pop"].IrFunc, irBlock, program, tok)
-			break
-		case lang.AddT:
-			CallFunc(program.Funcs["add"].IrFunc, irBlock, program, tok)
-			break
-		case lang.SubT:
-			CallFunc(program.Funcs["sub"].IrFunc, irBlock, program, tok)
-			break
-		case lang.MulT:
-			CallFunc(program.Funcs["mul"].IrFunc, irBlock, program, tok)
-			break
-		case lang.PrintT:
-			CallFunc(program.Funcs["print"].IrFunc, irBlock, program, tok)
-			break
-		case lang.PrintI8T:
-			CallFunc(program.Funcs["printI8"].IrFunc, irBlock, program, tok)
-			break
-		case lang.InputT:
-			CallFunc(program.Funcs["input"].IrFunc, irBlock, program, tok)
-			break
-		case lang.DupT:
-			CallFunc(program.Funcs["dup"].IrFunc, irBlock, program, tok)
-			break
-		case lang.SwapT:
-			CallFunc(program.Funcs["swap"].IrFunc, irBlock, program, tok)
-			break
-		case lang.RotT:
-			CallFunc(program.Funcs["rot"].IrFunc, irBlock, program, tok)
-			break
-		case lang.OverT:
-			CallFunc(program.Funcs["over"].IrFunc, irBlock, program, tok)
-			break
-		case lang.BlockT:
-			LoadBlock(program, tok.Value.(*lang.Block))
-		default:
-			fmt.Println(tok)
-			panic("unhandled default case")
+		}
+		if lexer.ConstTokens[tok.TokenType].DefaultFunction {
+			CallFunc(lexer.ConstTokens[tok.TokenType].Ir, irBlock, program, tok)
+		} else {
+			if tok.TokenType == lang.BlockT {
+				LoadBlock(program, tok.Value.(*lang.Block))
+			} else {
+				fmt.Println(tok)
+				panic("unhandled default case")
+			}
+
 		}
 	}
 

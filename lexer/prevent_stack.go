@@ -7,7 +7,7 @@ func LexPrevent(tokens []lang.Token) []lang.Token {
 	idx := 0
 	for _, tok := range tokens {
 		if tok.TokenType == lang.StackPreventT {
-			if newTokens[idx-1].CanPrevent() == false {
+			if ConstTokens[newTokens[idx-1].TokenType].CanPrevent == false {
 				panic("Syntax Error: \n Can not stack prevent operation: " + newTokens[idx-1].String())
 			}
 			newTokens[idx-1].StackPrevent = true

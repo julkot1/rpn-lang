@@ -57,6 +57,10 @@ func CreateBlocks(tokens []lang.Token, program *lang.Program) []lang.Token {
 		}
 
 	}
+	if !blocksStack.IsEmpty() {
+		currentBlock, _ := blocksStack.Pop()
+		newTokens = append(newTokens, lang.Token{TokenType: lang.BlockT, Value: currentBlock})
+	}
 	return newTokens
 }
 
