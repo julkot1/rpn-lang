@@ -1,6 +1,6 @@
 fun main {
-   1 1 == if {
+   5 repeat {
         3 print
    }
-   2 print
+   5 print
 }

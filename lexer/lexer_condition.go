@@ -18,6 +18,14 @@ func CreateIf(tokens []lang.Token, program *lang.Program) []lang.Token {
 			} else {
 				panic("invalid if construction")
 			}
+		} else if token.TokenType == lang.RepeatT {
+			if tokens[idx+1].TokenType != lang.BlockT {
+				panic("invalid repeat construction")
+			}
+			tokens[idx+1].Value.(*lang.Block).Tokens = CreateIf(tokens[idx+1].Value.(*lang.Block).Tokens, program)
+			repeat := &lang.RepeatStatement{LoopBlock: tokens[idx+1].Value.(*lang.Block)}
+			newTokens = append(newTokens, lang.Token{TokenType: lang.RepeatT, Value: repeat, Match: token.Match})
+			idx++
 		} else if token.TokenType == lang.BlockT {
 			token.Value.(*lang.Block).Tokens = CreateIf(token.Value.(*lang.Block).Tokens, program)
 			newTokens = append(newTokens, token)

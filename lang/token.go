@@ -38,6 +38,7 @@ const (
 	NotEqualT
 	OrT
 	AndT
+	RepeatT
 )
 
 type Token struct {

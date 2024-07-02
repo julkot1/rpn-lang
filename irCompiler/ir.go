@@ -131,8 +131,12 @@ func CallFunc(function *ir.Func, block *ir.Block, program *lang.Program, tok lan
 }
 
 func LoadBlock(program *lang.Program, block *lang.Block, fun *lang.Function) *lang.Block {
-	irBlock := fun.Ir.NewBlock(block.Name)
-	block.Ir = irBlock
+	if block.Ir == nil {
+		block.Ir = fun.Ir.NewBlock(block.Name)
+	}
+
+	irBlock := block.Ir
+
 	lastBlock := block
 	for i := 0; i < len(block.Tokens); i++ {
 		tok := block.Tokens[i]
@@ -148,6 +152,9 @@ func LoadBlock(program *lang.Program, block *lang.Block, fun *lang.Function) *la
 				break
 			case lang.IfT:
 				lastBlock = LoadIf(program, tok.Value.(*lang.IfStatement), fun, irBlock, block.Tokens[i+1].Value.(*lang.Block))
+				break
+			case lang.RepeatT:
+				lastBlock = LoadRepeat(program, tok.Value.(*lang.RepeatStatement), fun, irBlock, block.Tokens[i+1].Value.(*lang.Block))
 				break
 			default:
 				fmt.Println(tok)
