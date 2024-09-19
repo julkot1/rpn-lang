@@ -93,7 +93,9 @@ func Parse(file string) *lang.Program {
 
 	tokens = LexPrevent(tokens)
 	tokens = CreateBlocks(tokens, program)
-	tokens = CreateIf(tokens, program)
+
+	//tokens = CreateIf(tokens, program)
+	//tokens = CreateRepeat(tokens, program)
 	tokens = CreateGlobalFunctions(tokens)
 	LoadFunctions(program, tokens)
 

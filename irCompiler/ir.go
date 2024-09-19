@@ -130,31 +130,23 @@ func CallFunc(function *ir.Func, block *ir.Block, program *lang.Program, tok lan
 
 }
 
-func LoadBlock(program *lang.Program, block *lang.Block, fun *lang.Function) *lang.Block {
-	if block.Ir == nil {
-		block.Ir = fun.Ir.NewBlock(block.Name)
-	}
-
+func LoadBlock(program *lang.Program, block *lang.Block, fun *lang.Function, idx int) {
 	irBlock := block.Ir
 
-	lastBlock := block
 	for i := 0; i < len(block.Tokens); i++ {
 		tok := block.Tokens[i]
 		if tok.TokenType == lang.PushT {
 			irBlock.NewCall(program.Funcs["push"].IrFunc, constant.NewInt(types.I32, int64(tok.Value.(int))))
-		}
-		if lexer.ConstTokens[tok.TokenType].DefaultFunction {
+		} else if lexer.ConstTokens[tok.TokenType].DefaultFunction {
 			CallFunc(lexer.ConstTokens[tok.TokenType].Ir, irBlock, program, tok)
 		} else {
 			switch tok.TokenType {
-			case lang.BlockT:
-				lastBlock = LoadBlock(program, tok.Value.(*lang.Block), fun)
-				break
+
 			case lang.IfT:
-				lastBlock = LoadIf(program, tok.Value.(*lang.IfStatement), fun, irBlock, block.Tokens[i+1].Value.(*lang.Block))
+				LoadIf(program, irBlock, block.NextFreeBlock(block), fun.Blocks[idx+1])
 				break
 			case lang.RepeatT:
-				lastBlock = LoadRepeat(program, tok.Value.(*lang.RepeatStatement), fun, irBlock, block.Tokens[i+1].Value.(*lang.Block))
+				LoadRepeat(program, fun, irBlock, block.NextFreeBlock(block), fun.Blocks[idx+1])
 				break
 			default:
 				fmt.Println(tok)
@@ -163,16 +155,31 @@ func LoadBlock(program *lang.Program, block *lang.Block, fun *lang.Function) *la
 
 		}
 	}
-	return lastBlock
+}
+
+func CreateIrBlocks(fun *lang.Function) {
+	for _, block := range fun.Blocks {
+		block.Ir = fun.Ir.NewBlock(block.Name)
+	}
 }
 
 func LoadFunction(program *lang.Program, fun *lang.Function) {
 	funFn := program.Module.NewFunc(fun.Name, types.I32)
-	funFunctionBlock := program.MainFunction.Blocks[0]
-	funFunctionBlock.Func.Ir = funFn
-	block := LoadBlock(program, funFunctionBlock, fun)
-	block.Ir.NewRet(constant.NewInt(types.I32, 0))
+	fun.Ir = funFn
+	CreateIrBlocks(fun)
 
+	for idx, block := range fun.Blocks {
+		LoadBlock(program, block, fun, idx)
+	}
+	for idx, block := range fun.Blocks {
+		if block.Ir.Term == nil {
+			if idx+1 < len(fun.Blocks) {
+				block.Ir.NewBr(block.NextFreeBlock(block).Ir)
+			} else {
+				block.Ir.NewRet(constant.NewInt(types.I32, 0))
+			}
+		}
+	}
 }
 
 func LoadProgram(program *lang.Program) {

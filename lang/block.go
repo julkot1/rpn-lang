@@ -1,19 +1,26 @@
 package lang
 
-import "github.com/llir/llvm/ir"
+import (
+	"github.com/llir/llvm/ir"
+	"strconv"
+)
 
 type Block struct {
-	Name   string
-	Func   *Function
-	Ir     *ir.Block
-	Parent *Block
-	Tokens []Token
-	Vars   []*Var
+	Id        int
+	Name      string
+	Func      *Function
+	Ir        *ir.Block
+	Parent    *Block
+	Children  []*Block
+	Tokens    []Token
+	Vars      []*Var
+	FreeBlock bool
 }
 
-func NewBlock(name string) *Block {
-	return &Block{Name: name}
+func NewBlock(id int, freeBlock bool) *Block {
+	return &Block{Name: "block" + strconv.Itoa(id), Id: id, FreeBlock: freeBlock}
 }
+
 func (block *Block) GetVars() []*Var {
 	vars := make([]*Var, 0)
 	if block.Vars != nil {
@@ -38,5 +45,24 @@ func (block *Block) ContainsVar(name string) bool {
 		}
 	}
 	return false
+
+}
+func (block *Block) NextFreeBlock(forbidden *Block) *Block {
+	children := block.Children
+	afterBlock := true
+	if forbidden.Parent == block {
+		afterBlock = false
+	}
+	for _, child := range children {
+		if forbidden == child {
+			afterBlock = true
+			continue
+		}
+		if child.FreeBlock && afterBlock {
+			return child
+		}
+	}
+	// if it has no free block as children find it in parent
+	return block.Parent.NextFreeBlock(forbidden)
 
 }

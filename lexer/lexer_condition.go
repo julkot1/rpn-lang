@@ -18,16 +18,33 @@ func CreateIf(tokens []lang.Token, program *lang.Program) []lang.Token {
 			} else {
 				panic("invalid if construction")
 			}
-		} else if token.TokenType == lang.RepeatT {
+		} else if token.TokenType == lang.BlockT {
+			token.Value.(*lang.Block).Tokens = CreateIf(token.Value.(*lang.Block).Tokens, program)
+			newTokens = append(newTokens, token)
+		} else {
+			newTokens = append(newTokens, token)
+		}
+
+	}
+	return newTokens
+}
+func CreateRepeat(tokens []lang.Token, program *lang.Program) []lang.Token {
+	newTokens := make([]lang.Token, 0)
+	for idx := 0; idx < len(tokens); idx++ {
+		token := tokens[idx]
+		if token.TokenType == lang.RepeatT {
 			if tokens[idx+1].TokenType != lang.BlockT {
 				panic("invalid repeat construction")
 			}
-			tokens[idx+1].Value.(*lang.Block).Tokens = CreateIf(tokens[idx+1].Value.(*lang.Block).Tokens, program)
+			tokens[idx+1].Value.(*lang.Block).Tokens = CreateRepeat(tokens[idx+1].Value.(*lang.Block).Tokens, program)
 			repeat := &lang.RepeatStatement{LoopBlock: tokens[idx+1].Value.(*lang.Block)}
 			newTokens = append(newTokens, lang.Token{TokenType: lang.RepeatT, Value: repeat, Match: token.Match})
 			idx++
 		} else if token.TokenType == lang.BlockT {
-			token.Value.(*lang.Block).Tokens = CreateIf(token.Value.(*lang.Block).Tokens, program)
+			token.Value.(*lang.Block).Tokens = CreateRepeat(token.Value.(*lang.Block).Tokens, program)
+			newTokens = append(newTokens, token)
+		} else if token.TokenType == lang.IfT {
+			token.Value.(*lang.IfStatement).TrueBlock.Tokens = CreateRepeat(token.Value.(*lang.IfStatement).TrueBlock.Tokens, program)
 			newTokens = append(newTokens, token)
 		} else {
 			newTokens = append(newTokens, token)
