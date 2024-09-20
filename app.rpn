@@ -1,6 +1,6 @@
 fun main {
-    2 2 == if {
-        3 print
+    0
+    100000000 repeat {
+        1 + |> 100000000 |s % 0 == if { print! }
     }
-    5 print
 }

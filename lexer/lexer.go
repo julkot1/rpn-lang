@@ -22,6 +22,7 @@ func CreateLexer() *lexmachine.Lexer {
 	AddOperation(SubToken, lang.SubT, lex)
 	AddOperation(MulToken, lang.MulT, lex)
 	AddOperation(DivToken, lang.DivT, lex)
+	AddOperation(ModToken, lang.ModT, lex)
 	AddOperation(DupToken, lang.DupT, lex)
 	AddOperation(SwapToken, lang.SwapT, lex)
 	AddOperation(RotToken, lang.RotT, lex)
@@ -43,7 +44,10 @@ func CreateLexer() *lexmachine.Lexer {
 	AddOperation(NotToken, lang.NotT, lex)
 	AddOperation(OrToken, lang.OrT, lex)
 	AddOperation(AndToken, lang.AndT, lex)
-	AddOperation(RepeatToken, lang.RepeatT, lex)
+
+	lex.Add([]byte(RepeatToken), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
+		return lang.Token{TokenType: lang.RepeatT, Value: &lang.RepeatStatement{}, Match: match}, nil
+	})
 
 	lex.Add([]byte(IdentifierToken), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
 		return lang.Token{TokenType: lang.IdentifierT, Value: string(match.Bytes), Match: match}, nil
@@ -90,14 +94,18 @@ func Parse(file string) *lang.Program {
 	}
 
 	program := lang.NewProgram()
-
+	tokens = CreateRepeat(tokens, program)
 	tokens = LexPrevent(tokens)
 	tokens = CreateBlocks(tokens, program)
 
-	//tokens = CreateIf(tokens, program)
-	//tokens = CreateRepeat(tokens, program)
 	tokens = CreateGlobalFunctions(tokens)
 	LoadFunctions(program, tokens)
+
+	for _, function := range program.Functions {
+		for _, block := range function.Blocks {
+			AddRepeatBlock(block)
+		}
+	}
 
 	return program
 }

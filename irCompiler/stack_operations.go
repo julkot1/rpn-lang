@@ -75,6 +75,14 @@ func DefineAddFunc(program *lang.Program) *ir.Func {
 	binFnBody.NewRet(nil)
 	return binFn
 }
+func DefineModFunc(program *lang.Program) *ir.Func {
+	binFnBody, binFn, a, b := DefineBinaryFunction(program, "mod")
+	result := binFnBody.NewSRem(a, b)
+
+	binFnBody.NewCall(program.Funcs["push"].IrFunc, result)
+	binFnBody.NewRet(nil)
+	return binFn
+}
 func DefineSubFunc(program *lang.Program) *ir.Func {
 	binFnBody, binFn, a, b := DefineBinaryFunction(program, "div")
 	result := binFnBody.NewSub(a, b)

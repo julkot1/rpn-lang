@@ -2,11 +2,9 @@ package lang
 
 import (
 	"github.com/llir/llvm/ir"
-	"strconv"
 )
 
 type Block struct {
-	Id        int
 	Name      string
 	Func      *Function
 	Ir        *ir.Block
@@ -17,8 +15,8 @@ type Block struct {
 	FreeBlock bool
 }
 
-func NewBlock(id int, freeBlock bool) *Block {
-	return &Block{Name: "block" + strconv.Itoa(id), Id: id, FreeBlock: freeBlock}
+func NewBlock(id string, freeBlock bool) *Block {
+	return &Block{Name: id, FreeBlock: freeBlock}
 }
 
 func (block *Block) GetVars() []*Var {
@@ -47,14 +45,31 @@ func (block *Block) ContainsVar(name string) bool {
 	return false
 
 }
-func (block *Block) NextFreeBlock(forbidden *Block) *Block {
+
+func containsParent(forbidden []*Block, block *Block) bool {
+	for _, v := range forbidden {
+		if v.Parent == block {
+			return true
+		}
+	}
+	return false
+}
+func containsSelf(forbidden []*Block, block *Block) bool {
+	for _, v := range forbidden {
+		if v == block {
+			return true
+		}
+	}
+	return false
+}
+func (block *Block) NextFreeBlock(forbidden ...*Block) *Block {
 	children := block.Children
 	afterBlock := true
-	if forbidden.Parent == block {
+	if containsParent(forbidden, block) {
 		afterBlock = false
 	}
 	for _, child := range children {
-		if forbidden == child {
+		if containsSelf(forbidden, child) {
 			afterBlock = true
 			continue
 		}
@@ -63,6 +78,6 @@ func (block *Block) NextFreeBlock(forbidden *Block) *Block {
 		}
 	}
 	// if it has no free block as children find it in parent
-	return block.Parent.NextFreeBlock(forbidden)
+	return block.Parent.NextFreeBlock(forbidden...)
 
 }

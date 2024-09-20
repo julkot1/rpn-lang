@@ -6,7 +6,6 @@ import (
 	"github.com/llir/llvm/ir/enum"
 	"github.com/llir/llvm/ir/types"
 	"rpn/lang"
-	"strconv"
 )
 
 func LoadIf(program *lang.Program, block *ir.Block, nextBlock *lang.Block, trueBlock *lang.Block) *lang.Block {
@@ -18,25 +17,24 @@ func LoadIf(program *lang.Program, block *ir.Block, nextBlock *lang.Block, trueB
 	return nextBlock
 }
 
-func LoadRepeat(program *lang.Program, fun *lang.Function, block *ir.Block, nextBlock *lang.Block, loopBlock *lang.Block) *lang.Block {
+func LoadRepeat(program *lang.Program, fun *lang.Function, block *ir.Block, nextBlock *lang.Block, loopBlock *lang.Block, conditionBlock *lang.Block) *lang.Block {
 	arg := GetValues(program, 1, block)[0]
 	counter := block.NewAlloca(types.I32)
 
 	block.NewStore(constant.NewInt(types.I32, 0), counter)
 
-	conditionName := "loop" + strconv.Itoa(program.NewBlockIndex())
-	conditionBlock := fun.Ir.NewBlock(conditionName)
+	conditionBlockIr := conditionBlock.Ir
 
-	block.NewBr(conditionBlock)
+	block.NewBr(conditionBlockIr)
 
-	counterVal := conditionBlock.NewLoad(types.I32, counter)
-	compare := conditionBlock.NewICmp(enum.IPredNE, arg, counterVal)
+	counterVal := conditionBlockIr.NewLoad(types.I32, counter)
+	compare := conditionBlockIr.NewICmp(enum.IPredNE, arg, counterVal)
 
-	conditionBlock.NewCondBr(compare, loopBlock.Ir, nextBlock.Ir)
+	conditionBlockIr.NewCondBr(compare, loopBlock.Ir, nextBlock.Ir)
 
 	counterValBody := loopBlock.Ir.NewLoad(types.I32, counter)
 	newCounter := loopBlock.Ir.NewAdd(constant.NewInt(types.I32, 1), counterValBody)
 	loopBlock.Ir.NewStore(newCounter, counter)
-	loopBlock.Ir.NewBr(conditionBlock)
+	loopBlock.Ir.NewBr(conditionBlockIr)
 	return nextBlock
 }

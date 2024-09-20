@@ -18,6 +18,7 @@ func DefineFuncs(program *lang.Program) {
 	program.Funcs["push"] = &lang.DefaultFunc{IrFunc: DefinePushFunction(program)}
 	program.Funcs["pop"] = &lang.DefaultFunc{IrFunc: DefinePopFunction(program)}
 	program.Funcs["add"] = &lang.DefaultFunc{IrFunc: DefineAddFunc(program)}
+	program.Funcs["mod"] = &lang.DefaultFunc{IrFunc: DefineModFunc(program)}
 	program.Funcs["sub"] = &lang.DefaultFunc{IrFunc: DefineSubFunc(program)}
 	program.Funcs["mul"] = &lang.DefaultFunc{IrFunc: DefineMulFunc(program)}
 
@@ -50,6 +51,7 @@ func AssignToConstTokens(funcs map[string]*lang.DefaultFunc) {
 	lexer.ConstTokens[lang.AddT].Ir = funcs["add"].IrFunc
 	lexer.ConstTokens[lang.SubT].Ir = funcs["sub"].IrFunc
 	lexer.ConstTokens[lang.MulT].Ir = funcs["mul"].IrFunc
+	lexer.ConstTokens[lang.ModT].Ir = funcs["mod"].IrFunc
 
 	lexer.ConstTokens[lang.PrintT].Ir = funcs["print"].IrFunc
 	lexer.ConstTokens[lang.PrintI8T].Ir = funcs["printI8"].IrFunc
@@ -146,7 +148,7 @@ func LoadBlock(program *lang.Program, block *lang.Block, fun *lang.Function, idx
 				LoadIf(program, irBlock, block.NextFreeBlock(block), fun.Blocks[idx+1])
 				break
 			case lang.RepeatT:
-				LoadRepeat(program, fun, irBlock, block.NextFreeBlock(block), fun.Blocks[idx+1])
+				LoadRepeat(program, fun, irBlock, block.NextFreeBlock(block, tok.Value.(*lang.RepeatStatement).LoopBlock), fun.Blocks[idx+1], tok.Value.(*lang.RepeatStatement).LoopBlock)
 				break
 			default:
 				fmt.Println(tok)
@@ -158,8 +160,14 @@ func LoadBlock(program *lang.Program, block *lang.Block, fun *lang.Function, idx
 }
 
 func CreateIrBlocks(fun *lang.Function) {
+
 	for _, block := range fun.Blocks {
 		block.Ir = fun.Ir.NewBlock(block.Name)
+		for _, tok := range block.Tokens {
+			if tok.TokenType == lang.RepeatT {
+				tok.Value.(*lang.RepeatStatement).LoopBlock.Ir = fun.Ir.NewBlock(tok.Value.(*lang.RepeatStatement).LoopBlock.Name)
+			}
+		}
 	}
 }
 

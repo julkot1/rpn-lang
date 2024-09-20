@@ -10,6 +10,7 @@ const (
 	AddToken          = `\+`
 	SubToken          = `\-`
 	MulToken          = `\*`
+	ModToken          = `\%`
 	PrintToken        = `print`
 	DivToken          = `\/`
 	PrintI8Token      = `puts`
@@ -54,6 +55,8 @@ func CreateConstTokens() map[lang.TokenType]*ConstToken {
 	consts[lang.PushT] = &ConstToken{Str: "", Argc: 1, CanPrevent: true, DefaultFunction: true, Lexable: false}
 	consts[lang.PopT] = &ConstToken{Str: PopToken, Argc: 0, CanPrevent: false, DefaultFunction: true, Lexable: true}
 	consts[lang.AddT] = &ConstToken{Str: AddToken, Argc: 2, CanPrevent: true, DefaultFunction: true, Lexable: true}
+	consts[lang.ModT] = &ConstToken{Str: ModToken, Argc: 2, CanPrevent: true, DefaultFunction: true, Lexable: true}
+
 	consts[lang.SubT] = &ConstToken{Str: SubToken, Argc: 2, CanPrevent: true, DefaultFunction: true, Lexable: true}
 	consts[lang.MulT] = &ConstToken{Str: MulToken, Argc: 2, CanPrevent: true, DefaultFunction: true, Lexable: true}
 	consts[lang.DivT] = &ConstToken{Str: DivToken, Argc: 2, CanPrevent: true, DefaultFunction: true, Lexable: true}

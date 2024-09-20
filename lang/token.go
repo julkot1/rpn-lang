@@ -15,6 +15,7 @@ const (
 	MulT
 	PrintT
 	DivT
+	ModT
 	PrintI8T
 	InputT
 	DupT
