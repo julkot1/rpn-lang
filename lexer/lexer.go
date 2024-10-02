@@ -54,7 +54,7 @@ func CreateLexer() *lexmachine.Lexer {
 	})
 	lex.Add([]byte(`[0-9]+`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
 		num, err := strconv.Atoi(string(match.Bytes))
-		return lang.Token{TokenType: lang.PushT, Value: num, Match: match}, err
+		return lang.Token{TokenType: lang.PushT, Value: lang.PushableToken{Value: int64(num), Typ: lang.INT_T}, Match: match}, err
 	})
 
 	lex.Add([]byte(`[ \t\r\n]+`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {

@@ -11,8 +11,8 @@ import (
 func DefineBinLogicFunction(program *lang.Program, name string, cmp enum.IPred) *ir.Func {
 	binFnBody, binFn, a, b := DefineBinaryFunction(program, name)
 	result := binFnBody.NewICmp(cmp, a, b)
-	zexted := binFnBody.NewZExt(result, types.I32)
-	binFnBody.NewCall(program.Funcs["push"].IrFunc, zexted)
+	zexted := binFnBody.NewZExt(result, types.I64)
+	binFnBody.NewCall(program.Funcs["push"].IrFunc, zexted, constant.NewInt(types.I64, int64(lang.BOOL_T)))
 	binFnBody.NewRet(nil)
 	return binFn
 }
@@ -44,8 +44,8 @@ func DefineLessOrEqFunction(program *lang.Program) *ir.Func {
 func DefineAndOperation(program *lang.Program) *ir.Func {
 	binFnBody, binFn, a, b := DefineBinaryFunction(program, "and")
 	result := binFnBody.NewAnd(a, b)
-	//zexted := binFnBody.NewZExt(result, types.I32)
-	binFnBody.NewCall(program.Funcs["push"].IrFunc, result)
+	//zexted := binFnBody.NewZExt(result, types.I64)
+	binFnBody.NewCall(program.Funcs["push"].IrFunc, result, constant.NewInt(types.I64, int64(lang.BOOL_T)))
 	binFnBody.NewRet(nil)
 	return binFn
 
@@ -53,21 +53,21 @@ func DefineAndOperation(program *lang.Program) *ir.Func {
 func DefineOrOperation(program *lang.Program) *ir.Func {
 	binFnBody, binFn, a, b := DefineBinaryFunction(program, "or")
 	result := binFnBody.NewOr(a, b)
-	//zexted := binFnBody.NewZExt(result, types.I32)
-	binFnBody.NewCall(program.Funcs["push"].IrFunc, result)
+	//zexted := binFnBody.NewZExt(result, types.I64)
+	binFnBody.NewCall(program.Funcs["push"].IrFunc, result, constant.NewInt(types.I64, int64(lang.BOOL_T)))
 	binFnBody.NewRet(nil)
 	return binFn
 
 }
 func DefineNotOperation(program *lang.Program) *ir.Func {
-	notFn := program.Module.NewFunc("not_op", types.Void, ir.NewParam("a", types.I32))
+	notFn := program.Module.NewFunc("not_op", types.Void, ir.NewParam("a", types.I64))
 	notFnBody := notFn.NewBlock("entry")
 
 	op1 := notFn.Params[0]
 	op1T := notFnBody.NewTrunc(op1, types.I1)
 	result := notFnBody.NewXor(constant.True, op1T)
-	zexted := notFnBody.NewZExt(result, types.I32)
-	notFnBody.NewCall(program.Funcs["push"].IrFunc, zexted)
+	zexted := notFnBody.NewZExt(result, types.I64)
+	notFnBody.NewCall(program.Funcs["push"].IrFunc, zexted, constant.NewInt(types.I64, int64(lang.BOOL_T)))
 	notFnBody.NewRet(nil)
 	return notFn
 

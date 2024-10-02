@@ -76,12 +76,13 @@ func AssignToConstTokens(funcs map[string]*lang.DefaultFunc) {
 
 func DefineGlobals(m *ir.Module) map[string]*ir.Global {
 	stackSize := 100
-	stackType := types.NewArray(uint64(stackSize), types.I32)
+	stackType := types.NewArray(uint64(stackSize), types.I64)
 
 	globals := make(map[string]*ir.Global)
 
 	globals["stack"] = m.NewGlobalDef("vstack", constant.NewZeroInitializer(stackType))
-	globals["top"] = m.NewGlobalDef("top", constant.NewInt(types.I32, 0))
+	globals["type_stack"] = m.NewGlobalDef("tstack", constant.NewZeroInitializer(stackType))
+	globals["top"] = m.NewGlobalDef("top", constant.NewInt(types.I64, 0))
 
 	formatStr := constant.NewCharArrayFromString("%d\n\x00")
 	globals["format"] = m.NewGlobalDef("format", formatStr)
@@ -138,7 +139,10 @@ func LoadBlock(program *lang.Program, block *lang.Block, fun *lang.Function, idx
 	for i := 0; i < len(block.Tokens); i++ {
 		tok := block.Tokens[i]
 		if tok.TokenType == lang.PushT {
-			irBlock.NewCall(program.Funcs["push"].IrFunc, constant.NewInt(types.I32, int64(tok.Value.(int))))
+			pushableTok := tok.Value.(lang.PushableToken)
+			irBlock.NewCall(program.Funcs["push"].IrFunc,
+				constant.NewInt(types.I64, pushableTok.Value),
+				constant.NewInt(types.I64, int64(pushableTok.Typ))) // TO-DO type
 		} else if lexer.ConstTokens[tok.TokenType].DefaultFunction {
 			CallFunc(lexer.ConstTokens[tok.TokenType].Ir, irBlock, program, tok)
 		} else {
@@ -172,7 +176,7 @@ func CreateIrBlocks(fun *lang.Function) {
 }
 
 func LoadFunction(program *lang.Program, fun *lang.Function) {
-	funFn := program.Module.NewFunc(fun.Name, types.I32)
+	funFn := program.Module.NewFunc(fun.Name, types.I64)
 	fun.Ir = funFn
 	CreateIrBlocks(fun)
 
@@ -184,7 +188,7 @@ func LoadFunction(program *lang.Program, fun *lang.Function) {
 			if idx+1 < len(fun.Blocks) {
 				block.Ir.NewBr(block.NextFreeBlock(block).Ir)
 			} else {
-				block.Ir.NewRet(constant.NewInt(types.I32, 0))
+				block.Ir.NewRet(constant.NewInt(types.I64, 0))
 			}
 		}
 	}
