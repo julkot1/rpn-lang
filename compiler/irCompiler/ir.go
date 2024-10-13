@@ -11,12 +11,14 @@ import (
 )
 
 func DefineFuncs(program *lang.Program) {
+
 	program.Funcs = make(map[string]*lang.DefaultFunc)
 	program.Funcs["printf"] = DefinePrintFnFunction(program)
 	program.Funcs["scanf"] = DefineScanFnFunction(program)
 
 	program.Funcs["push"] = &lang.DefaultFunc{IrFunc: DefinePushFunction(program)}
 	program.Funcs["pop"] = &lang.DefaultFunc{IrFunc: DefinePopFunction(program)}
+	program.Funcs["pop_type"] = &lang.DefaultFunc{IrFunc: DefineTypePopFunction(program)}
 	program.Funcs["add"] = &lang.DefaultFunc{IrFunc: DefineAddFunc(program)}
 	program.Funcs["mod"] = &lang.DefaultFunc{IrFunc: DefineModFunc(program)}
 	program.Funcs["sub"] = &lang.DefaultFunc{IrFunc: DefineSubFunc(program)}
@@ -126,7 +128,7 @@ func CallFunc(function *ir.Func, block *ir.Block, program *lang.Program, tok lan
 				block.NewCall(function, args[0])
 			}
 			if argc == 2 {
-				block.NewCall(function, args[1], args[0])
+				block.NewCall(function, args[2], args[0])
 			}
 		}
 	}

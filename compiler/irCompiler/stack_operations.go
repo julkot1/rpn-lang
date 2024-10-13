@@ -47,6 +47,22 @@ func DefinePopFunction(program *lang.Program) *ir.Func {
 	return popFn
 }
 
+func DefineTypePopFunction(program *lang.Program) *ir.Func {
+	stackSize := 100
+	stackType := types.NewArray(uint64(stackSize), types.I64)
+
+	popFn := program.Module.NewFunc("pop_type", types.I64)
+	popFnBody := popFn.NewBlock("entry")
+
+	currentTop := popFnBody.NewLoad(types.I64, program.Globals["top"])
+	stackPtr := popFnBody.NewGetElementPtr(stackType, program.Globals["type_stack"], constant.NewInt(types.I64, 0), currentTop)
+	value := popFnBody.NewLoad(types.I64, stackPtr)
+
+	popFnBody.NewRet(value)
+
+	return popFn
+}
+
 func GetPreventValues(program *lang.Program, argc int, block *ir.Block) []*ir.InstLoad {
 	stackSize := 100
 	stackType := types.NewArray(uint64(stackSize), types.I64)
@@ -63,10 +79,10 @@ func GetPreventValues(program *lang.Program, argc int, block *ir.Block) []*ir.In
 }
 func GetValues(program *lang.Program, argc int, block *ir.Block) []*ir.InstCall {
 
-	args := make([]*ir.InstCall, argc)
-	for i := 0; i < argc; i++ {
+	args := make([]*ir.InstCall, argc*2)
+	for i := 0; i < argc*2; i += 2 {
 		args[i] = block.NewCall(program.Funcs["pop"].IrFunc)
-
+		args[i+1] = block.NewCall(program.Funcs["pop_type"].IrFunc)
 	}
 	return args
 }
@@ -75,7 +91,7 @@ func DefineAddFunc(program *lang.Program) *ir.Func {
 	binFnBody, binFn, a, b := DefineBinaryFunction(program, "add")
 	result := binFnBody.NewAdd(a, b)
 
-	binFnBody.NewCall(program.Funcs["push"].IrFunc, result)
+	binFnBody.NewCall(program.Funcs["push"].IrFunc, result, constant.NewInt(types.I64, int64(0)))
 	binFnBody.NewRet(nil)
 	return binFn
 }
@@ -83,7 +99,7 @@ func DefineModFunc(program *lang.Program) *ir.Func {
 	binFnBody, binFn, a, b := DefineBinaryFunction(program, "mod")
 	result := binFnBody.NewSRem(a, b)
 
-	binFnBody.NewCall(program.Funcs["push"].IrFunc, result)
+	binFnBody.NewCall(program.Funcs["push"].IrFunc, result, constant.NewInt(types.I64, int64(0)))
 	binFnBody.NewRet(nil)
 	return binFn
 }
@@ -91,7 +107,7 @@ func DefineSubFunc(program *lang.Program) *ir.Func {
 	binFnBody, binFn, a, b := DefineBinaryFunction(program, "div")
 	result := binFnBody.NewSub(a, b)
 
-	binFnBody.NewCall(program.Funcs["push"].IrFunc, result)
+	binFnBody.NewCall(program.Funcs["push"].IrFunc, result, constant.NewInt(types.I64, int64(0)))
 	binFnBody.NewRet(nil)
 	return binFn
 }
@@ -99,7 +115,7 @@ func DefineMulFunc(program *lang.Program) *ir.Func {
 	binFnBody, binFn, a, b := DefineBinaryFunction(program, "mul")
 	result := binFnBody.NewMul(a, b)
 
-	binFnBody.NewCall(program.Funcs["push"].IrFunc, result)
+	binFnBody.NewCall(program.Funcs["push"].IrFunc, result, constant.NewInt(types.I64, int64(0)))
 	binFnBody.NewRet(nil)
 	return binFn
 }
@@ -128,7 +144,7 @@ func DefineDupFunc(program *lang.Program) *ir.Func {
 	stackPtr := dupFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I64, 0), newTop)
 	value := dupFnBody.NewLoad(types.I64, stackPtr)
 
-	dupFnBody.NewCall(program.Funcs["push"].IrFunc, value)
+	dupFnBody.NewCall(program.Funcs["push"].IrFunc, value, constant.NewInt(types.I64, int64(0)))
 	dupFnBody.NewRet(nil)
 	return dupFn
 }
@@ -169,7 +185,7 @@ func DefineOverFunction(program *lang.Program) *ir.Func {
 	stackPtr := overFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I64, 0), newTop)
 	value := overFnBody.NewLoad(types.I64, stackPtr)
 
-	overFnBody.NewCall(program.Funcs["push"].IrFunc, value)
+	overFnBody.NewCall(program.Funcs["push"].IrFunc, value, constant.NewInt(types.I64, int64(0)))
 	overFnBody.NewRet(nil)
 	return overFn
 }

@@ -58,7 +58,8 @@ func DefineInputFunction(program *lang.Program) *ir.Func {
 	inputFnBody.NewCall(program.Funcs["scanf"].IrFunc, formatPtr, inputPtr)
 
 	input := inputFnBody.NewLoad(types.I64, inputPtr)
-	inputFnBody.NewCall(program.Funcs["push"].IrFunc, input)
+	inputFnBody.NewCall(program.Funcs["push"].IrFunc, input, constant.NewInt(types.I64, int64(0)))
+
 	inputFnBody.NewRet(nil)
 	return inputFn
 
