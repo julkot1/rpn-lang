@@ -11,6 +11,7 @@ type Config struct {
 	CompileLibs       bool   `toml:"compile_libs"`
 	CompilationScript string `toml:"compilation_script"`
 	ClangPath         string `toml:"clang_path"`
+	LinkerPath        string `toml:"linker_path"`
 }
 
 type Libs struct {

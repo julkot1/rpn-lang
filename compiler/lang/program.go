@@ -12,13 +12,14 @@ type DefaultFunc struct {
 }
 
 type Program struct {
-	Functions    []*Function
-	MainFunction *Function
-	Module       *ir.Module
-	Globals      map[string]*ir.Global
-	Funcs        map[string]*DefaultFunc
-	BlockIndex   int
-	LoopIndex    int
+	Functions         []*Function
+	MainFunction      *Function
+	Module            *ir.Module
+	StaticLibsModules []*ir.Module
+	Globals           map[string]*ir.Global
+	Funcs             map[string]*DefaultFunc
+	BlockIndex        int
+	LoopIndex         int
 }
 
 func DefineTypes() {

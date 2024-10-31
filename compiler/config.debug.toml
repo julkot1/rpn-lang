@@ -4,6 +4,7 @@ destination = "build"
 compile_libs = true
 compilation_script = "compile.sh"
 clang_path = "/usr/lib/llvm14/bin/clang"
+linker_path = "/usr/lib/llvm14/bin/llvm-link"
 
 
 [Libs]

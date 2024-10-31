@@ -1,0 +1,23 @@
+
+#if defined(__gnu_linux__) || defined(__linux__) || defined(linux) || defined(__linux)
+#include <sys/types.h>
+typedef int64_t STC_I64;
+typedef int64_t STC_TYPE;
+typedef int64_t STC_SIZE;
+
+#define STC_I64_TYPE 0x0
+#define STC_BOOL_TYPE 0x1
+#define STC_CHAR_TYPE 0x2
+#define STC_FLOAT_TYPE 0x3
+#define STC_STRING_TYPE 0x4
+#define STC_ARRAY_TYPE 0x5
+#define STC_STRUCT_TYPE 0x6
+#define STC_REF_TYPE 0x7
+
+#define STC_TYPES_SIZE 8
+
+
+#define IS_ONE_OF_TYPE(type, type_a, type_b) (type_a == type || type_b == type)
+#define IS_ALL_TYPE(type, type_a, type_b) (type_a == type && type_b == type)
+#define IS_ALL_SAME_TYPE(type_a, type_b) (type_a == type_b)
+#endif

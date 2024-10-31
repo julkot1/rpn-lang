@@ -23,6 +23,7 @@ func DefineFuncs(program *lang.Program) {
 	program.Funcs["mod"] = &lang.DefaultFunc{IrFunc: DefineModFunc(program)}
 	program.Funcs["sub"] = &lang.DefaultFunc{IrFunc: DefineSubFunc(program)}
 	program.Funcs["mul"] = &lang.DefaultFunc{IrFunc: DefineMulFunc(program)}
+	program.Funcs["div"] = &lang.DefaultFunc{IrFunc: DefineDivFunc(program)}
 
 	program.Funcs["print"] = &lang.DefaultFunc{IrFunc: DefinePrintFunction(program)}
 	program.Funcs["printI8"] = &lang.DefaultFunc{IrFunc: DefinePrintCharFunction(program)}
@@ -54,6 +55,7 @@ func AssignToConstTokens(funcs map[string]*lang.DefaultFunc) {
 	lexer.ConstTokens[lang.SubT].Ir = funcs["sub"].IrFunc
 	lexer.ConstTokens[lang.MulT].Ir = funcs["mul"].IrFunc
 	lexer.ConstTokens[lang.ModT].Ir = funcs["mod"].IrFunc
+	lexer.ConstTokens[lang.DivT].Ir = funcs["div"].IrFunc
 
 	lexer.ConstTokens[lang.PrintT].Ir = funcs["print"].IrFunc
 	lexer.ConstTokens[lang.PrintI8T].Ir = funcs["printI8"].IrFunc
@@ -128,7 +130,12 @@ func CallFunc(function *ir.Func, block *ir.Block, program *lang.Program, tok lan
 				block.NewCall(function, args[0])
 			}
 			if argc == 2 {
-				block.NewCall(function, args[2], args[0])
+				if function.Name() == "add" {
+					block.NewCall(program.StaticLibsModules[0].Funcs[3], args[2], args[0], args[1], args[3])
+				} else {
+					block.NewCall(function, args[2], args[0])
+				}
+
 			}
 		}
 	}

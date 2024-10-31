@@ -104,8 +104,16 @@ func DefineModFunc(program *lang.Program) *ir.Func {
 	return binFn
 }
 func DefineSubFunc(program *lang.Program) *ir.Func {
-	binFnBody, binFn, a, b := DefineBinaryFunction(program, "div")
+	binFnBody, binFn, a, b := DefineBinaryFunction(program, "sub")
 	result := binFnBody.NewSub(a, b)
+
+	binFnBody.NewCall(program.Funcs["push"].IrFunc, result, constant.NewInt(types.I64, int64(0)))
+	binFnBody.NewRet(nil)
+	return binFn
+}
+func DefineDivFunc(program *lang.Program) *ir.Func {
+	binFnBody, binFn, a, b := DefineBinaryFunction(program, "div")
+	result := binFnBody.NewSDiv(a, b)
 
 	binFnBody.NewCall(program.Funcs["push"].IrFunc, result, constant.NewInt(types.I64, int64(0)))
 	binFnBody.NewRet(nil)

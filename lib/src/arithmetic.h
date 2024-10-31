@@ -8,7 +8,7 @@
 
 
 STC_TYPE stc_add_type(STC_TYPE type_a, STC_TYPE type_b);
-STC_I64 stc_add(STC_I64 a, STC_I64 b, STC_TYPE type_a, STC_TYPE type_b, STC_TYPE result);
+void stc_add(STC_I64 a, STC_I64 b, STC_TYPE type_a, STC_TYPE type_b);
 
 
 
