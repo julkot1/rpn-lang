@@ -9,7 +9,8 @@ linker_path = "/usr/lib/llvm14/bin/llvm-link"
 
 [Libs]
 lib_root = "lib/src"
+lib_config_root = "lib"
 lib_raw = [
-    "arithmetic.c"
+    "arithmetic"
 ]
 

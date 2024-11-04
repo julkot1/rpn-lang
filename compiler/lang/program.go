@@ -10,14 +10,24 @@ type DefaultFunc struct {
 	IrFunc *ir.Func
 	Type   *types.FuncType
 }
+type ProgramTokenType int
+
+const (
+	PConst ProgramTokenType = iota
+	PStcFunction
+	PDefaultFunc
+	PStaticFunc
+)
 
 type Program struct {
+	GlobalTokenTable  map[string]ProgramTokenType
 	Functions         []*Function
 	MainFunction      *Function
 	Module            *ir.Module
 	StaticLibsModules []*ir.Module
+	StaticFunctions   map[string]*DefaultFunc
 	Globals           map[string]*ir.Global
-	Funcs             map[string]*DefaultFunc
+	Funcs             map[TokenType]*DefaultFunc
 	BlockIndex        int
 	LoopIndex         int
 }

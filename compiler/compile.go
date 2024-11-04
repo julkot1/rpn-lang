@@ -53,10 +53,12 @@ func ExecScript(config config.TOMLConfig) {
 
 func Compile(config config.TOMLConfig, path string) {
 	program := lexer.Parse(config.GetPath(path))
+
 	program.Module.DataLayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
 	if config.Config.CompileLibs {
 		CompileLibs(config, program)
 	}
+	lib.BindLibs(config, program)
 	lib.GenerateDefinitions(program)
 
 	irCompiler.LoadProgram(program)
@@ -97,19 +99,18 @@ func CompileLibs(config config.TOMLConfig, program *lang.Program) {
 	root := config.GetPath(config.Libs.LibRoot) + "/"
 	for _, libPath := range config.Libs.LibRaw {
 		base := filepath.Base(libPath)
-		ext := filepath.Ext(base)
-		nameWithoutExt := strings.TrimSuffix(base, ext)
-		outPath := config.GetPath(config.Config.Destination) + "/" + nameWithoutExt + ".ll"
-		cmd := exec.Command(config.Config.ClangPath, "-O2", "-S", "-emit-llvm", root+libPath, "-o", outPath)
+
+		outPath := filepath.Join(config.GetPath(config.Config.Destination), base+".ll")
+		cmd := exec.Command(config.Config.ClangPath, "-O2", "-S", "-emit-llvm", filepath.Join(root, libPath+".c"), "-o", outPath)
 		err := cmd.Run()
 		if err != nil {
 			fmt.Println("Error compiling lib:", libPath, err)
-			return
+			os.Exit(1)
 		}
 		mod, err2 := asm.ParseFile(outPath)
 		if err2 != nil {
 			fmt.Println("Error loading lib:", libPath, err2)
-			return
+			os.Exit(1)
 		}
 		program.StaticLibsModules = append(program.StaticLibsModules, mod)
 		fmt.Println("Compiled lib:", libPath)

@@ -1,7 +1,8 @@
 
 fun main {
     0
-    100000000 repeat {
-        1 + |> 100000000 |s % 0 == if { print! }
+    10 repeat {
+        1 +
     }
+    print
 }

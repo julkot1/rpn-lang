@@ -15,8 +15,9 @@ type Config struct {
 }
 
 type Libs struct {
-	LibRoot string   `toml:"lib_root"`
-	LibRaw  []string `toml:"lib_raw"`
+	LibRoot       string   `toml:"lib_root"`
+	LibConfigRoot string   `toml:"lib_config_root"`
+	LibRaw        []string `toml:"lib_raw"`
 }
 
 type TOMLConfig struct {

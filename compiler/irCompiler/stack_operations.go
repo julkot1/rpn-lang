@@ -4,6 +4,7 @@ import (
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/types"
+	"github.com/llir/llvm/ir/value"
 	"rpn/lang"
 )
 
@@ -63,11 +64,12 @@ func DefineTypePopFunction(program *lang.Program) *ir.Func {
 	return popFn
 }
 
-func GetPreventValues(program *lang.Program, argc int, block *ir.Block) []*ir.InstLoad {
+func GetPreventValues(program *lang.Program, argc int, block *ir.Block) []value.Value {
 	stackSize := 100
 	stackType := types.NewArray(uint64(stackSize), types.I64)
 
-	args := make([]*ir.InstLoad, argc)
+	args := make([]value.Value, argc)
+	//TO-DO make for types !!!
 	for i := 0; i < argc; i++ {
 		currentTop := block.NewLoad(types.I64, program.Globals["top"])
 		newTop := block.NewSub(currentTop, constant.NewInt(types.I64, 1+int64(i)))
@@ -77,55 +79,16 @@ func GetPreventValues(program *lang.Program, argc int, block *ir.Block) []*ir.In
 	}
 	return args
 }
-func GetValues(program *lang.Program, argc int, block *ir.Block) []*ir.InstCall {
+func GetValues(program *lang.Program, argc int, block *ir.Block) []value.Value {
 
-	args := make([]*ir.InstCall, argc*2)
-	for i := 0; i < argc*2; i += 2 {
-		args[i] = block.NewCall(program.Funcs["pop"].IrFunc)
-		args[i+1] = block.NewCall(program.Funcs["pop_type"].IrFunc)
+	args := make([]value.Value, argc*2)
+	for i := 0; i < argc; i += 1 {
+		args[i] = block.NewCall(program.Funcs[lang.PopT].IrFunc)
+	}
+	for i := argc; i < argc*2; i += 1 {
+		args[i] = block.NewCall(program.Funcs[lang.PopTypeT].IrFunc)
 	}
 	return args
-}
-
-func DefineAddFunc(program *lang.Program) *ir.Func {
-	binFnBody, binFn, a, b := DefineBinaryFunction(program, "add")
-	result := binFnBody.NewAdd(a, b)
-
-	binFnBody.NewCall(program.Funcs["push"].IrFunc, result, constant.NewInt(types.I64, int64(0)))
-	binFnBody.NewRet(nil)
-	return binFn
-}
-func DefineModFunc(program *lang.Program) *ir.Func {
-	binFnBody, binFn, a, b := DefineBinaryFunction(program, "mod")
-	result := binFnBody.NewSRem(a, b)
-
-	binFnBody.NewCall(program.Funcs["push"].IrFunc, result, constant.NewInt(types.I64, int64(0)))
-	binFnBody.NewRet(nil)
-	return binFn
-}
-func DefineSubFunc(program *lang.Program) *ir.Func {
-	binFnBody, binFn, a, b := DefineBinaryFunction(program, "sub")
-	result := binFnBody.NewSub(a, b)
-
-	binFnBody.NewCall(program.Funcs["push"].IrFunc, result, constant.NewInt(types.I64, int64(0)))
-	binFnBody.NewRet(nil)
-	return binFn
-}
-func DefineDivFunc(program *lang.Program) *ir.Func {
-	binFnBody, binFn, a, b := DefineBinaryFunction(program, "div")
-	result := binFnBody.NewSDiv(a, b)
-
-	binFnBody.NewCall(program.Funcs["push"].IrFunc, result, constant.NewInt(types.I64, int64(0)))
-	binFnBody.NewRet(nil)
-	return binFn
-}
-func DefineMulFunc(program *lang.Program) *ir.Func {
-	binFnBody, binFn, a, b := DefineBinaryFunction(program, "mul")
-	result := binFnBody.NewMul(a, b)
-
-	binFnBody.NewCall(program.Funcs["push"].IrFunc, result, constant.NewInt(types.I64, int64(0)))
-	binFnBody.NewRet(nil)
-	return binFn
 }
 
 func DefineBinaryFunction(program *lang.Program, name string) (*ir.Block, *ir.Func, *ir.Param, *ir.Param) {
@@ -152,7 +115,7 @@ func DefineDupFunc(program *lang.Program) *ir.Func {
 	stackPtr := dupFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I64, 0), newTop)
 	value := dupFnBody.NewLoad(types.I64, stackPtr)
 
-	dupFnBody.NewCall(program.Funcs["push"].IrFunc, value, constant.NewInt(types.I64, int64(0)))
+	dupFnBody.NewCall(program.Funcs[lang.PushT].IrFunc, value, constant.NewInt(types.I64, int64(0)))
 	dupFnBody.NewRet(nil)
 	return dupFn
 }
@@ -193,7 +156,7 @@ func DefineOverFunction(program *lang.Program) *ir.Func {
 	stackPtr := overFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I64, 0), newTop)
 	value := overFnBody.NewLoad(types.I64, stackPtr)
 
-	overFnBody.NewCall(program.Funcs["push"].IrFunc, value, constant.NewInt(types.I64, int64(0)))
+	overFnBody.NewCall(program.Funcs[lang.PushT].IrFunc, value, constant.NewInt(types.I64, int64(0)))
 	overFnBody.NewRet(nil)
 	return overFn
 }

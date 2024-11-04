@@ -94,6 +94,10 @@ func Parse(file string) *lang.Program {
 	}
 
 	program := lang.NewProgram()
+	program.StaticFunctions = make(map[string]*lang.DefaultFunc)
+	program.GlobalTokenTable = make(map[string]lang.ProgramTokenType)
+	program.Funcs = make(map[lang.TokenType]*lang.DefaultFunc)
+
 	tokens = CreateRepeat(tokens, program)
 	tokens = LexPrevent(tokens)
 	tokens = CreateBlocks(tokens, program)

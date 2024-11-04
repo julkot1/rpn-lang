@@ -23,13 +23,13 @@ func DefineScanFnFunction(program *lang.Program) *lang.DefaultFunc {
 
 func DefinePrintFunction(program *lang.Program) *ir.Func {
 
-	printFn := program.Module.NewFunc("print", types.Void, ir.NewParam("a", types.I64))
+	printFn := program.Module.NewFunc("print", types.Void, ir.NewParam("a", types.I64), ir.NewParam("b", types.I64))
 	printFnBody := printFn.NewBlock("entry")
 
 	op1 := printFn.Params[0]
 
 	formatPtr := printFnBody.NewGetElementPtr(types.NewArray(4, types.I8), program.Globals["format"], constant.NewInt(types.I64, 0), constant.NewInt(types.I64, 0))
-	printFnBody.NewCall(program.Funcs["printf"].IrFunc, formatPtr, op1)
+	printFnBody.NewCall(program.Funcs[lang.PrintFT].IrFunc, formatPtr, op1)
 	printFnBody.NewRet(nil)
 
 	return printFn
@@ -43,7 +43,7 @@ func DefinePrintCharFunction(program *lang.Program) *ir.Func {
 	truncated := printFnBody.NewTrunc(op1, types.I8)
 
 	formatPtr := printFnBody.NewGetElementPtr(types.NewArray(4, types.I8), program.Globals["formatChar"], constant.NewInt(types.I64, 0), constant.NewInt(types.I64, 0))
-	printFnBody.NewCall(program.Funcs["printf"].IrFunc, formatPtr, truncated)
+	printFnBody.NewCall(program.Funcs[lang.PrintT].IrFunc, formatPtr, truncated)
 	printFnBody.NewRet(nil)
 
 	return printFn
@@ -55,10 +55,10 @@ func DefineInputFunction(program *lang.Program) *ir.Func {
 	inputPtr := inputFnBody.NewAlloca(types.I64)
 
 	formatPtr := inputFnBody.NewGetElementPtr(types.NewArray(3, types.I8), program.Globals["formatIn"], constant.NewInt(types.I64, 0), constant.NewInt(types.I64, 0))
-	inputFnBody.NewCall(program.Funcs["scanf"].IrFunc, formatPtr, inputPtr)
+	inputFnBody.NewCall(program.Funcs[lang.ScanFT].IrFunc, formatPtr, inputPtr)
 
 	input := inputFnBody.NewLoad(types.I64, inputPtr)
-	inputFnBody.NewCall(program.Funcs["push"].IrFunc, input, constant.NewInt(types.I64, int64(0)))
+	inputFnBody.NewCall(program.Funcs[lang.PushT].IrFunc, input, constant.NewInt(types.I64, int64(0)))
 
 	inputFnBody.NewRet(nil)
 	return inputFn
