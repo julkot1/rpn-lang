@@ -19,17 +19,17 @@ type LibConfig struct {
 
 // Head represents the [head] section
 type Head struct {
-	Name     string    `toml:"name"`
-	Includes []string  `toml:"includes"`
-	Types    HeadTypes `toml:"types"`
+	Name     string      `toml:"name"`
+	Includes []string    `toml:"includes"`
+	Types    []HeadTypes `toml:"types"`
 }
 
 // HeadTypes represents the [head.types] table within [head]
 type HeadTypes struct {
 	TypeName string      `toml:"type_name"`
 	Name     string      `toml:"name"`
-	Args     []string    `toml:"args"`
-	Return   string      `toml:"return"`
+	Args     *[]string   `toml:"args"`
+	Return   *string     `toml:"return"`
 	Method   Method      `toml:"method"`
 	Match    []TypeMatch `toml:"match"`
 }
@@ -167,9 +167,10 @@ func toStcMethod(method Method) *StcMethod {
 }
 func getMethods(bindConfig *LibConfig) []*StcMethod {
 	var methods []*StcMethod
-	if bindConfig.Head.Types.Name != "" {
-		if bindConfig.Head.Types.Method.Stc {
-			methods = append(methods, toStcMethod(bindConfig.Head.Types.Method))
+
+	for _, typ := range bindConfig.Head.Types {
+		if typ.Method.Stc {
+			methods = append(methods, toStcMethod(typ.Method))
 		}
 	}
 	for _, method := range bindConfig.Body.Method {

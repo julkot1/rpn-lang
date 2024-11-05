@@ -115,7 +115,10 @@ func DefineDupFunc(program *lang.Program) *ir.Func {
 	stackPtr := dupFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I64, 0), newTop)
 	value := dupFnBody.NewLoad(types.I64, stackPtr)
 
-	dupFnBody.NewCall(program.Funcs[lang.PushT].IrFunc, value, constant.NewInt(types.I64, int64(0)))
+	typeStackPtr := dupFnBody.NewGetElementPtr(stackType, program.Globals["type_stack"], constant.NewInt(types.I64, 0), currentTop)
+	typeVal := dupFnBody.NewLoad(types.I64, typeStackPtr)
+
+	dupFnBody.NewCall(program.Funcs[lang.PushT].IrFunc, value, typeVal)
 	dupFnBody.NewRet(nil)
 	return dupFn
 }

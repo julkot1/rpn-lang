@@ -1,8 +1,7 @@
 
 fun main {
-    0
-    10 repeat {
-        1 +
+    0 0 andN if {
+        3 print
     }
-    print
+    2 print
 }

@@ -1,0 +1,270 @@
+[head]
+name = "logic"
+includes = ["types.h", "stack.h"]
+
+[[head.types]]
+type_name = "STC_logic_bin_function"
+name = "equals_funcs"
+args = ["STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+[head.types.method]
+name = "equals"
+stc = true
+stc_code = 22
+args = [ "STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+code = []
+[[head.types.match]]
+argA = "STC_I64"
+argB = "STC_I64"
+function = "equals_N"
+[[head.types.match]]
+argA = "STC_FLOAT"
+argB = "STC_FLOAT"
+function = "equals_N"
+[[head.types.match]]
+argA = "STC_I64"
+argB = "STC_FLOAT"
+function = "equals_N"
+[[head.types.match]]
+argA = "STC_FLOAT"
+argB = "STC_I64"
+function = "equals_N"
+[[head.types.match]]
+argA = "STC_BOOL"
+argB = "STC_BOOL"
+function = "equals_N"
+[[head.types.match]]
+argA = "STC_CHAR"
+argB = "STC_CHAR"
+function = "equals_N"
+[[head.types.match]]
+argA = "STC_I64"
+argB = "STC_CHAR"
+function = "equals_N"
+[[head.types.match]]
+argA = "STC_CHAR"
+argB = "STC_I64"
+function = "equals_N"
+
+
+[[head.types]]
+type_name = "STC_logic_bin_function"
+name = "not_equals_funcs"
+args = ["STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+[head.types.method]
+name = "not_equals"
+stc = true
+stc_code = 28
+args = [ "STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+code = []
+[[head.types.match]]
+argA = "STC_I64"
+argB = "STC_I64"
+function = "not_eq_N"
+[[head.types.match]]
+argA = "STC_FLOAT"
+argB = "STC_FLOAT"
+function = "not_eq_N"
+[[head.types.match]]
+argA = "STC_I64"
+argB = "STC_FLOAT"
+function = "not_eq_N"
+[[head.types.match]]
+argA = "STC_FLOAT"
+argB = "STC_I64"
+function = "not_eq_N"
+[[head.types.match]]
+argA = "STC_BOOL"
+argB = "STC_BOOL"
+function = "not_eq_N"
+[[head.types.match]]
+argA = "STC_CHAR"
+argB = "STC_CHAR"
+function = "not_eq_N"
+[[head.types.match]]
+argA = "STC_I64"
+argB = "STC_CHAR"
+function = "not_eq_N"
+[[head.types.match]]
+argA = "STC_CHAR"
+argB = "STC_I64"
+function = "not_eq_N"
+
+
+[[head.types]]
+type_name = "STC_logic_bin_function"
+name = "greater_funcs"
+
+[head.types.method]
+name = "greater"
+stc = true
+stc_code = 24
+args = [ "STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+code = []
+[[head.types.match]]
+argA = "STC_I64"
+argB = "STC_I64"
+function = "greater_I"
+
+
+[[head.types]]
+type_name = "STC_logic_bin_function"
+name = "less_funcs"
+
+[head.types.method]
+name = "less"
+stc = true
+stc_code = 25
+args = [ "STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+code = []
+[[head.types.match]]
+argA = "STC_I64"
+argB = "STC_I64"
+function = "less_I"
+
+[[head.types]]
+type_name = "STC_logic_bin_function"
+name = "greater_or_eq_funcs"
+
+[head.types.method]
+name = "greater_or_eq"
+stc = true
+stc_code = 26
+args = [ "STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+code = []
+[[head.types.match]]
+argA = "STC_I64"
+argB = "STC_I64"
+function = "greater_eq_I"
+
+
+[[head.types]]
+type_name = "STC_logic_bin_function"
+name = "less_or_eq_funcs"
+
+[head.types.method]
+name = "less_or_eq"
+stc = true
+stc_code = 27
+args = [ "STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+code = []
+[[head.types.match]]
+argA = "STC_I64"
+argB = "STC_I64"
+function = "less_eq_I"
+
+
+[[head.types]]
+type_name = "STC_logic_bin_function"
+name = "or_funcs"
+
+[head.types.method]
+name = "or"
+stc = true
+stc_code = 29
+args = [ "STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+code = []
+[[head.types.match]]
+argA = "STC_I64"
+argB = "STC_I64"
+function = "or_N"
+
+[[head.types]]
+type_name = "STC_logic_bin_function"
+name = "and_funcs"
+
+[head.types.method]
+name = "and"
+stc = true
+stc_code = 29
+args = [ "STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+code = []
+[[head.types.match]]
+argA = "STC_I64"
+argB = "STC_I64"
+function = "and_N"
+
+[body]
+
+[[body.method]]
+name = "equals_N"
+args = ["STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+stc = true
+stc_code = 255
+stc_name = "eqN"
+code = ["push(arg1==arg0, STC_BOOL_TYPE);"]
+
+[[body.method]]
+name = "greater_I"
+args = ["STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+stc = true
+stc_code = 255
+stc_name = "grI"
+code = ["push(arg1>arg0, STC_BOOL_TYPE);"]
+
+
+[[body.method]]
+name = "less_I"
+args = ["STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+stc = true
+stc_code = 255
+stc_name = "ltI"
+code = ["push(arg1<arg0, STC_BOOL_TYPE);"]
+
+[[body.method]]
+name = "less_eq_I"
+args = ["STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+stc = true
+stc_code = 255
+stc_name = "leI"
+code = ["push(arg1<=arg0, STC_BOOL_TYPE);"]
+
+[[body.method]]
+name = "greater_eq_I"
+args = ["STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+stc = true
+stc_code = 255
+stc_name = "geI"
+code = ["push(arg1>=arg0, STC_BOOL_TYPE);"]
+
+[[body.method]]
+name = "not_eq_N"
+args = ["STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+stc = true
+stc_code = 255
+stc_name = "neqN"
+code = ["push(arg1!=arg0, STC_BOOL_TYPE);"]
+
+
+[[body.method]]
+name = "or_N"
+args = ["STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+stc = true
+stc_code = 255
+stc_name = "orN"
+code = ["push(arg1||arg0, STC_BOOL_TYPE);"]
+
+[[body.method]]
+name = "and_N"
+args = ["STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+stc = true
+stc_code = 255
+stc_name = "andN"
+code = ["push(arg1&&arg0, STC_BOOL_TYPE);"]

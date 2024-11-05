@@ -2,45 +2,128 @@
 name = "arithmetic"
 includes = ["types.h", "stack.h"]
 
-[head.types]
+[[head.types]]
 type_name = "STC_bin_function"
 name = "add_funcs"
-args = ["STC_I64", "STC_I64"]
+args = ["STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
 return = "void"
-
 [head.types.method]
 name = "add"
 stc = true
 stc_code = 2
-args = ["STC_TYPE", "STC_TYPE", "STC_I64", "STC_I64"]
+args = [ "STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
 return = "void"
 code = []
-
-
-
 [[head.types.match]]
 argA = "STC_I64"
 argB = "STC_I64"
 function = "add_I64_I64"
+
+[[head.types]]
+type_name = "STC_bin_function"
+name = "sub_funcs"
+[head.types.method]
+name = "sub"
+stc = true
+stc_code = 3
+args = [ "STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+code = []
+[[head.types.match]]
+argA = "STC_I64"
+argB = "STC_I64"
+function = "sub_I64_I64"
+
+[[head.types]]
+type_name = "STC_bin_function"
+name = "mul_funcs"
+[head.types.method]
+name = "mul"
+stc = true
+stc_code = 4
+args = [ "STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+code = []
+[[head.types.match]]
+argA = "STC_I64"
+argB = "STC_I64"
+function = "mul_I64_I64"
+
+[[head.types]]
+type_name = "STC_bin_function"
+name = "div_funcs"
+[head.types.method]
+name = "div"
+stc = true
+stc_code = 6
+args = [ "STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+code = []
+[[head.types.match]]
+argA = "STC_I64"
+argB = "STC_I64"
+function = "div_I64_I64"
+
+[[head.types]]
+type_name = "STC_bin_function"
+name = "mod_funcs"
+[head.types.method]
+name = "mod"
+stc = true
+stc_code = 7
+args = [ "STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+code = []
+[[head.types.match]]
+argA = "STC_I64"
+argB = "STC_I64"
+function = "mod_I64_I64"
 
 
 [body]
 
 [[body.method]]
 name = "add_I64_I64"
-args = ["STC_I64", "STC_I64"]
+args = ["STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
 return = "void"
 stc = true
 stc_code = 255
 stc_name = "addI"
 code = ["push(arg0+arg1, STC_I64_TYPE);"]
 
+
 [[body.method]]
-name = "add_F64_F64"
-args = ["STC_I64", "STC_I64"]
+name = "sub_I64_I64"
+args = ["STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
 return = "void"
 stc = true
 stc_code = 255
-stc_name = "addF"
+stc_name = "subI"
+code = ["push(arg1-arg0, STC_I64_TYPE);"]
 
-code = ["push(*(double *)&arg0+*(double *)&arg1, STC_FLOAT_TYPE);"]
+[[body.method]]
+name = "mul_I64_I64"
+args = ["STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+stc = true
+stc_code = 255
+stc_name = "mulI"
+code = ["push(arg1*arg0, STC_I64_TYPE);"]
+
+[[body.method]]
+name = "div_I64_I64"
+args = ["STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+stc = true
+stc_code = 255
+stc_name = "divI"
+code = ["push(arg1/arg0, STC_I64_TYPE);"]
+
+[[body.method]]
+name = "mod_I64_I64"
+args = ["STC_I64", "STC_I64", "STC_TYPE", "STC_TYPE"]
+return = "void"
+stc = true
+stc_code = 255
+stc_name = "modI"
+code = ["push(arg1%arg0, STC_I64_TYPE);"]
