@@ -40,6 +40,9 @@ const (
 	OrT
 	AndT
 	RepeatT
+	PopTypeT
+	PrintFT
+	ScanFT
 )
 
 type Token struct {

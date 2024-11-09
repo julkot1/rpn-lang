@@ -1,6 +1,7 @@
+
 fun main {
-    0
-    100000000 repeat {
-        1 + |> 100000000 |s % 0 == if { print! }
+    0 0 andN if {
+        3 print
     }
+    2 print
 }

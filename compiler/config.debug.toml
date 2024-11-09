@@ -1,0 +1,16 @@
+[Config]
+root_path = ".."
+destination = "build"
+compile_libs = true
+compilation_script = "compile.sh"
+clang_path = "/usr/lib/llvm14/bin/clang"
+linker_path = "/usr/lib/llvm14/bin/llvm-link"
+
+
+[Libs]
+lib_root = "lib/src"
+lib_config_root = "lib"
+lib_raw = [
+    "arithmetic", "logic"
+]
+

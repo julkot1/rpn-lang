@@ -54,7 +54,7 @@ func CreateLexer() *lexmachine.Lexer {
 	})
 	lex.Add([]byte(`[0-9]+`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
 		num, err := strconv.Atoi(string(match.Bytes))
-		return lang.Token{TokenType: lang.PushT, Value: num, Match: match}, err
+		return lang.Token{TokenType: lang.PushT, Value: lang.PushableToken{Value: int64(num), Typ: lang.INT_T}, Match: match}, err
 	})
 
 	lex.Add([]byte(`[ \t\r\n]+`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
@@ -94,6 +94,10 @@ func Parse(file string) *lang.Program {
 	}
 
 	program := lang.NewProgram()
+	program.StaticFunctions = make(map[string]*lang.DefaultFunc)
+	program.GlobalTokenTable = make(map[string]lang.ProgramTokenType)
+	program.Funcs = make(map[lang.TokenType]*lang.DefaultFunc)
+
 	tokens = CreateRepeat(tokens, program)
 	tokens = LexPrevent(tokens)
 	tokens = CreateBlocks(tokens, program)
