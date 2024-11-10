@@ -58,14 +58,13 @@ func Compile(config config.TOMLConfig, path string) {
 	if config.Config.CompileLibs {
 		CompileLibs(config, program)
 	}
-	//lib.BindLibs(config, program)
+	lib.BindLibs(config, program)
 	lib.GenerateDefinitions(program)
 
 	irCompiler.LoadProgram(program)
 	Save(program, config)
 	LinkFiles(program, config)
 	ExecScript(config)
-
 }
 
 func LinkFiles(program *lang.Program, tomlConfig config.TOMLConfig) {

@@ -137,8 +137,7 @@ Here's a breakdown of the available macros and how to use them:
 | `STC(...)`    | Any sequence of decorators   | The main macro used to apply a set of decorators to a function. |
 | `CODE(x)`     | STC token code (`int32`)     | Associates the function with a built-in operator in Stack Code. |
 | `NAME(x)`     | Function name (`string`)     | Binds the function to a specific literal name in Stack Code. |
-| `FUNCTION(vtable_type, vtable, ...)` | Vtable type, vtable variable, n type rules | Specifies the function's vtable for type checking. |
-| `TYPE(...)`   | STC types                    | Defines which types are allowed for this function, creating type-checking rules. |
+
 
 ---
 
@@ -152,15 +151,14 @@ To illustrate how to create a binding, let’s walk through an example.
 #include "decorators.h"
 
 // Example function declaration in a .h file
-STC(CODE(255), NAME("add"), FUNCTION(STC_bin_function, add_funcs, TYPE(STC_I64_TYPE, STC_I64_TYPE)))
+STC(CODE(255), NAME("add"))
 void stc_add(STC_I64 arg0, STC_I64 arg1, STC_TYPE arg2, STC_TYPE arg3);
 ```
 
 #### Explanation of the Example
-- **`CODE(4)`**: Links this function to the Stack Code operator with token code `255` (function call).
+- **`CODE(255)`**: Links this function to the Stack Code operator with token code `255` (function call).
 - **`NAME("add")`**: Binds the function to the literal name `"add"` in Stack Code.
-- **`FUNCTION(STC_bin_function, add_funcs, TYPE(STC_I64_TYPE, STC_I64_TYPE))`**: Adds function to `add_funcs` vtable
-- **`TYPE(STC_I64_TYPE, STC_I64_TYPE)`**: Specifies that the function only accepts `I64` types.
+
 
 ### Notes
 - Decorators simplify type checking and operator assignment, making it easier to extend Stack Code with additional functionality.
