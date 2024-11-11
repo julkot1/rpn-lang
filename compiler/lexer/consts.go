@@ -35,6 +35,7 @@ const (
 	OrToken           = `or`
 	AndToken          = `and`
 	RepeatToken       = `repeat`
+	TypeofToken       = `typeof`
 )
 
 var (
@@ -90,5 +91,8 @@ func CreateConstTokens() map[lang.TokenType]*ConstToken {
 	consts[lang.BlockT] = &ConstToken{Str: "", Argc: 0, CanPrevent: false, DefaultFunction: false, Lexable: false}
 	consts[lang.IfT] = &ConstToken{Str: IfToken, Argc: 1, CanPrevent: true, DefaultFunction: false, Lexable: true}
 	consts[lang.RepeatT] = &ConstToken{Str: RepeatToken, Argc: 1, CanPrevent: true, DefaultFunction: false, Lexable: true}
+
+	consts[lang.TypeofT] = &ConstToken{Str: TypeofToken, Argc: 1, CanPrevent: true, DefaultFunction: true, Lexable: true}
+
 	return consts
 }

@@ -52,6 +52,7 @@ The stack is the primary data space for operations. Each item on the stack is 64
 | `I64` | `long` |
 | `F64` | `double` |
 | `I8`  | `char` |
+| `Type` | `long` |
 
 ---
 
@@ -149,6 +150,103 @@ The `repeat` statement pops a value `n` from the stack and performs the enclosed
 5
 ```
 ---
+
+### Typeof Operator
+
+In Stack Code, the `typeof` operator is used to push the type of the item currently on the stack onto the stack. This operator can be used to determine the type of a value at runtime.
+
+#### Syntax:
+```stack
+value typeof
+```
+
+- `value`: The item whose type you want to inspect.
+- The result is pushed onto the stack as a string representing the type of the item.
+
+#### Example:
+```stack
+42 typeof
+```
+
+**Before**:
+```
+[42]
+```
+
+**After**:
+```
+["I64"type]
+```
+
+In this example, the `typeof` operator inspects the type of `42`, which is an `I64` integer, and pushes the string `"I64"` onto the stack.
+
+#### Handling Types in Stack Code
+
+- The `typeof` operator outputs a string type (e.g., `"I64"`, `"F64"`, `"I8"`) that can be used for conditional checks or debugging.
+- This string type can be used in conjunction with other operators for dynamic type handling in Stack Code programs.
+
+---
+
+### Print Operator
+
+The `print` operator outputs the current item on the stack as a string representation, converting it based on its type. It will display the value in a human-readable format.
+
+#### Syntax:
+```stack
+value print
+```
+
+- `value`: The item you want to print to the console.
+
+#### Example:
+```stack
+42 print
+```
+
+**Before**:
+```
+[42]
+```
+
+**After**:
+```
+[]
+```
+
+**Output**:
+```
+42
+```
+
+#### Behavior:
+- The `print` operator converts the value on top of the stack into a readable string and outputs it to the console.
+- For numeric types like `I64` or `F64`, it will print the number.
+- For types like `I8` (which is a character), it will print the ASCII representation of the character.
+
+#### Example with `I8` Type:
+```stack
+'I' print
+```
+
+**Before**:
+```
+['I']
+```
+
+**After**:
+```
+[]
+```
+
+**Output**:
+```
+I
+```
+
+In this case, the `I8` value `'I'` is printed as the character `I`.
+
+---
+
 ## C Library Integration
 
 ### STCClib (Stack Code C Library)

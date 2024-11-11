@@ -43,6 +43,7 @@ const (
 	PopTypeT
 	PrintFT
 	ScanFT
+	TypeofT
 )
 
 type Token struct {

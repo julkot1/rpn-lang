@@ -27,7 +27,8 @@ func DefineFuncs(program *lang.Program) {
 	program.Funcs[lang.OverT] = &lang.DefaultFunc{IrFunc: DefineOverFunction(program)}
 
 	program.Funcs[lang.InputT] = &lang.DefaultFunc{IrFunc: DefineInputFunction(program)}
-	program.Funcs[lang.PrintT] = &lang.DefaultFunc{IrFunc: DefinePrintFunction(program)}
+
+	program.Funcs[lang.TypeofT] = &lang.DefaultFunc{IrFunc: DefineTypeofFunction(program)}
 
 }
 
@@ -116,12 +117,13 @@ func pushToken(block *ir.Block, tok lang.PushableToken, program *lang.Program) {
 	var val value.Value
 	switch tok.Typ {
 	case lang.INT_T:
+		val = constant.NewInt(types.I64, tok.Value.(int64))
+		break
 	case lang.CHAR_T:
 		val = constant.NewInt(types.I64, tok.Value.(int64))
 		break
 	case lang.FLOAT_T:
 		f := math.Float64bits(tok.Value.(float64))
-		fmt.Println(f)
 		val = constant.NewInt(types.I64, int64(f))
 		break
 

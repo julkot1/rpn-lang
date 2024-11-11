@@ -20,7 +20,3 @@ func GenerateDefinitions(program *lang.Program) {
 		}
 	}
 }
-
-func MatchDefaultOperators(program *lang.Program) {
-
-}

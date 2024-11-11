@@ -10,7 +10,7 @@ const (
 	STRING_T
 	ARRAY_T
 	STRUCT_T
-	REF_T
+	Type_T
 )
 
 type PushableToken struct {

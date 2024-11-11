@@ -122,20 +122,20 @@ void stc_mod_I64_I64(STC_I64 arg0, STC_I64 arg1, STC_TYPE arg2, STC_TYPE arg3)
 void stc_add_F64_F64(STC_I64 arg0, STC_I64 arg1, STC_TYPE arg2, STC_TYPE arg3)
 {
 	STC_F64 x = *(STC_F64 *)(&arg0)+*(STC_F64 *)(&arg1);
-	push(*(STC_I64 *)&x, STC_FLOAT_TYPE);
+	push(*(STC_I64 *)&x, STC_F64_TYPE);
 }
 void stc_sub_F64_F64(STC_I64 arg0, STC_I64 arg1, STC_TYPE arg2, STC_TYPE arg3)
 {
 	STC_F64 x = *(STC_F64 *)(&arg1)-*(STC_F64 *)(&arg0);
-	push(*(STC_I64 *)&x, STC_FLOAT_TYPE);
+	push(*(STC_I64 *)&x, STC_F64_TYPE);
 }
 void stc_div_F64_F64(STC_I64 arg0, STC_I64 arg1, STC_TYPE arg2, STC_TYPE arg3)
 {
 	STC_F64 x = (*(STC_F64 *)(&arg1)) / (*(STC_F64 *)(&arg0));
-	push(*(STC_I64 *)&x, STC_FLOAT_TYPE);
+	push(*(STC_I64 *)&x, STC_F64_TYPE);
 }
 void stc_mul_F64_F64(STC_I64 arg0, STC_I64 arg1, STC_TYPE arg2, STC_TYPE arg3)
 {
 	STC_F64 x = (*(STC_F64 *)(&arg1)) * (*(STC_F64 *)(&arg0));
-	push(*(STC_I64 *)&x, STC_FLOAT_TYPE);
+	push(*(STC_I64 *)&x, STC_F64_TYPE);
 }

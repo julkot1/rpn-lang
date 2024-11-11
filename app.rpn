@@ -1,4 +1,7 @@
 
 fun main {
-    'a' 'c' - print
+    32 typeof print
+    2.3 typeof print
+    'x' typeof print
+    2 typeof typeof print
 }

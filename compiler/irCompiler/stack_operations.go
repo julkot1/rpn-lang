@@ -64,6 +64,18 @@ func DefineTypePopFunction(program *lang.Program) *ir.Func {
 	return popFn
 }
 
+func DefineTypeofFunction(program *lang.Program) *ir.Func {
+
+	typeofFn := program.Module.NewFunc("typeof", types.Void, ir.NewParam("a", types.I64), ir.NewParam("b", types.I64))
+	typeofFnBody := typeofFn.NewBlock("entry")
+
+	op1 := typeofFn.Params[1]
+
+	typeofFnBody.NewCall(program.Funcs[lang.PushT].IrFunc, op1, constant.NewInt(types.I64, int64(lang.Type_T)))
+	typeofFnBody.NewRet(nil)
+
+	return typeofFn
+}
 func GetPreventValues(program *lang.Program, argc int, block *ir.Block) []value.Value {
 	stackSize := 100
 	stackType := types.NewArray(uint64(stackSize), types.I64)

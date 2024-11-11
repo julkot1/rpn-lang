@@ -11,12 +11,12 @@ typedef double_t STC_F64 ;
 
 #define STC_I64_TYPE 0x0
 #define STC_BOOL_TYPE 0x1
-#define STC_CHAR_TYPE 0x2
-#define STC_FLOAT_TYPE 0x3
+#define STC_I8_TYPE 0x2
+#define STC_F64_TYPE 0x3
 #define STC_STRING_TYPE 0x4
 #define STC_ARRAY_TYPE 0x5
 #define STC_STRUCT_TYPE 0x6
-#define STC_REF_TYPE 0x7
+#define STC_TYPE_TYPE 0x7
 
 #define STC_TYPES_SIZE 8
 

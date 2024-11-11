@@ -44,6 +44,7 @@ func CreateLexer() *lexmachine.Lexer {
 	AddOperation(NotToken, lang.NotT, lex)
 	AddOperation(OrToken, lang.OrT, lex)
 	AddOperation(AndToken, lang.AndT, lex)
+	AddOperation(TypeofToken, lang.TypeofT, lex)
 
 	lex.Add([]byte(RepeatToken), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
 		return lang.Token{TokenType: lang.RepeatT, Value: &lang.RepeatStatement{}, Match: match}, nil
