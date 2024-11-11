@@ -14,6 +14,6 @@ const (
 )
 
 type PushableToken struct {
-	Value int64
+	Value interface{}
 	Typ   Type
 }

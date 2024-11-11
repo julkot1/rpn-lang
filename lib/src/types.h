@@ -1,9 +1,13 @@
 
+#include <math.h>
 #if defined(__gnu_linux__) || defined(__linux__) || defined(linux) || defined(__linux)
 #include <sys/types.h>
+#include <stdint.h>
+
 typedef int64_t STC_I64;
 typedef int64_t STC_TYPE;
 typedef int64_t STC_SIZE;
+typedef double_t STC_F64 ;
 
 #define STC_I64_TYPE 0x0
 #define STC_BOOL_TYPE 0x1

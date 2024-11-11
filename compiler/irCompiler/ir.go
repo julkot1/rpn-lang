@@ -6,6 +6,8 @@ import (
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/enum"
 	"github.com/llir/llvm/ir/types"
+	"github.com/llir/llvm/ir/value"
+	"math"
 	"rpn/lang"
 	"rpn/lexer"
 )
@@ -85,9 +87,7 @@ func LoadBlock(program *lang.Program, block *lang.Block, fun *lang.Function, idx
 		tok := block.Tokens[i]
 		if tok.TokenType == lang.PushT {
 			pushableTok := tok.Value.(lang.PushableToken)
-			irBlock.NewCall(program.Funcs[lang.PushT].IrFunc,
-				constant.NewInt(types.I64, pushableTok.Value),
-				constant.NewInt(types.I64, int64(pushableTok.Typ))) // TO-DO type
+			pushToken(irBlock, pushableTok, program)
 		} else if lexer.ConstTokens[tok.TokenType].DefaultFunction {
 			CallFunc(program.Funcs[tok.TokenType].IrFunc, irBlock, program, tok)
 		} else if tok.TokenType == lang.IdentifierT {
@@ -110,6 +110,25 @@ func LoadBlock(program *lang.Program, block *lang.Block, fun *lang.Function, idx
 
 		}
 	}
+}
+
+func pushToken(block *ir.Block, tok lang.PushableToken, program *lang.Program) {
+	var val value.Value
+	switch tok.Typ {
+	case lang.INT_T:
+	case lang.CHAR_T:
+		val = constant.NewInt(types.I64, tok.Value.(int64))
+		break
+	case lang.FLOAT_T:
+		f := math.Float64bits(tok.Value.(float64))
+		fmt.Println(f)
+		val = constant.NewInt(types.I64, int64(f))
+		break
+
+	}
+	block.NewCall(program.Funcs[lang.PushT].IrFunc,
+		val,
+		constant.NewInt(types.I64, int64(tok.Typ))) // TO-DO type
 }
 
 func CreateIrBlocks(fun *lang.Function) {

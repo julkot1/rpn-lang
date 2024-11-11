@@ -44,11 +44,45 @@ The stack is the primary data space for operations. Each item on the stack is 64
 ---
 
 
+
 ### Type System
 
-Currently, only the `I64` (64-bit integer) type is implemented. Future plans include additional types.
+| **Type**  | **Equivalent C Type** |
+| :--- | :---: |
+| `I64` | `long` |
+| `F64` | `double` |
+| `I8`  | `char` |
 
-**To-Do**: Expand type support.
+---
+
+### Number Types
+
+#### Integer Types
+
+There are two integer types in this system: `I8` and `I64`.
+
+1. **`I8`**: Represents a single character.
+   - Format: `'x'`, where `x` is a single ASCII character.
+
+2. **`I64`**: Represents a 64-bit integer, which can be defined in multiple numeric formats:
+   - **Decimal**: A standard integer, which may optionally include a `+` or `-` sign (e.g., `123`, `-456`).
+   - **Hexadecimal**: Prefixed with `0x` or `0X` (e.g., `0x1A`, `0X2B`).
+   - **Octal**: Prefixed with `0o` or `0O` (e.g., `0o17`, `0O24`).
+   - **Binary**: Prefixed with `0b` or `0B` (e.g., `0b1010`, `0B1101`).
+
+| **Format**      | **Example**  | **Description**                     |
+| :-------------- | :----------- | :----------------------------------- |
+| Decimal         | `123`        | Positive or negative decimal number  |
+| Hexadecimal     | `0x1A`       | Prefixed with `0x` or `0X`           |
+| Octal           | `0o17`       | Prefixed with `0o` or `0O`           |
+| Binary          | `0b1010`     | Prefixed with `0b` or `0B`           |
+
+#### Floating-Point Types
+
+The `F64` type represents a 64-bit floating-point number equivalent to `double` in C. Floating-point literals typically include a decimal point or an exponent (e.g., `1.23`, `4.56e-2`).
+
+
+
 
 ---
 

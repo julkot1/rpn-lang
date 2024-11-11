@@ -52,9 +52,34 @@ func CreateLexer() *lexmachine.Lexer {
 	lex.Add([]byte(IdentifierToken), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
 		return lang.Token{TokenType: lang.IdentifierT, Value: string(match.Bytes), Match: match}, nil
 	})
-	lex.Add([]byte(`[0-9]+`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
+
+	lex.Add([]byte(`0[xX][0-9a-fA-F]+`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
+		num, err := strconv.ParseInt(string(match.Bytes)[2:], 16, 64)
+		return lang.Token{TokenType: lang.PushT, Value: lang.PushableToken{Value: int64(num), Typ: lang.INT_T}, Match: match}, err
+	})
+	lex.Add([]byte(`0[oO][0-7]+`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
+		num, err := strconv.ParseInt(string(match.Bytes)[2:], 8, 64)
+		return lang.Token{TokenType: lang.PushT, Value: lang.PushableToken{Value: int64(num), Typ: lang.INT_T}, Match: match}, err
+	})
+	lex.Add([]byte(`0[bB][01]+`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
+		num, err := strconv.ParseInt(string(match.Bytes)[2:], 2, 64)
+		return lang.Token{TokenType: lang.PushT, Value: lang.PushableToken{Value: int64(num), Typ: lang.INT_T}, Match: match}, err
+	})
+	lex.Add([]byte(`[+-]?\d*\.\d+([eE][+-]?\d+)?`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
+		num, err := strconv.ParseFloat(string(match.Bytes), 64)
+		return lang.Token{TokenType: lang.PushT, Value: lang.PushableToken{Value: num, Typ: lang.FLOAT_T}, Match: match}, err
+	})
+	lex.Add([]byte(`[+-]?[0-9]*\.[0-9]+`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
+		num, err := strconv.ParseFloat(string(match.Bytes), 64)
+		return lang.Token{TokenType: lang.PushT, Value: lang.PushableToken{Value: num, Typ: lang.FLOAT_T}, Match: match}, err
+	})
+	lex.Add([]byte(`[+-]?[0-9]+`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
 		num, err := strconv.Atoi(string(match.Bytes))
 		return lang.Token{TokenType: lang.PushT, Value: lang.PushableToken{Value: int64(num), Typ: lang.INT_T}, Match: match}, err
+	})
+	lex.Add([]byte(`'[^\']'`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
+		char := string(match.Bytes)[1]
+		return lang.Token{TokenType: lang.PushT, Value: lang.PushableToken{Value: int64(char), Typ: lang.CHAR_T}, Match: match}, nil
 	})
 
 	lex.Add([]byte(`[ \t\r\n]+`), func(scan *lexmachine.Scanner, match *machines.Match) (interface{}, error) {
