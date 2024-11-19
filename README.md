@@ -16,7 +16,120 @@ Stack Code is a playful and experimental language built with Go and LLVM (versio
 
 ## Running Stack Code
 
-**To-Do**: Instructions on setting up and running the interpreter will be available soon.  
+Below is a Markdown description for the two `Config` structs you provided, designed for documentation purposes:
+
+---
+
+## Configuration Structs
+
+### Config Type
+
+
+The `Config` struct defines the configuration options for your application. These options can be specified in a TOML configuration file. Each field is described below:
+
+| Field Name      | TOML Key         | Type    | Description                                                                 |
+|------------------|------------------|---------|-----------------------------------------------------------------------------|
+| `RootPath`      | `root_path`      | string  | The root directory path for the project.                                   |
+| `Destination`   | `destination`    | string  | The output directory where generated files will be stored.                 |
+| `CompileLibs`   | `compile_libs`   | bool    | A flag indicating whether to compile libraries.                            |
+| `ClangPath`     | `clang_path`     | string  | The file path to the Clang compiler executable.                            |
+| `LlcPath`       | `llc_path`       | string  | The file path to the LLVM `llc` tool for compiling LLVM intermediate code. |
+| `LLDisPath`     | `llc_dis_path`   | string  | The file path to the LLVM `lldis` tool for disassembling LLVM bytecode.    |
+| `LinkerPath`    | `linker_path`    | string  | The file path to the linker executable.                                    |
+
+### CLI Config Type
+
+The CLI `Config` struct is identical in structure to the general configuration type above. It allows the same set of fields to be specified via command-line arguments or parsed from a configuration file.
+
+| Field Name      | TOML Key         | Type    | Description                                                                 |
+|------------------|------------------|---------|-----------------------------------------------------------------------------|
+| `RootPath`      | `root_path`      | string  | The root directory path for the project.                                   |
+| `Destination`   | `destination`    | string  | The output directory where generated files will be stored.                 |
+| `CompileLibs`   | `compile_libs`   | bool    | A flag indicating whether to compile libraries.                            |
+| `ClangPath`     | `clang_path`     | string  | The file path to the Clang compiler executable.                            |
+| `LlcPath`       | `llc_path`       | string  | The file path to the LLVM `llc` tool for compiling LLVM intermediate code. |
+| `LLDisPath`     | `llc_dis_path`   | string  | The file path to the LLVM `lldis` tool for disassembling LLVM bytecode.    |
+| `LinkerPath`    | `linker_path`    | string  | The file path to the linker executable.                                    |
+
+### Notes
+- Ensure all paths are absolute or correctly resolved relative to your working directory.
+- The `CompileLibs` field is optional and defaults to `false` if not explicitly specified.
+- The `Config` struct is versatile and can be used for both file-based configuration and command-line initialization.
+
+Here’s a comprehensive Markdown description for the `cli` package you provided:
+
+---
+
+### Commands
+
+#### `stc` (Root Command)
+The root command serves as the entry point for the `stc` CLI tool. It includes the following subcommands:
+
+##### 1. `compile`
+Compiles given program files into an executable or LLVM IR, based on the provided flags.
+
+**Usage:**
+```sh
+stc compile [files...] [flags]
+```
+
+**Arguments:**
+- `files...`: A list of source files to compile.
+
+**Flags:**
+| Flag                | Shorthand | Default | Description                                                |
+|---------------------|-----------|---------|------------------------------------------------------------|
+| `--output`          | `-o`      | `out`   | Specifies the name of the output file.                     |
+| `--opt`             | `-O`      | `0`     | Specifies the optimization level (0–3).                    |
+| `--emit-llvm`       | `-l`      | `false` | Generates output in LLVM Intermediate Representation (IR). |
+
+**Behavior:**
+- Validates the optimization level.
+- Compiles each file specified using the `Compile` function, configured via a TOML file (`config.debug.toml`).
+
+##### 2. `libs`
+Compiles the default libraries for the `stc` tool.
+
+**Usage:**
+```sh
+stc libs
+```
+
+**Behavior:**
+- Invokes the `CompileStcLibs` function to build standard libraries, using the configuration from `config.debug.toml`.
+
+---
+
+### Example Usage
+
+1. Compile source files with default settings:
+   ```sh
+   stc compile file1.rpn file2.rpn
+   ```
+
+2. Specify an output file and optimization level:
+   ```sh
+   stc compile file1.rpn -o myprogram -O2
+   ```
+
+3. Generate LLVM IR:
+   ```sh
+   stc compile file1.rpn -l
+   ```
+
+4. Compile default libraries:
+   ```sh
+   stc libs
+   ```
+
+---
+
+### Notes
+- The `config.CreateTOMLConfig` function is used to load configurations from a TOML file.
+- Ensure the optimization level is between 0 and 3 to avoid errors.
+- This CLI package requires the `cobra` library for command management.
+
+---
 
 ---
 

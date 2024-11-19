@@ -1,4 +1,4 @@
-package main
+package cli
 
 import (
 	"bufio"
@@ -40,31 +40,64 @@ func Save(program *lang.Program, config config.TOMLConfig) {
 		log.Fatalf("failed to create file: %s", err)
 	}
 }
-func ExecScript(config config.TOMLConfig) {
-	cmd := exec.Command(config.GetPath(config.Config.CompilationScript))
-	err := cmd.Run()
-	if err != nil {
-		fmt.Println("Error running script:", err)
-		return
-	}
 
-	fmt.Println("Compilation script successful, binary created")
+func CompileStcLibs(config config.TOMLConfig) {
+	root := config.GetPath(config.Libs.LibRoot) + "/"
+	for _, libPath := range config.Libs.LibRaw {
+		base := filepath.Base(libPath)
+
+		outPath := filepath.Join(config.GetPath(config.Libs.LibBin), base+".ll")
+		cmd := exec.Command(config.Config.ClangPath, "-O2", "-S", "-emit-llvm", filepath.Join(root, libPath+".c"), "-o", outPath)
+		err := cmd.Run()
+		if err != nil {
+			fmt.Println("Error compiling lib:", libPath, err)
+			os.Exit(1)
+		}
+		fmt.Println("Compiled lib:", libPath)
+
+	}
 }
 
-func Compile(config config.TOMLConfig, path string) {
+func Compile(config config.TOMLConfig, path string, compilationCfg CompilationConfig) {
 	program := lexer.Parse(config.GetPath(path))
 
 	program.Module.DataLayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
-	if config.Config.CompileLibs {
-		CompileLibs(config, program)
-	}
+	LoadLibs(config, program)
 	lib.BindLibs(config, program)
 	lib.GenerateDefinitions(program)
 
 	irCompiler.LoadProgram(program)
 	Save(program, config)
 	LinkFiles(program, config)
-	ExecScript(config)
+	BuildBinary(config, compilationCfg)
+}
+
+func BuildBinary(config config.TOMLConfig, cfg CompilationConfig) {
+	llPath := config.GetPath(config.Config.Destination) + "/output.ll"
+
+	cmd := exec.Command(
+		config.Config.ClangPath, llPath, "-lm", "-fPIE", "-pie", getOpt(cfg.Optimization), "-o", cfg.OutFile)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
+	if err != nil {
+		fmt.Println("Error compiling binary:", err)
+	}
+	if cfg.EmitLLVM {
+		cmd = exec.Command(config.Config.LLDisPath, llPath, "-o", cfg.OutFile+".ll")
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		err := cmd.Run()
+		if err != nil {
+			fmt.Println("Error compiling binary:", err)
+		}
+
+	}
+
+}
+
+func getOpt(opt int) string {
+	return fmt.Sprintf("-O%d", opt)
 }
 
 func LinkFiles(program *lang.Program, tomlConfig config.TOMLConfig) {
@@ -86,7 +119,7 @@ func getFilesToLink(config config.TOMLConfig) []string {
 		base := filepath.Base(libPath)
 		ext := filepath.Ext(base)
 		nameWithoutExt := strings.TrimSuffix(base, ext)
-		outPath := config.GetPath(config.Config.Destination) + "/" + nameWithoutExt + ".ll"
+		outPath := config.GetPath(config.Libs.LibBin) + "/" + nameWithoutExt + ".ll"
 		str = append(str, outPath)
 	}
 	str = append(str, config.GetPath(config.Config.Destination)+"/output.ll")
@@ -94,25 +127,16 @@ func getFilesToLink(config config.TOMLConfig) []string {
 
 }
 
-func CompileLibs(config config.TOMLConfig, program *lang.Program) {
-	root := config.GetPath(config.Libs.LibRoot) + "/"
+func LoadLibs(config config.TOMLConfig, program *lang.Program) {
 	for _, libPath := range config.Libs.LibRaw {
 		base := filepath.Base(libPath)
 
-		outPath := filepath.Join(config.GetPath(config.Config.Destination), base+".ll")
-		cmd := exec.Command(config.Config.ClangPath, "-O2", "-S", "-emit-llvm", filepath.Join(root, libPath+".c"), "-o", outPath)
-		err := cmd.Run()
-		if err != nil {
-			fmt.Println("Error compiling lib:", libPath, err)
-			os.Exit(1)
-		}
-		mod, err2 := asm.ParseFile(outPath)
+		libBinPath := filepath.Join(config.GetPath(config.Libs.LibBin), base+".ll")
+		mod, err2 := asm.ParseFile(libBinPath)
 		if err2 != nil {
 			fmt.Println("Error loading lib:", libPath, err2)
 			os.Exit(1)
 		}
 		program.StaticLibsModules = append(program.StaticLibsModules, mod)
-		fmt.Println("Compiled lib:", libPath)
-
 	}
 }

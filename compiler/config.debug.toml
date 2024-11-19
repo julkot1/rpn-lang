@@ -5,11 +5,12 @@ compile_libs = true
 compilation_script = "compile.sh"
 clang_path = "/usr/lib/llvm14/bin/clang"
 linker_path = "/usr/lib/llvm14/bin/llvm-link"
-
+llc_path =  "/usr/lib/llvm14/bin/llc"
+llc_dis_path =  "/usr/lib/llvm14/bin/llvm-dis"
 
 [Libs]
 lib_root = "lib/src"
-lib_config_root = "lib"
+lib_path = "lib/bin"
 lib_raw = [
     "arithmetic", "logic", "io"
 ]

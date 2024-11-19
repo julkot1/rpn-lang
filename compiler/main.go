@@ -1,14 +1,18 @@
 package main
 
 import (
-	"rpn/util/config"
+	"fmt"
+	"os"
+	"rpn/cli"
 )
 
 func main() {
 
 	// Parse STC line
-
-	conf := config.CreateTOMLConfig("config.debug.toml")
-	Compile(conf, "app.rpn")
+	Cli := cli.CreateCli()
+	if err := Cli.Root.Execute(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 }

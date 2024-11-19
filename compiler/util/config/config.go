@@ -6,18 +6,19 @@ import (
 )
 
 type Config struct {
-	RootPath          string `toml:"root_path"`
-	Destination       string `toml:"destination"`
-	CompileLibs       bool   `toml:"compile_libs"`
-	CompilationScript string `toml:"compilation_script"`
-	ClangPath         string `toml:"clang_path"`
-	LinkerPath        string `toml:"linker_path"`
+	RootPath    string `toml:"root_path"`
+	Destination string `toml:"destination"`
+	CompileLibs bool   `toml:"compile_libs"`
+	ClangPath   string `toml:"clang_path"`
+	LlcPath     string `toml:"llc_path"`
+	LLDisPath   string `toml:"llc_dis_path"`
+	LinkerPath  string `toml:"linker_path"`
 }
 
 type Libs struct {
-	LibRoot       string   `toml:"lib_root"`
-	LibConfigRoot string   `toml:"lib_config_root"`
-	LibRaw        []string `toml:"lib_raw"`
+	LibRoot string   `toml:"lib_root"`
+	LibBin  string   `toml:"lib_path"`
+	LibRaw  []string `toml:"lib_raw"`
 }
 
 type TOMLConfig struct {
