@@ -37,26 +37,6 @@ The `Config` struct defines the configuration options for your application. Thes
 | `LLDisPath`     | `llc_dis_path`   | string  | The file path to the LLVM `lldis` tool for disassembling LLVM bytecode.    |
 | `LinkerPath`    | `linker_path`    | string  | The file path to the linker executable.                                    |
 
-### CLI Config Type
-
-The CLI `Config` struct is identical in structure to the general configuration type above. It allows the same set of fields to be specified via command-line arguments or parsed from a configuration file.
-
-| Field Name      | TOML Key         | Type    | Description                                                                 |
-|------------------|------------------|---------|-----------------------------------------------------------------------------|
-| `RootPath`      | `root_path`      | string  | The root directory path for the project.                                   |
-| `Destination`   | `destination`    | string  | The output directory where generated files will be stored.                 |
-| `CompileLibs`   | `compile_libs`   | bool    | A flag indicating whether to compile libraries.                            |
-| `ClangPath`     | `clang_path`     | string  | The file path to the Clang compiler executable.                            |
-| `LlcPath`       | `llc_path`       | string  | The file path to the LLVM `llc` tool for compiling LLVM intermediate code. |
-| `LLDisPath`     | `llc_dis_path`   | string  | The file path to the LLVM `lldis` tool for disassembling LLVM bytecode.    |
-| `LinkerPath`    | `linker_path`    | string  | The file path to the linker executable.                                    |
-
-### Notes
-- Ensure all paths are absolute or correctly resolved relative to your working directory.
-- The `CompileLibs` field is optional and defaults to `false` if not explicitly specified.
-- The `Config` struct is versatile and can be used for both file-based configuration and command-line initialization.
-
-Here’s a comprehensive Markdown description for the `cli` package you provided:
 
 ---
 
