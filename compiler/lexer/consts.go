@@ -15,10 +15,10 @@ const (
 	DivToken          = `\/`
 	PrintI8Token      = `puts`
 	InputToken        = `input`
-	DupToken          = `\|\>`
-	SwapToken         = `\|s`
-	OverToken         = `\|o`
-	RotToken          = `\|r`
+	DupToken          = `dup`
+	SwapToken         = `swap`
+	OverToken         = `over`
+	RotToken          = `rot`
 	StackPreventToken = `!`
 	FunctionDefToken  = `fun`
 	IfToken           = `if`

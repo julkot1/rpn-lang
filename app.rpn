@@ -1,7 +1,17 @@
 
 fun main {
-    32 typeof print
-    2.3 typeof print
-    'x' typeof print
-    2 typeof typeof print
+    0 print
+    1 1 == if {
+        1 print
+        32 2 == if {
+           2 print
+        }
+        2 4 == if {
+           3 print
+        }
+         2 2 == if {
+           3 print
+        }
+        6 print
+    }
 }

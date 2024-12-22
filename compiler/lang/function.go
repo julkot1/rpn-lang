@@ -1,6 +1,9 @@
 package lang
 
-import "github.com/llir/llvm/ir"
+import (
+	"github.com/llir/llvm/ir"
+	"github.com/llir/llvm/ir/types"
+)
 
 type Function struct {
 	Name   string
@@ -8,8 +11,10 @@ type Function struct {
 	Ir     *ir.Func
 }
 
-func NewFunction(name string) *Function {
-	return &Function{Name: name}
+func NewFunction(name string, module *ir.Module) *Function {
+	x := &Function{Name: name}
+	x.Ir = module.NewFunc(name, types.I64)
+	return x
 }
 
 func (f *Function) GetBlock(id string) *Block {

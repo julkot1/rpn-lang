@@ -3,6 +3,7 @@ package cli
 import (
 	"bufio"
 	"fmt"
+	"github.com/antlr4-go/antlr/v4"
 	"github.com/llir/llvm/asm"
 	"log"
 	"os"
@@ -10,8 +11,8 @@ import (
 	"path/filepath"
 	"rpn/irCompiler"
 	"rpn/lang"
-	"rpn/lexer"
 	"rpn/lib"
+	"rpn/parser"
 	"rpn/util/config"
 	"strings"
 )
@@ -59,9 +60,17 @@ func CompileStcLibs(config config.TOMLConfig) {
 }
 
 func Compile(config config.TOMLConfig, path string, compilationCfg CompilationConfig) {
-	program := lexer.Parse(config.GetPath(path))
+	input, _ := antlr.NewFileStream(config.GetPath(path))
+	lex := parser.NewStcLexer(input)
+	stream := antlr.NewCommonTokenStream(lex, 0)
+	p := parser.NewStcParser(stream)
+	p.AddErrorListener(antlr.NewDefaultErrorListener())
+	tree := p.Prog()
 
+	program := lang.NewProgram()
+	program.Tree = tree
 	program.Module.DataLayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
+
 	LoadLibs(config, program)
 	lib.BindLibs(config, program)
 	lib.GenerateDefinitions(program)

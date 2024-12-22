@@ -8,8 +8,6 @@
 #define PRINT_F64(x) printf("%f\n", x)
 #define PRINT_I8(x) printf("%c\n", x)
 #define PRINT_STRING(x) printf("%s\n", x)
-
-
 #endif
 
 

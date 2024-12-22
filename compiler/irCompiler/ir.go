@@ -1,15 +1,12 @@
 package irCompiler
 
 import (
-	"fmt"
+	"github.com/antlr4-go/antlr/v4"
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/enum"
 	"github.com/llir/llvm/ir/types"
-	"github.com/llir/llvm/ir/value"
-	"math"
 	"rpn/lang"
-	"rpn/lexer"
 )
 
 func DefineFuncs(program *lang.Program) {
@@ -60,13 +57,13 @@ func DefineGlobals(m *ir.Module) map[string]*ir.Global {
 	return globals
 }
 
-func CallFunc(function *ir.Func, block *ir.Block, program *lang.Program, tok lang.Token) {
-	if tok.StackPrevent == true {
+func CallFunc(function *ir.Func, block *ir.Block, program *lang.Program, prevent bool) {
+	if prevent == true {
 		argc := len(function.Sig.Params) / 2
 		if argc == 0 {
 			block.NewCall(function)
 		} else {
-			args := GetPreventValues(program, argc, block)
+			args := GetValues(program, argc, block)
 			block.NewCall(function, args...)
 		}
 		return
@@ -81,97 +78,47 @@ func CallFunc(function *ir.Func, block *ir.Block, program *lang.Program, tok lan
 
 }
 
-func LoadBlock(program *lang.Program, block *lang.Block, fun *lang.Function, idx int) {
-	irBlock := block.Ir
-
-	for i := 0; i < len(block.Tokens); i++ {
-		tok := block.Tokens[i]
-		if tok.TokenType == lang.PushT {
-			pushableTok := tok.Value.(lang.PushableToken)
-			pushToken(irBlock, pushableTok, program)
-		} else if lexer.ConstTokens[tok.TokenType].DefaultFunction {
-			CallFunc(program.Funcs[tok.TokenType].IrFunc, irBlock, program, tok)
-		} else if tok.TokenType == lang.IdentifierT {
-			if program.GlobalTokenTable[tok.Value.(string)] == lang.PStaticFunc {
-				CallFunc(program.StaticFunctions[tok.Value.(string)].IrFunc, irBlock, program, tok)
-			}
-		} else {
-			switch tok.TokenType {
-
-			case lang.IfT:
-				LoadIf(program, irBlock, block.NextFreeBlock(block), fun.Blocks[idx+1])
-				break
-			case lang.RepeatT:
-				LoadRepeat(program, fun, irBlock, block.NextFreeBlock(block, tok.Value.(*lang.RepeatStatement).LoopBlock), fun.Blocks[idx+1], tok.Value.(*lang.RepeatStatement).LoopBlock)
-				break
-			default:
-				fmt.Println(tok)
-				panic("unhandled default case")
-			}
-
-		}
-	}
-}
-
-func pushToken(block *ir.Block, tok lang.PushableToken, program *lang.Program) {
-	var val value.Value
-	switch tok.Typ {
-	case lang.INT_T:
-		val = constant.NewInt(types.I64, tok.Value.(int64))
-		break
-	case lang.CHAR_T:
-		val = constant.NewInt(types.I64, tok.Value.(int64))
-		break
-	case lang.FLOAT_T:
-		f := math.Float64bits(tok.Value.(float64))
-		val = constant.NewInt(types.I64, int64(f))
-		break
-
-	}
-	block.NewCall(program.Funcs[lang.PushT].IrFunc,
-		val,
-		constant.NewInt(types.I64, int64(tok.Typ))) // TO-DO type
-}
-
-func CreateIrBlocks(fun *lang.Function) {
-
-	for _, block := range fun.Blocks {
-		block.Ir = fun.Ir.NewBlock(block.Name)
-		for _, tok := range block.Tokens {
-			if tok.TokenType == lang.RepeatT {
-				tok.Value.(*lang.RepeatStatement).LoopBlock.Ir = fun.Ir.NewBlock(tok.Value.(*lang.RepeatStatement).LoopBlock.Name)
-			}
-		}
-	}
-}
-
-func LoadFunction(program *lang.Program, fun *lang.Function) {
-	funFn := program.Module.NewFunc(fun.Name, types.I64)
-	fun.Ir = funFn
-	CreateIrBlocks(fun)
-
-	for idx, block := range fun.Blocks {
-		LoadBlock(program, block, fun, idx)
-	}
-	for idx, block := range fun.Blocks {
-		if block.Ir.Term == nil {
-			if idx+1 < len(fun.Blocks) {
-				block.Ir.NewBr(block.NextFreeBlock(block).Ir)
-			} else {
-				block.Ir.NewRet(constant.NewInt(types.I64, 0))
-			}
-		}
-	}
-}
-
 func LoadProgram(program *lang.Program) {
 	program.Globals = DefineGlobals(program.Module)
+
 	DefineFuncs(program)
 
-	LoadFunction(program, program.MainFunction)
+	treeWalk := NewTreeWalk()
+	treeWalk.program = program
+	antlr.ParseTreeWalkerDefault.Walk(treeWalk, program.Tree)
+
+	createJumps(program)
+}
+func createJumps(program *lang.Program) {
 	for _, fun := range program.Functions {
-		if fun.Name != "main" {
-			LoadFunction(program, fun)
+		for idx, block := range fun.Blocks {
+			if block.CreateIf {
+				LoadIf(program, block.Ir, NextFreeBlock(fun, idx, program), fun.Blocks[idx+1])
+			} else if block.Ir.Term == nil {
+				block.Ir.NewBr(NextFreeBlock(fun, idx, program).Ir)
+			}
+
 		}
 	}
+}
+func NextFreeBlock(fun *lang.Function, idx int, program *lang.Program) *lang.Block {
+	counter := 0
+	endValue := 0
+	if fun.Blocks[idx].FreeBlock && !fun.Blocks[idx].CreateIf {
+		endValue = 1
+	}
+	for i := idx + 1; i < len(fun.Blocks); i++ {
+		if fun.Blocks[i].FreeBlock {
+			counter++
+		} else {
+			counter--
+		}
+		if counter == endValue {
+			return fun.Blocks[i]
+		}
+	}
+	b := lang.NewBlockIr(program.NewBlockIndex(), true, fun, false)
+	b.Ir.NewRet(constant.NewInt(types.I64, 0))
+	fun.Blocks = append(fun.Blocks, b)
+	return b
 }

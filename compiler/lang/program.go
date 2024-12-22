@@ -1,6 +1,8 @@
 package lang
 
 import (
+	"fmt"
+	"github.com/antlr4-go/antlr/v4"
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/types"
 	"strconv"
@@ -20,6 +22,7 @@ const (
 )
 
 type Program struct {
+	Tree              antlr.Tree
 	GlobalTokenTable  map[string]ProgramTokenType
 	Functions         []*Function
 	MainFunction      *Function
@@ -36,14 +39,6 @@ func DefineTypes() {
 	types.I8Ptr = types.NewPointer(types.I8)
 }
 
-func NewProgram() *Program {
-	program := &Program{}
-	program.Module = ir.NewModule()
-	DefineTypes()
-
-	return program
-}
-
 func (p *Program) NewBlockIndex() string {
 	idx := p.BlockIndex
 	p.BlockIndex++
@@ -53,4 +48,24 @@ func (p *Program) NewLoopIndex() string {
 	idx := p.LoopIndex
 	p.LoopIndex++
 	return "loop" + strconv.Itoa(idx)
+}
+
+func NewProgram() *Program {
+	program := &Program{}
+	program.Module = ir.NewModule()
+	program.StaticFunctions = make(map[string]*DefaultFunc)
+	program.GlobalTokenTable = make(map[string]ProgramTokenType)
+	program.Funcs = make(map[TokenType]*DefaultFunc)
+
+	program.StaticLibsModules = make([]*ir.Module, 0)
+	return program
+
+}
+
+func (p *Program) AddGlobalToken(name string, t ProgramTokenType) error {
+	if _, ok := p.GlobalTokenTable[name]; ok {
+		return fmt.Errorf("global token already defined: %s", name)
+	}
+	p.GlobalTokenTable[name] = t
+	return nil
 }
