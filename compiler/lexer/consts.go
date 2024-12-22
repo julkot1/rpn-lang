@@ -7,12 +7,12 @@ import (
 
 const (
 	PopToken          = `pop`
-	AddToken          = `\+`
-	SubToken          = `\-`
-	MulToken          = `\*`
-	ModToken          = `\%`
+	AddToken          = `+`
+	SubToken          = `-`
+	MulToken          = `*`
+	ModToken          = `%`
 	PrintToken        = `print`
-	DivToken          = `\/`
+	DivToken          = `/`
 	PrintI8Token      = `puts`
 	InputToken        = `input`
 	DupToken          = `dup`

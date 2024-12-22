@@ -17,7 +17,8 @@ func LoadIf(program *lang.Program, block *ir.Block, nextBlock *lang.Block, trueB
 	return nextBlock
 }
 
-func LoadRepeat(program *lang.Program, fun *lang.Function, block *ir.Block, nextBlock *lang.Block, loopBlock *lang.Block, conditionBlock *lang.Block) *lang.Block {
+func LoadRepeat(program *lang.Program, fun *lang.Function, block *ir.Block, nextBlock, loopBlock, conditionBlock *lang.Block) *lang.Block {
+
 	arg := GetValues(program, 1, block)[0]
 	counter := block.NewAlloca(types.I64)
 

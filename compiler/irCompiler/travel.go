@@ -15,6 +15,7 @@ type TreeWalk struct {
 	functionStack util.Stack
 	nonFreeBlock  bool
 	ifBlock       bool
+	repeatBlock   bool
 }
 
 func NewTreeWalk() *TreeWalk {
@@ -23,6 +24,7 @@ func NewTreeWalk() *TreeWalk {
 	x.functionStack = util.NewStack()
 	x.nonFreeBlock = false
 	x.ifBlock = false
+	x.repeatBlock = false
 	return x
 }
 
@@ -51,7 +53,7 @@ func (w *TreeWalk) EnterSubBlock(ctx *parser.SubBlockContext) {
 		os.Exit(-1)
 	}
 
-	w.blockStack.Push(lang.NewBlockIr(w.program.NewBlockIndex(), !w.nonFreeBlock, top.(*lang.Function), false))
+	w.blockStack.Push(lang.NewBlockIr(w.program.NewBlockIndex(), !w.nonFreeBlock, top.(*lang.Function), false, false))
 	w.nonFreeBlock = false
 }
 
@@ -60,7 +62,10 @@ func (w *TreeWalk) ExitSubBlock(ctx *parser.SubBlockContext) {
 	pop, err := w.blockStack.Pop()
 	top, _ := w.functionStack.Top()
 	pop.(*lang.Block).CreateIf = w.ifBlock
+	pop.(*lang.Block).CreateLoop = w.repeatBlock
+
 	w.ifBlock = false
+	w.repeatBlock = false
 
 	if err != nil {
 		os.Exit(-1)
@@ -124,8 +129,33 @@ func (w *TreeWalk) EnterIfBlock(ctx *parser.IfBlockContext) {
 	top.(*lang.Function).Blocks = append(top.(*lang.Function).Blocks, pop.(*lang.Block))
 
 	w.nonFreeBlock = true
-
 }
 func (w *TreeWalk) ExitIfBlock(ctx *parser.IfBlockContext) {
 	w.ifBlock = true
+}
+
+func (w *TreeWalk) EnterRepeatBlock(ctx *parser.RepeatBlockContext) {
+	top, err := w.functionStack.Top()
+	if err != nil {
+		os.Exit(-1)
+	}
+
+	pop, err := w.blockStack.Top()
+	if err != nil {
+		os.Exit(-1)
+	}
+	top.(*lang.Function).Blocks = append(top.(*lang.Function).Blocks, pop.(*lang.Block))
+
+	w.nonFreeBlock = true
+}
+func (w *TreeWalk) ExitRepeatBlock(ctx *parser.RepeatBlockContext) {
+	w.repeatBlock = true
+	top, err := w.functionStack.Top()
+	if err != nil {
+		os.Exit(-1)
+	}
+	b := lang.NewBlockIr(w.program.NewBlockIndex(), true, top.(*lang.Function), false, false)
+	b.LoopCondition = true
+	top.(*lang.Function).Blocks = append(top.(*lang.Function).Blocks, b)
+
 }
