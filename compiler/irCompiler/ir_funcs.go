@@ -58,7 +58,55 @@ func push(block *ir.Block, ctx *parser.PushContext, program *lang.Program) {
 		f := math.Float64bits(i)
 		val = constant.NewInt(types.I64, int64(f))
 	}
+
+	if ctx.CHAR() != nil {
+		typ = lang.CHAR_T
+		text := ctx.CHAR().GetText()
+		ch := getChar(text)
+		val = constant.NewInt(types.I64, int64(ch))
+	}
+	if ctx.STRING() != nil {
+		typ = lang.STRING_T
+		text := ctx.STRING().GetText()
+		str := trimString(text)
+		g := program.StringTable.GetOrAdd(str, program)
+		strPtr := block.NewGetElementPtr(types.NewArray(uint64(len(str)+1), types.I8), g, constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 0))
+		val = block.NewPtrToInt(strPtr, types.I64)
+		block.NewCall(program.Funcs[lang.PushT].IrFunc,
+			val,
+			constant.NewInt(types.I64, int64(typ)))
+		return
+	}
+
 	block.NewCall(program.Funcs[lang.PushT].IrFunc,
 		val,
 		constant.NewInt(types.I64, int64(typ)))
+}
+
+func trimString(text string) string {
+	result, _ := strconv.Unquote(text)
+	return result
+}
+
+func getChar(text string) int {
+	if len(text) == 3 {
+		b := text[1]
+		i := int(b)
+		return i
+	} else {
+		b := text[2]
+		switch b {
+		case 'n':
+			return int('\n')
+		case 't':
+			return int('\t')
+		case 'r':
+			return int('\r')
+		case 'f':
+			return int('\f')
+		case '0':
+			return int('0')
+		}
+	}
+	return 0
 }

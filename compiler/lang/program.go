@@ -23,6 +23,7 @@ const (
 
 type Program struct {
 	Tree              antlr.Tree
+	StringTable       *StringTable
 	GlobalTokenTable  map[string]ProgramTokenType
 	Functions         []*Function
 	MainFunction      *Function
@@ -56,7 +57,7 @@ func NewProgram() *Program {
 	program.StaticFunctions = make(map[string]*DefaultFunc)
 	program.GlobalTokenTable = make(map[string]ProgramTokenType)
 	program.Funcs = make(map[TokenType]*DefaultFunc)
-
+	program.StringTable = NewStringTable()
 	program.StaticLibsModules = make([]*ir.Module, 0)
 	return program
 

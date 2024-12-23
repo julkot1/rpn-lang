@@ -7,7 +7,9 @@
 typedef int64_t STC_I64;
 typedef int64_t STC_TYPE;
 typedef int64_t STC_SIZE;
-typedef double_t STC_F64 ;
+typedef double_t STC_F64;
+typedef char STC_I8;
+typedef char *STC_STR;
 
 #define STC_I64_TYPE 0x0
 #define STC_BOOL_TYPE 0x1
