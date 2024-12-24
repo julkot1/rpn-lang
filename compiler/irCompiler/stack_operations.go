@@ -103,17 +103,6 @@ func GetValues(program *lang.Program, argc int, block *ir.Block) []value.Value {
 	return args
 }
 
-func DefineBinaryFunction(program *lang.Program, name string) (*ir.Block, *ir.Func, *ir.Param, *ir.Param) {
-
-	binFn := program.Module.NewFunc(name, types.Void, ir.NewParam("a", types.I64), ir.NewParam("b", types.I64))
-	binFnBody := binFn.NewBlock("entry")
-
-	op1 := binFn.Params[0]
-	op2 := binFn.Params[1]
-
-	return binFnBody, binFn, op1, op2
-}
-
 func DefineDupFunc(program *lang.Program) *ir.Func {
 	stackSize := 100
 	stackType := types.NewArray(uint64(stackSize), types.I64)

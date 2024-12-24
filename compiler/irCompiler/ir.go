@@ -11,9 +11,6 @@ import (
 
 func DefineFuncs(program *lang.Program) {
 
-	program.Funcs[lang.PrintFT] = DefinePrintFnFunction(program)
-	program.Funcs[lang.ScanFT] = DefineScanFnFunction(program)
-
 	program.Funcs[lang.PushT] = &lang.DefaultFunc{IrFunc: DefinePushFunction(program)}
 	program.Funcs[lang.PopT] = &lang.DefaultFunc{IrFunc: DefinePopFunction(program)}
 	program.Funcs[lang.PopTypeT] = &lang.DefaultFunc{IrFunc: DefineTypePopFunction(program)}
@@ -23,9 +20,9 @@ func DefineFuncs(program *lang.Program) {
 	program.Funcs[lang.RotT] = &lang.DefaultFunc{IrFunc: DefineRotFunction(program)}
 	program.Funcs[lang.OverT] = &lang.DefaultFunc{IrFunc: DefineOverFunction(program)}
 
-	program.Funcs[lang.InputT] = &lang.DefaultFunc{IrFunc: DefineInputFunction(program)}
-
 	program.Funcs[lang.TypeofT] = &lang.DefaultFunc{IrFunc: DefineTypeofFunction(program)}
+
+	program.Funcs[lang.AtT] = &lang.DefaultFunc{IrFunc: DefineAtFunction(program)}
 
 }
 

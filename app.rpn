@@ -1,7 +1,7 @@
+fun printL {
+   print '\n' print
+}
 
 fun main {
-     1 "fs" '2' rot
-     typeof print '\n' print
-     typeof print '\n' print
-     typeof print '\n' print
+   232 24 addN printL
 } 

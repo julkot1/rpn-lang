@@ -2,6 +2,7 @@ package irCompiler
 
 import (
 	"fmt"
+	"github.com/antlr4-go/antlr/v4"
 	"os"
 	"rpn/lang"
 	"rpn/parser"
@@ -18,6 +19,18 @@ type TreeWalk struct {
 	repeatBlock   bool
 }
 
+func getLineText(lineNumber int, tokenStream *antlr.CommonTokenStream) string {
+	allTokens := tokenStream.GetAllTokens()
+	lineText := ""
+
+	for _, token := range allTokens {
+		if token.GetLine() == lineNumber {
+			lineText += token.GetText()
+		}
+	}
+	return lineText
+}
+
 func NewTreeWalk() *TreeWalk {
 	x := new(TreeWalk)
 	x.blockStack = util.NewStack()
@@ -31,7 +44,9 @@ func NewTreeWalk() *TreeWalk {
 func (w *TreeWalk) EnterFunctionDef(ctx *parser.FunctionDefContext) {
 	err := w.program.AddGlobalToken(ctx.ID().GetText(), lang.PStcFunction)
 	if err != nil {
-		fmt.Println(err)
+		line := ctx.GetStart().GetLine()
+		lineText := getLineText(line, w.program.Stream)
+		fmt.Printf("Function %s is defined in other place\n \tline: %v: %s", ctx.ID().GetText(), line, lineText)
 		os.Exit(-1)
 	}
 	w.functionStack.Push(lang.NewFunction(ctx.ID().GetText(), w.program.Module))
@@ -117,10 +132,13 @@ func (w *TreeWalk) EnterIdentifier(ctx *parser.IdentifierContext) {
 
 	if ctx.GetText() == lang.PrintToken {
 		CallFunc(w.program.Funcs[lang.PrintT].IrFunc, top.(*lang.Block).Ir, w.program, false)
-	}
-	if ctx.GetText() == lang.InputToken {
+	} else if ctx.GetText() == lang.InputToken {
 		CallFunc(w.program.Funcs[lang.InputT].IrFunc, top.(*lang.Block).Ir, w.program, false)
+	} else {
+		topF, _ := w.functionStack.Top()
+		ParseToken(ctx.GetText(), top.(*lang.Block), topF.(*lang.Function), w.program)
 	}
+
 }
 
 func (w *TreeWalk) EnterIfBlock(ctx *parser.IfBlockContext) {

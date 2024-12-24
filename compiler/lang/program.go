@@ -22,7 +22,9 @@ const (
 )
 
 type Program struct {
-	Tree              antlr.Tree
+	Tree   antlr.Tree
+	Stream *antlr.CommonTokenStream
+
 	StringTable       *StringTable
 	GlobalTokenTable  map[string]ProgramTokenType
 	Functions         []*Function
@@ -34,6 +36,18 @@ type Program struct {
 	Funcs             map[TokenType]*DefaultFunc
 	BlockIndex        int
 	LoopIndex         int
+}
+
+func (p *Program) GetFunction(name string, function *Function) *Function {
+	if function.Name == name {
+		return function
+	}
+	for _, fun := range p.Functions {
+		if fun.Name == name {
+			return fun
+		}
+	}
+	return nil
 }
 
 func DefineTypes() {

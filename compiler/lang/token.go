@@ -34,6 +34,7 @@ const (
 	AndToken         = `and`
 	RepeatToken      = `repeat`
 	TypeofToken      = `typeof`
+	AtToken          = `@`
 )
 
 type TokenType int
@@ -72,7 +73,7 @@ const (
 	AndT
 	RepeatT
 	PopTypeT
-	PrintFT
+	AtT
 	ScanFT
 	TypeofT
 )
@@ -146,6 +147,8 @@ func StrToTokenType(str string) TokenType {
 		return RepeatT
 	case TypeofToken:
 		return TypeofT
+	case AtToken:
+		return AtT
 	}
 
 	return AddT
