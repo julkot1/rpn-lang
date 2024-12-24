@@ -23,6 +23,7 @@ stackOperation: 'dup'
               | 'rot' 
               | 'swap' 
               | 'pop'
+              | 'over'
               ;
 push          : SIGNED_NUMBER 
               | NUMBER

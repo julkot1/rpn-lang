@@ -1,6 +1,7 @@
 // Code generated from Stc.g4 by ANTLR 4.13.2. DO NOT EDIT.
 
 package parser // Stc
+
 import (
 	"fmt"
 	"strconv"
@@ -33,10 +34,10 @@ func stcParserInit() {
 	staticData := &StcParserStaticData
 	staticData.LiteralNames = []string{
 		"", "'fun'", "'{'", "'}'", "'if'", "'else'", "'repeat'", "'dup'", "'rot'",
-		"'swap'", "'pop'", "':'", "'!'",
+		"'swap'", "'pop'", "'over'", "':'", "'!'",
 	}
 	staticData.SymbolicNames = []string{
-		"", "", "", "", "", "", "", "", "", "", "", "", "STACK_PREVENTION",
+		"", "", "", "", "", "", "", "", "", "", "", "", "", "STACK_PREVENTION",
 		"NUMBER", "SIGNED_NUMBER", "FLOAT", "SIGNED_FLOAT", "FLOAT_E", "SIGNED_FLOAT_E",
 		"BIN_NUMBER", "HEX_NUMBER", "STRING", "CHAR", "BOOL", "SIMPLE_TYPE",
 		"LOGIC_OPERATOR", "ARITHMETIC_OPERATOR", "BUILD_IN_OPERATOR", "ID",
@@ -48,7 +49,7 @@ func stcParserInit() {
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 29, 88, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 1, 30, 88, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
 		10, 2, 11, 7, 11, 1, 0, 4, 0, 26, 8, 0, 11, 0, 12, 0, 27, 1, 0, 1, 0, 1,
 		1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 2, 4, 2, 40, 8, 2, 11, 2, 12,
@@ -57,13 +58,13 @@ func stcParserInit() {
 		1, 5, 1, 6, 1, 6, 1, 6, 1, 7, 3, 7, 69, 8, 7, 1, 7, 1, 7, 1, 8, 1, 8, 1,
 		9, 1, 9, 1, 10, 1, 10, 1, 11, 1, 11, 1, 11, 4, 11, 82, 8, 11, 11, 11, 12,
 		11, 83, 3, 11, 86, 8, 11, 1, 11, 0, 0, 12, 0, 2, 4, 6, 8, 10, 12, 14, 16,
-		18, 20, 22, 0, 3, 1, 0, 25, 27, 1, 0, 7, 10, 1, 0, 13, 24, 88, 0, 25, 1,
+		18, 20, 22, 0, 3, 1, 0, 26, 28, 1, 0, 7, 11, 1, 0, 14, 25, 88, 0, 25, 1,
 		0, 0, 0, 2, 31, 1, 0, 0, 0, 4, 39, 1, 0, 0, 0, 6, 48, 1, 0, 0, 0, 8, 56,
 		1, 0, 0, 0, 10, 61, 1, 0, 0, 0, 12, 64, 1, 0, 0, 0, 14, 68, 1, 0, 0, 0,
 		16, 72, 1, 0, 0, 0, 18, 74, 1, 0, 0, 0, 20, 76, 1, 0, 0, 0, 22, 78, 1,
 		0, 0, 0, 24, 26, 3, 2, 1, 0, 25, 24, 1, 0, 0, 0, 26, 27, 1, 0, 0, 0, 27,
 		25, 1, 0, 0, 0, 27, 28, 1, 0, 0, 0, 28, 29, 1, 0, 0, 0, 29, 30, 5, 0, 0,
-		1, 30, 1, 1, 0, 0, 0, 31, 32, 5, 1, 0, 0, 32, 33, 5, 28, 0, 0, 33, 34,
+		1, 30, 1, 1, 0, 0, 0, 31, 32, 5, 1, 0, 0, 32, 33, 5, 29, 0, 0, 33, 34,
 		3, 6, 3, 0, 34, 3, 1, 0, 0, 0, 35, 40, 3, 14, 7, 0, 36, 40, 3, 18, 9, 0,
 		37, 40, 3, 20, 10, 0, 38, 40, 3, 22, 11, 0, 39, 35, 1, 0, 0, 0, 39, 36,
 		1, 0, 0, 0, 39, 37, 1, 0, 0, 0, 39, 38, 1, 0, 0, 0, 40, 41, 1, 0, 0, 0,
@@ -76,10 +77,10 @@ func stcParserInit() {
 		3, 0, 58, 60, 3, 10, 5, 0, 59, 58, 1, 0, 0, 0, 59, 60, 1, 0, 0, 0, 60,
 		9, 1, 0, 0, 0, 61, 62, 5, 5, 0, 0, 62, 63, 3, 6, 3, 0, 63, 11, 1, 0, 0,
 		0, 64, 65, 5, 6, 0, 0, 65, 66, 3, 6, 3, 0, 66, 13, 1, 0, 0, 0, 67, 69,
-		5, 12, 0, 0, 68, 67, 1, 0, 0, 0, 68, 69, 1, 0, 0, 0, 69, 70, 1, 0, 0, 0,
+		5, 13, 0, 0, 68, 67, 1, 0, 0, 0, 68, 69, 1, 0, 0, 0, 69, 70, 1, 0, 0, 0,
 		70, 71, 3, 16, 8, 0, 71, 15, 1, 0, 0, 0, 72, 73, 7, 0, 0, 0, 73, 17, 1,
 		0, 0, 0, 74, 75, 7, 1, 0, 0, 75, 19, 1, 0, 0, 0, 76, 77, 7, 2, 0, 0, 77,
-		21, 1, 0, 0, 0, 78, 85, 5, 28, 0, 0, 79, 80, 5, 11, 0, 0, 80, 82, 5, 28,
+		21, 1, 0, 0, 0, 78, 85, 5, 29, 0, 0, 79, 80, 5, 12, 0, 0, 80, 82, 5, 29,
 		0, 0, 81, 79, 1, 0, 0, 0, 82, 83, 1, 0, 0, 0, 83, 81, 1, 0, 0, 0, 83, 84,
 		1, 0, 0, 0, 84, 86, 1, 0, 0, 0, 85, 81, 1, 0, 0, 0, 85, 86, 1, 0, 0, 0,
 		86, 23, 1, 0, 0, 0, 9, 27, 39, 41, 46, 52, 59, 68, 83, 85,
@@ -132,24 +133,25 @@ const (
 	StcParserT__8                = 9
 	StcParserT__9                = 10
 	StcParserT__10               = 11
-	StcParserSTACK_PREVENTION    = 12
-	StcParserNUMBER              = 13
-	StcParserSIGNED_NUMBER       = 14
-	StcParserFLOAT               = 15
-	StcParserSIGNED_FLOAT        = 16
-	StcParserFLOAT_E             = 17
-	StcParserSIGNED_FLOAT_E      = 18
-	StcParserBIN_NUMBER          = 19
-	StcParserHEX_NUMBER          = 20
-	StcParserSTRING              = 21
-	StcParserCHAR                = 22
-	StcParserBOOL                = 23
-	StcParserSIMPLE_TYPE         = 24
-	StcParserLOGIC_OPERATOR      = 25
-	StcParserARITHMETIC_OPERATOR = 26
-	StcParserBUILD_IN_OPERATOR   = 27
-	StcParserID                  = 28
-	StcParserWS                  = 29
+	StcParserT__11               = 12
+	StcParserSTACK_PREVENTION    = 13
+	StcParserNUMBER              = 14
+	StcParserSIGNED_NUMBER       = 15
+	StcParserFLOAT               = 16
+	StcParserSIGNED_FLOAT        = 17
+	StcParserFLOAT_E             = 18
+	StcParserSIGNED_FLOAT_E      = 19
+	StcParserBIN_NUMBER          = 20
+	StcParserHEX_NUMBER          = 21
+	StcParserSTRING              = 22
+	StcParserCHAR                = 23
+	StcParserBOOL                = 24
+	StcParserSIMPLE_TYPE         = 25
+	StcParserLOGIC_OPERATOR      = 26
+	StcParserARITHMETIC_OPERATOR = 27
+	StcParserBUILD_IN_OPERATOR   = 28
+	StcParserID                  = 29
+	StcParserWS                  = 30
 )
 
 // StcParser rules.
@@ -770,7 +772,7 @@ func (p *StcParser) SubBlock() (localctx ISubBlockContext) {
 					p.Operation()
 				}
 
-			case StcParserT__6, StcParserT__7, StcParserT__8, StcParserT__9:
+			case StcParserT__6, StcParserT__7, StcParserT__8, StcParserT__9, StcParserT__10:
 				{
 					p.SetState(36)
 					p.StackOperation()
@@ -829,7 +831,7 @@ func (p *StcParser) SubBlock() (localctx ISubBlockContext) {
 			p.RepeatBlock()
 		}
 
-	case StcParserT__2, StcParserT__6, StcParserT__7, StcParserT__8, StcParserT__9, StcParserSTACK_PREVENTION, StcParserNUMBER, StcParserSIGNED_NUMBER, StcParserFLOAT, StcParserSIGNED_FLOAT, StcParserFLOAT_E, StcParserSIGNED_FLOAT_E, StcParserBIN_NUMBER, StcParserHEX_NUMBER, StcParserSTRING, StcParserCHAR, StcParserBOOL, StcParserSIMPLE_TYPE, StcParserLOGIC_OPERATOR, StcParserARITHMETIC_OPERATOR, StcParserBUILD_IN_OPERATOR, StcParserID:
+	case StcParserT__2, StcParserT__6, StcParserT__7, StcParserT__8, StcParserT__9, StcParserT__10, StcParserSTACK_PREVENTION, StcParserNUMBER, StcParserSIGNED_NUMBER, StcParserFLOAT, StcParserSIGNED_FLOAT, StcParserFLOAT_E, StcParserSIGNED_FLOAT_E, StcParserBIN_NUMBER, StcParserHEX_NUMBER, StcParserSTRING, StcParserCHAR, StcParserBOOL, StcParserSIMPLE_TYPE, StcParserLOGIC_OPERATOR, StcParserARITHMETIC_OPERATOR, StcParserBUILD_IN_OPERATOR, StcParserID:
 
 	default:
 	}
@@ -976,7 +978,7 @@ func (p *StcParser) Block() (localctx IBlockContext) {
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&536868736) != 0) {
+	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1073737600) != 0) {
 		{
 			p.SetState(49)
 			p.SubBlock()
@@ -1599,7 +1601,7 @@ func (p *StcParser) Operaor() (localctx IOperaorContext) {
 		p.SetState(72)
 		_la = p.GetTokenStream().LA(1)
 
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&234881024) != 0) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&469762048) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -1691,7 +1693,7 @@ func (p *StcParser) StackOperation() (localctx IStackOperationContext) {
 		p.SetState(74)
 		_la = p.GetTokenStream().LA(1)
 
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1920) != 0) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&3968) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -1847,7 +1849,7 @@ func (p *StcParser) Push() (localctx IPushContext) {
 		p.SetState(76)
 		_la = p.GetTokenStream().LA(1)
 
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&33546240) != 0) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&67092480) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -1964,7 +1966,7 @@ func (p *StcParser) Identifier() (localctx IIdentifierContext) {
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	if _la == StcParserT__10 {
+	if _la == StcParserT__11 {
 		p.SetState(81)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
@@ -1972,10 +1974,10 @@ func (p *StcParser) Identifier() (localctx IIdentifierContext) {
 		}
 		_la = p.GetTokenStream().LA(1)
 
-		for ok := true; ok; ok = _la == StcParserT__10 {
+		for ok := true; ok; ok = _la == StcParserT__11 {
 			{
 				p.SetState(79)
-				p.Match(StcParserT__10)
+				p.Match(StcParserT__11)
 				if p.HasError() {
 					// Recognition error - abort rule
 					goto errorExit

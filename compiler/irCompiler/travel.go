@@ -100,7 +100,15 @@ func (w *TreeWalk) EnterOperation(ctx *parser.OperationContext) {
 
 	CallFunc(w.program.Funcs[typ].IrFunc, top.(*lang.Block).Ir, w.program, prevent)
 }
+func (w *TreeWalk) EnterStackOperation(ctx *parser.StackOperationContext) {
+	top, err := w.blockStack.Top()
+	if err != nil {
+		os.Exit(-1)
+	}
+	typ := lang.StrToTokenType(ctx.GetText())
 
+	CallFunc(w.program.Funcs[typ].IrFunc, top.(*lang.Block).Ir, w.program, false)
+}
 func (w *TreeWalk) EnterIdentifier(ctx *parser.IdentifierContext) {
 	top, err := w.blockStack.Top()
 	if err != nil {

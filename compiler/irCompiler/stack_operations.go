@@ -125,12 +125,12 @@ func DefineDupFunc(program *lang.Program) *ir.Func {
 	newTop := dupFnBody.NewSub(currentTop, constant.NewInt(types.I64, 1))
 
 	stackPtr := dupFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I64, 0), newTop)
-	value := dupFnBody.NewLoad(types.I64, stackPtr)
+	load := dupFnBody.NewLoad(types.I64, stackPtr)
 
-	typeStackPtr := dupFnBody.NewGetElementPtr(stackType, program.Globals["type_stack"], constant.NewInt(types.I64, 0), currentTop)
+	typeStackPtr := dupFnBody.NewGetElementPtr(stackType, program.Globals["type_stack"], constant.NewInt(types.I64, 0), newTop)
 	typeVal := dupFnBody.NewLoad(types.I64, typeStackPtr)
 
-	dupFnBody.NewCall(program.Funcs[lang.PushT].IrFunc, value, typeVal)
+	dupFnBody.NewCall(program.Funcs[lang.PushT].IrFunc, load, typeVal)
 	dupFnBody.NewRet(nil)
 	return dupFn
 }
@@ -147,13 +147,22 @@ func DefineSwapFunction(program *lang.Program) *ir.Func {
 	stackPtr1 := swapFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I64, 0), newTop)
 	value1 := swapFnBody.NewLoad(types.I64, stackPtr1)
 
+	typePtr1 := swapFnBody.NewGetElementPtr(stackType, program.Globals["type_stack"], constant.NewInt(types.I64, 0), newTop)
+	type1 := swapFnBody.NewLoad(types.I64, typePtr1)
+
 	newTop = swapFnBody.NewSub(currentTop, constant.NewInt(types.I64, 2))
 
 	stackPtr2 := swapFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I64, 0), newTop)
 	value2 := swapFnBody.NewLoad(types.I64, stackPtr2)
 
+	typePtr2 := swapFnBody.NewGetElementPtr(stackType, program.Globals["type_stack"], constant.NewInt(types.I64, 0), newTop)
+	type2 := swapFnBody.NewLoad(types.I64, typePtr2)
+
 	swapFnBody.NewStore(value1, stackPtr2)
 	swapFnBody.NewStore(value2, stackPtr1)
+
+	swapFnBody.NewStore(type1, typePtr2)
+	swapFnBody.NewStore(type2, typePtr1)
 
 	swapFnBody.NewRet(nil)
 	return swapFn
@@ -171,7 +180,10 @@ func DefineOverFunction(program *lang.Program) *ir.Func {
 	stackPtr := overFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I64, 0), newTop)
 	value := overFnBody.NewLoad(types.I64, stackPtr)
 
-	overFnBody.NewCall(program.Funcs[lang.PushT].IrFunc, value, constant.NewInt(types.I64, int64(0)))
+	typePtr1 := overFnBody.NewGetElementPtr(stackType, program.Globals["type_stack"], constant.NewInt(types.I64, 0), newTop)
+	typeVal := overFnBody.NewLoad(types.I64, typePtr1)
+
+	overFnBody.NewCall(program.Funcs[lang.PushT].IrFunc, value, typeVal)
 	overFnBody.NewRet(nil)
 	return overFn
 }
@@ -188,19 +200,30 @@ func DefineRotFunction(program *lang.Program) *ir.Func {
 	stackPtr1 := rotFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I64, 0), newTop)
 	value1 := rotFnBody.NewLoad(types.I64, stackPtr1)
 
+	typePtr1 := rotFnBody.NewGetElementPtr(stackType, program.Globals["type_stack"], constant.NewInt(types.I64, 0), newTop)
+	type1 := rotFnBody.NewLoad(types.I64, typePtr1)
+
 	newTop = rotFnBody.NewSub(currentTop, constant.NewInt(types.I64, 2))
 
 	stackPtr2 := rotFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I64, 0), newTop)
 	value2 := rotFnBody.NewLoad(types.I64, stackPtr2)
+	typePtr2 := rotFnBody.NewGetElementPtr(stackType, program.Globals["type_stack"], constant.NewInt(types.I64, 0), newTop)
+	type2 := rotFnBody.NewLoad(types.I64, typePtr2)
 
 	newTop = rotFnBody.NewSub(currentTop, constant.NewInt(types.I64, 3))
 
 	stackPtr3 := rotFnBody.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I64, 0), newTop)
 	value3 := rotFnBody.NewLoad(types.I64, stackPtr3)
+	typePtr3 := rotFnBody.NewGetElementPtr(stackType, program.Globals["type_stack"], constant.NewInt(types.I64, 0), newTop)
+	type3 := rotFnBody.NewLoad(types.I64, typePtr3)
 
 	rotFnBody.NewStore(value1, stackPtr2)
 	rotFnBody.NewStore(value2, stackPtr3)
 	rotFnBody.NewStore(value3, stackPtr1)
+
+	rotFnBody.NewStore(type1, typePtr2)
+	rotFnBody.NewStore(type2, typePtr3)
+	rotFnBody.NewStore(type3, typePtr1)
 
 	rotFnBody.NewRet(nil)
 	return rotFn

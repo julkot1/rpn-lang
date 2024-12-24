@@ -1,6 +1,7 @@
 // Code generated from Stc.g4 by ANTLR 4.13.2. DO NOT EDIT.
 
 package parser // Stc
+
 import "github.com/antlr4-go/antlr/v4"
 
 // BaseStcListener is a complete listener for a parse tree produced by StcParser.
