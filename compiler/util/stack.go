@@ -9,6 +9,7 @@ type Stack interface {
 	Top() (interface{}, error)
 	IsEmpty() bool
 	Size() int
+	Items() []interface{}
 }
 
 func NewStack() Stack {
@@ -27,7 +28,9 @@ func (s *sliceStack) Top() (interface{}, error) {
 	item := s.items[index]
 	return item, nil
 }
-
+func (s *sliceStack) Items() []interface{} {
+	return s.items
+}
 func (s *sliceStack) Push(item interface{}) {
 	s.items = append(s.items, item)
 }

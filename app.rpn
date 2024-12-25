@@ -3,5 +3,13 @@ fun printL {
 }
 
 fun main {
-   232 24 addN printL
+   0 x :=
+   5 repeat {
+      x y :=
+      x 1 + x :=
+      y printL
+   }
+   x printL
+   y printL
+
 } 

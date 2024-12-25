@@ -19,6 +19,7 @@ const (
 	PStcFunction
 	PDefaultFunc
 	PStaticFunc
+	PVar
 )
 
 type Program struct {

@@ -3,21 +3,24 @@ grammar Stc;
 
 prog          : (functionDef)+ EOF;
 
-functionDef   : 'fun' ID block; 
+functionDef   : 'fun' ID arguments? block; 
 
 
-subBlock      :( (operation | stackOperation | push | identifier)+ (functionDef | ifBlock | repeatBlock)?  );
+subBlock      :( (operation | stackOperation | push | varReference | varAssing | identifier )+ (functionDef | ifBlock | repeatBlock)?  );
 
 block         : '{' (subBlock)+'}';
 
 ifBlock       : 'if' block (elseBlock)?;
 elseBlock     : 'else' block;
-repeatBlock   : 'repeat' block;
+repeatBlock   : 'repeat' arguments? block;
+
+arguments : '(' identifier+ ')' ;
 
 operation     : STACK_PREVENTION? operaor;
 operaor       : LOGIC_OPERATOR 
               | ARITHMETIC_OPERATOR 
               | BUILD_IN_OPERATOR
+              | ASSIGN_OPERATOR
               ;
 stackOperation: 'dup' 
               | 'rot' 
@@ -39,6 +42,11 @@ push          : SIGNED_NUMBER
               | SIMPLE_TYPE
               ;
 
+
+varAssing   : varIdentifier ASSIGN_OPERATOR;
+varReference: REFERENCE_OPERATOR varIdentifier;
+varIdentifier: ID ((':' ID)+)?;
+identifier: ID ((':' ID)+)?;
 
 
 STACK_PREVENTION: '!';
@@ -80,13 +88,13 @@ ARITHMETIC_OPERATOR: '+'
                    | '/' 
                    | '%' 
                    ;  
-BUILD_IN_OPERATOR  : 'typeof' 
-                   | ':=' 
-                   ;
+ASSIGN_OPERATOR    : ':=';
+REFERENCE_OPERATOR : '&';
+BUILD_IN_OPERATOR  : 'typeof';
 
 ID: [a-zA-Z_][a-zA-Z_0-9]*;  
 
-identifier: ID ((':' ID)+)?;
+
 
 
 

@@ -63,6 +63,12 @@ func (s *BaseStcListener) EnterRepeatBlock(ctx *RepeatBlockContext) {}
 // ExitRepeatBlock is called when production repeatBlock is exited.
 func (s *BaseStcListener) ExitRepeatBlock(ctx *RepeatBlockContext) {}
 
+// EnterArguments is called when production arguments is entered.
+func (s *BaseStcListener) EnterArguments(ctx *ArgumentsContext) {}
+
+// ExitArguments is called when production arguments is exited.
+func (s *BaseStcListener) ExitArguments(ctx *ArgumentsContext) {}
+
 // EnterOperation is called when production operation is entered.
 func (s *BaseStcListener) EnterOperation(ctx *OperationContext) {}
 
@@ -86,6 +92,24 @@ func (s *BaseStcListener) EnterPush(ctx *PushContext) {}
 
 // ExitPush is called when production push is exited.
 func (s *BaseStcListener) ExitPush(ctx *PushContext) {}
+
+// EnterVarAssing is called when production varAssing is entered.
+func (s *BaseStcListener) EnterVarAssing(ctx *VarAssingContext) {}
+
+// ExitVarAssing is called when production varAssing is exited.
+func (s *BaseStcListener) ExitVarAssing(ctx *VarAssingContext) {}
+
+// EnterVarReference is called when production varReference is entered.
+func (s *BaseStcListener) EnterVarReference(ctx *VarReferenceContext) {}
+
+// ExitVarReference is called when production varReference is exited.
+func (s *BaseStcListener) ExitVarReference(ctx *VarReferenceContext) {}
+
+// EnterVarIdentifier is called when production varIdentifier is entered.
+func (s *BaseStcListener) EnterVarIdentifier(ctx *VarIdentifierContext) {}
+
+// ExitVarIdentifier is called when production varIdentifier is exited.
+func (s *BaseStcListener) ExitVarIdentifier(ctx *VarIdentifierContext) {}
 
 // EnterIdentifier is called when production identifier is entered.
 func (s *BaseStcListener) EnterIdentifier(ctx *IdentifierContext) {}

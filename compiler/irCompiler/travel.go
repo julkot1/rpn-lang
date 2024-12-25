@@ -14,6 +14,7 @@ type TreeWalk struct {
 	program       *lang.Program
 	blockStack    util.Stack
 	functionStack util.Stack
+	scopeStack    util.Stack
 	nonFreeBlock  bool
 	ifBlock       bool
 	repeatBlock   bool
@@ -38,6 +39,7 @@ func NewTreeWalk() *TreeWalk {
 	x.nonFreeBlock = false
 	x.ifBlock = false
 	x.repeatBlock = false
+	x.scopeStack = util.NewStack()
 	return x
 }
 
@@ -60,6 +62,14 @@ func (w *TreeWalk) ExitFunctionDef(ctx *parser.FunctionDefContext) {
 	}
 	fun := pop.(*lang.Function)
 	w.program.Functions = append(w.program.Functions, fun)
+}
+
+func (w *TreeWalk) EnterVarAssing(ctx *parser.VarAssingContext) {
+	top, err := w.blockStack.Top()
+	if err != nil {
+		os.Exit(-1)
+	}
+	AssignVar(top.(*lang.Block), ctx.VarIdentifier().GetText(), w.scopeStack, w.program)
 }
 
 func (w *TreeWalk) EnterSubBlock(ctx *parser.SubBlockContext) {
@@ -96,6 +106,15 @@ func (w *TreeWalk) ExitSubBlock(ctx *parser.SubBlockContext) {
 		top.(*lang.Function).Blocks = append(top.(*lang.Function).Blocks, pop.(*lang.Block))
 	}
 
+}
+
+func (w *TreeWalk) EnterBlock(ctx *parser.BlockContext) {
+	scope := NewScope()
+	w.scopeStack.Push(scope)
+}
+
+func (w *TreeWalk) ExitBlock(ctx *parser.BlockContext) {
+	w.scopeStack.Pop()
 }
 
 func (w *TreeWalk) EnterPush(ctx *parser.PushContext) {
@@ -136,7 +155,7 @@ func (w *TreeWalk) EnterIdentifier(ctx *parser.IdentifierContext) {
 		CallFunc(w.program.Funcs[lang.InputT].IrFunc, top.(*lang.Block).Ir, w.program, false)
 	} else {
 		topF, _ := w.functionStack.Top()
-		ParseToken(ctx.GetText(), top.(*lang.Block), topF.(*lang.Function), w.program)
+		ParseToken(ctx.GetText(), top.(*lang.Block), topF.(*lang.Function), w.program, w.scopeStack)
 	}
 
 }

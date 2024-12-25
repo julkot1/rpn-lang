@@ -29,6 +29,9 @@ type StcListener interface {
 	// EnterRepeatBlock is called when entering the repeatBlock production.
 	EnterRepeatBlock(c *RepeatBlockContext)
 
+	// EnterArguments is called when entering the arguments production.
+	EnterArguments(c *ArgumentsContext)
+
 	// EnterOperation is called when entering the operation production.
 	EnterOperation(c *OperationContext)
 
@@ -40,6 +43,15 @@ type StcListener interface {
 
 	// EnterPush is called when entering the push production.
 	EnterPush(c *PushContext)
+
+	// EnterVarAssing is called when entering the varAssing production.
+	EnterVarAssing(c *VarAssingContext)
+
+	// EnterVarReference is called when entering the varReference production.
+	EnterVarReference(c *VarReferenceContext)
+
+	// EnterVarIdentifier is called when entering the varIdentifier production.
+	EnterVarIdentifier(c *VarIdentifierContext)
 
 	// EnterIdentifier is called when entering the identifier production.
 	EnterIdentifier(c *IdentifierContext)
@@ -65,6 +77,9 @@ type StcListener interface {
 	// ExitRepeatBlock is called when exiting the repeatBlock production.
 	ExitRepeatBlock(c *RepeatBlockContext)
 
+	// ExitArguments is called when exiting the arguments production.
+	ExitArguments(c *ArgumentsContext)
+
 	// ExitOperation is called when exiting the operation production.
 	ExitOperation(c *OperationContext)
 
@@ -76,6 +91,15 @@ type StcListener interface {
 
 	// ExitPush is called when exiting the push production.
 	ExitPush(c *PushContext)
+
+	// ExitVarAssing is called when exiting the varAssing production.
+	ExitVarAssing(c *VarAssingContext)
+
+	// ExitVarReference is called when exiting the varReference production.
+	ExitVarReference(c *VarReferenceContext)
+
+	// ExitVarIdentifier is called when exiting the varIdentifier production.
+	ExitVarIdentifier(c *VarIdentifierContext)
 
 	// ExitIdentifier is called when exiting the identifier production.
 	ExitIdentifier(c *IdentifierContext)
