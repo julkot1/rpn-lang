@@ -37,6 +37,7 @@ type Program struct {
 	Funcs             map[TokenType]*DefaultFunc
 	BlockIndex        int
 	LoopIndex         int
+	Structs           map[string]*types.StructType
 }
 
 func (p *Program) GetFunction(name string, function *Function) *Function {

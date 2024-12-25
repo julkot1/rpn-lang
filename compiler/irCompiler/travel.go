@@ -72,6 +72,14 @@ func (w *TreeWalk) EnterVarAssing(ctx *parser.VarAssingContext) {
 	AssignVar(top.(*lang.Block), ctx.VarIdentifier().GetText(), w.scopeStack, w.program)
 }
 
+func (w *TreeWalk) EnterVarReference(ctx *parser.VarReferenceContext) {
+	top, err := w.blockStack.Top()
+	if err != nil {
+		os.Exit(-1)
+	}
+	PushReference(top.(*lang.Block), ctx.VarIdentifier().GetText(), w, ctx)
+}
+
 func (w *TreeWalk) EnterSubBlock(ctx *parser.SubBlockContext) {
 	top, err := w.functionStack.Top()
 	if err != nil {
@@ -130,10 +138,17 @@ func (w *TreeWalk) EnterOperation(ctx *parser.OperationContext) {
 		os.Exit(-1)
 	}
 	typ := lang.StrToTokenType(ctx.GetText())
+
 	prevent := ctx.STACK_PREVENTION() != nil
+
+	if typ == lang.AssignT {
+		AssignVarRef(w, top.(*lang.Block).Ir, prevent)
+		return
+	}
 
 	CallFunc(w.program.Funcs[typ].IrFunc, top.(*lang.Block).Ir, w.program, prevent)
 }
+
 func (w *TreeWalk) EnterStackOperation(ctx *parser.StackOperationContext) {
 	top, err := w.blockStack.Top()
 	if err != nil {
@@ -155,7 +170,7 @@ func (w *TreeWalk) EnterIdentifier(ctx *parser.IdentifierContext) {
 		CallFunc(w.program.Funcs[lang.InputT].IrFunc, top.(*lang.Block).Ir, w.program, false)
 	} else {
 		topF, _ := w.functionStack.Top()
-		ParseToken(ctx.GetText(), top.(*lang.Block), topF.(*lang.Function), w.program, w.scopeStack)
+		ParseToken(ctx.GetText(), top.(*lang.Block), topF.(*lang.Function), w.program, w.scopeStack, ctx)
 	}
 
 }

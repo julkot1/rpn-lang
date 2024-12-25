@@ -3,7 +3,7 @@
 
 void stc_print(STC_I64 val, STC_TYPE typ){
     char *types[8] = {
-        "I64", "Bool", "I8", "F64", "Str", "Array", "Struct", "Type"
+        "I64", "Bool", "I8", "F64", "Str", "Array", "Ref", "Type"
     };
 
     switch (typ) {

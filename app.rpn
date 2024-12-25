@@ -3,13 +3,15 @@ fun printL {
 }
 
 fun main {
-   0 x :=
-   5 repeat {
-      x y :=
-      x 1 + x :=
-      y printL
-   }
-   x printL
-   y printL
+   4 a :=
+   5 b :=
+   "a: " print a printL
+   "b: " print b printL
+
+   a &b b &a
+   := :=
+   "Swapped" printL
+   "a: " print a printL
+   "b: " print b printL
 
 } 

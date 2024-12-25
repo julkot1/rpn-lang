@@ -34,7 +34,8 @@ const (
 	AndToken         = `and`
 	RepeatToken      = `repeat`
 	TypeofToken      = `typeof`
-	AtToken          = `@`
+	AtToken          = `at`
+	AssignToken      = `:=`
 )
 
 type TokenType int
@@ -76,6 +77,7 @@ const (
 	AtT
 	ScanFT
 	TypeofT
+	AssignT
 )
 
 type Token struct {
@@ -149,6 +151,8 @@ func StrToTokenType(str string) TokenType {
 		return TypeofT
 	case AtToken:
 		return AtT
+	case AssignToken:
+		return AssignT
 	}
 
 	return AddT

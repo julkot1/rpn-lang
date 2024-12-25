@@ -54,6 +54,15 @@ func DefineGlobals(m *ir.Module) map[string]*ir.Global {
 	return globals
 }
 
+func DefineStructs() map[string]*types.StructType {
+	structs := make(map[string]*types.StructType)
+
+	variable := types.NewStruct(types.I64, types.I64)
+	structs["variable"] = variable
+
+	return structs
+}
+
 func CallFunc(function *ir.Func, block *ir.Block, program *lang.Program, prevent bool) {
 	if prevent == true {
 		argc := len(function.Sig.Params) / 2
@@ -77,6 +86,7 @@ func CallFunc(function *ir.Func, block *ir.Block, program *lang.Program, prevent
 
 func LoadProgram(program *lang.Program) {
 	program.Globals = DefineGlobals(program.Module)
+	program.Structs = DefineStructs()
 
 	DefineFuncs(program)
 
