@@ -17,25 +17,44 @@ func LoadIf(program *lang.Program, block *ir.Block, nextBlock *lang.Block, trueB
 	return nextBlock
 }
 
-func LoadRepeat(program *lang.Program, fun *lang.Function, block *ir.Block, nextBlock, loopBlock, conditionBlock *lang.Block) *lang.Block {
+func LoadRepeat(program *lang.Program, block *lang.Block, nextBlock, loopBlock, conditionBlock *lang.Block) *lang.Block {
 
-	arg := GetValues(program, 1, block)[0]
-	counter := block.NewAlloca(types.I64)
-
-	block.NewStore(constant.NewInt(types.I64, 0), counter)
+	arg := GetValues(program, 1, block.Ir)[0]
+	counter, ok := block.Vars["loop_index"]
+	var loadPtr *ir.InstGetElementPtr
+	if !ok {
+		counter = block.Ir.NewAlloca(types.I64)
+		block.Ir.NewStore(constant.NewInt(types.I64, 0), counter)
+	} else {
+		typ := program.Structs["variable"]
+		loadPtr = block.Ir.NewGetElementPtr(typ, counter, constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 0))
+	}
 
 	conditionBlockIr := conditionBlock.Ir
 
-	block.NewBr(conditionBlockIr)
-
-	counterVal := conditionBlockIr.NewLoad(types.I64, counter)
+	block.Ir.NewBr(conditionBlockIr)
+	var counterVal *ir.InstLoad
+	if ok {
+		counterVal = conditionBlockIr.NewLoad(types.I64, loadPtr)
+	} else {
+		counterVal = conditionBlockIr.NewLoad(types.I64, counter)
+	}
 	compare := conditionBlockIr.NewICmp(enum.IPredNE, arg, counterVal)
 
 	conditionBlockIr.NewCondBr(compare, loopBlock.Ir, nextBlock.Ir)
 
-	counterValBody := loopBlock.Ir.NewLoad(types.I64, counter)
+	var counterValBody *ir.InstLoad
+	if ok {
+		counterValBody = loopBlock.Ir.NewLoad(types.I64, loadPtr)
+	} else {
+		counterValBody = loopBlock.Ir.NewLoad(types.I64, counter)
+	}
 	newCounter := loopBlock.Ir.NewAdd(constant.NewInt(types.I64, 1), counterValBody)
-	loopBlock.Ir.NewStore(newCounter, counter)
+	if !ok {
+		loopBlock.Ir.NewStore(newCounter, counter)
+	} else {
+		loopBlock.Ir.NewStore(newCounter, loadPtr)
+	}
 	loopBlock.Ir.NewBr(conditionBlockIr)
 	return nextBlock
 }

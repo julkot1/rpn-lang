@@ -6,7 +6,7 @@ prog          : (functionDef)+ EOF;
 functionDef   : 'fun' ID arguments? block; 
 
 
-subBlock      :( (operation | stackOperation | push | varReference | varAssing | identifier )+ (functionDef | ifBlock | repeatBlock)?  );
+subBlock      :( (operation | stackOperation | push | varReference | varAssign | identifier )+ (functionDef | ifBlock | repeatBlock)?  );
 
 block         : '{' (subBlock)+'}';
 
@@ -14,7 +14,7 @@ ifBlock       : 'if' block (elseBlock)?;
 elseBlock     : 'else' block;
 repeatBlock   : 'repeat' arguments? block;
 
-arguments : '(' identifier+ ')' ;
+arguments : '(' argument+ ')' ;
 
 operation     : STACK_PREVENTION? operaor;
 operaor       : LOGIC_OPERATOR 
@@ -43,7 +43,8 @@ push          : SIGNED_NUMBER
               ;
 
 
-varAssing   : varIdentifier ASSIGN_OPERATOR;
+argument    : ID;
+varAssign   : varIdentifier ASSIGN_OPERATOR;
 varReference: REFERENCE_OPERATOR varIdentifier;
 varIdentifier: ID ((':' ID)+)?;
 identifier: (STACK_PREVENTION)? ID ((':' ID)+)?;

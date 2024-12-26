@@ -93,11 +93,17 @@ func (s *BaseStcListener) EnterPush(ctx *PushContext) {}
 // ExitPush is called when production push is exited.
 func (s *BaseStcListener) ExitPush(ctx *PushContext) {}
 
-// EnterVarAssing is called when production varAssing is entered.
-func (s *BaseStcListener) EnterVarAssing(ctx *VarAssingContext) {}
+// EnterArgument is called when production argument is entered.
+func (s *BaseStcListener) EnterArgument(ctx *ArgumentContext) {}
 
-// ExitVarAssing is called when production varAssing is exited.
-func (s *BaseStcListener) ExitVarAssing(ctx *VarAssingContext) {}
+// ExitArgument is called when production argument is exited.
+func (s *BaseStcListener) ExitArgument(ctx *ArgumentContext) {}
+
+// EnterVarAssign is called when production varAssign is entered.
+func (s *BaseStcListener) EnterVarAssign(ctx *VarAssignContext) {}
+
+// ExitVarAssign is called when production varAssign is exited.
+func (s *BaseStcListener) ExitVarAssign(ctx *VarAssignContext) {}
 
 // EnterVarReference is called when production varReference is entered.
 func (s *BaseStcListener) EnterVarReference(ctx *VarReferenceContext) {}

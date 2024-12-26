@@ -79,6 +79,7 @@ func Compile(config config.TOMLConfig, path string, compilationCfg CompilationCo
 	irCompiler.LoadProgram(program)
 	Save(program, config)
 	LinkFiles(program, config)
+
 	BuildBinary(config, compilationCfg)
 }
 
@@ -118,7 +119,7 @@ func LinkFiles(program *lang.Program, tomlConfig config.TOMLConfig) {
 	err := cmd.Run()
 	if err != nil {
 		fmt.Println("Error: Invalid linker process:", err)
-		return
+		os.Exit(-1)
 	}
 
 }

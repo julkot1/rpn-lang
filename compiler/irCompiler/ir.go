@@ -100,7 +100,7 @@ func createJumps(program *lang.Program) {
 				LoadIf(program, block.Ir, NextFreeBlock(fun, idx, program), fun.Blocks[idx+1])
 			} else if block.CreateLoop {
 				i, b := MatchLoopCondition(fun, idx, program)
-				LoadRepeat(program, fun, block.Ir, NextLoopFreeBlock(fun, i, program), fun.Blocks[idx+1], b)
+				LoadRepeat(program, block, NextLoopFreeBlock(fun, i, program), fun.Blocks[idx+1], b)
 			} else if block.Ir.Term == nil {
 				block.Ir.NewBr(NextFreeBlock(fun, idx, program).Ir)
 			}

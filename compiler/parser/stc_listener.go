@@ -44,8 +44,11 @@ type StcListener interface {
 	// EnterPush is called when entering the push production.
 	EnterPush(c *PushContext)
 
-	// EnterVarAssing is called when entering the varAssing production.
-	EnterVarAssing(c *VarAssingContext)
+	// EnterArgument is called when entering the argument production.
+	EnterArgument(c *ArgumentContext)
+
+	// EnterVarAssign is called when entering the varAssign production.
+	EnterVarAssign(c *VarAssignContext)
 
 	// EnterVarReference is called when entering the varReference production.
 	EnterVarReference(c *VarReferenceContext)
@@ -92,8 +95,11 @@ type StcListener interface {
 	// ExitPush is called when exiting the push production.
 	ExitPush(c *PushContext)
 
-	// ExitVarAssing is called when exiting the varAssing production.
-	ExitVarAssing(c *VarAssingContext)
+	// ExitArgument is called when exiting the argument production.
+	ExitArgument(c *ArgumentContext)
+
+	// ExitVarAssign is called when exiting the varAssign production.
+	ExitVarAssign(c *VarAssignContext)
 
 	// ExitVarReference is called when exiting the varReference production.
 	ExitVarReference(c *VarReferenceContext)

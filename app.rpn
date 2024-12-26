@@ -3,9 +3,7 @@ fun printL {
 }
 
 fun main {
-  "abcdefg" !len 0 swap repeat {
-    !at printL
-    1 +
+  "abcdefg" !len repeat (idx) {
+    idx !at printL pop 
   }
-
 } 

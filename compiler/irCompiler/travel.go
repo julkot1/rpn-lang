@@ -3,6 +3,8 @@ package irCompiler
 import (
 	"fmt"
 	"github.com/antlr4-go/antlr/v4"
+	"github.com/llir/llvm/ir/constant"
+	"github.com/llir/llvm/ir/types"
 	"os"
 	"rpn/lang"
 	"rpn/parser"
@@ -11,13 +13,14 @@ import (
 
 type TreeWalk struct {
 	*parser.BaseStcListener
-	program       *lang.Program
-	blockStack    util.Stack
-	functionStack util.Stack
-	scopeStack    util.Stack
-	nonFreeBlock  bool
-	ifBlock       bool
-	repeatBlock   bool
+	program        *lang.Program
+	blockStack     util.Stack
+	functionStack  util.Stack
+	scopeStack     util.Stack
+	nonFreeBlock   bool
+	ifBlock        bool
+	repeatBlock    bool
+	notCreateScope bool
 }
 
 func getLineText(lineNumber int, tokenStream *antlr.CommonTokenStream) string {
@@ -39,7 +42,9 @@ func NewTreeWalk() *TreeWalk {
 	x.nonFreeBlock = false
 	x.ifBlock = false
 	x.repeatBlock = false
+	x.notCreateScope = false
 	x.scopeStack = util.NewStack()
+
 	return x
 }
 
@@ -64,7 +69,7 @@ func (w *TreeWalk) ExitFunctionDef(ctx *parser.FunctionDefContext) {
 	w.program.Functions = append(w.program.Functions, fun)
 }
 
-func (w *TreeWalk) EnterVarAssing(ctx *parser.VarAssingContext) {
+func (w *TreeWalk) EnterVarAssign(ctx *parser.VarAssignContext) {
 	top, err := w.blockStack.Top()
 	if err != nil {
 		os.Exit(-1)
@@ -117,8 +122,12 @@ func (w *TreeWalk) ExitSubBlock(ctx *parser.SubBlockContext) {
 }
 
 func (w *TreeWalk) EnterBlock(ctx *parser.BlockContext) {
-	scope := NewScope()
-	w.scopeStack.Push(scope)
+	if !w.notCreateScope {
+		scope := NewScope()
+		w.scopeStack.Push(scope)
+		w.nonFreeBlock = false
+	}
+
 }
 
 func (w *TreeWalk) ExitBlock(ctx *parser.BlockContext) {
@@ -160,6 +169,10 @@ func (w *TreeWalk) EnterStackOperation(ctx *parser.StackOperationContext) {
 	typ := lang.StrToTokenType(ctx.GetText())
 
 	CallFunc(w.program.Funcs[typ].IrFunc, top.(*lang.Block).Ir, w.program, false)
+	if typ == lang.PopT {
+		CallFunc(w.program.Funcs[lang.PopTypeT].IrFunc, top.(*lang.Block).Ir, w.program, false)
+
+	}
 }
 func (w *TreeWalk) EnterIdentifier(ctx *parser.IdentifierContext) {
 	top, err := w.blockStack.Top()
@@ -211,6 +224,30 @@ func (w *TreeWalk) EnterRepeatBlock(ctx *parser.RepeatBlockContext) {
 	top.(*lang.Function).Blocks = append(top.(*lang.Function).Blocks, pop.(*lang.Block))
 
 	w.nonFreeBlock = true
+
+	if ctx.Arguments() == nil {
+		return
+	}
+	if len(ctx.Arguments().AllArgument()) != 1 {
+		fmt.Printf("Too many arguments repeat statment \n\tline %v:", ctx.Arguments().GetStart().GetLine())
+		os.Exit(-1)
+	}
+	arg := ctx.Arguments().AllArgument()[0].GetText()
+	scope := NewScope()
+	w.scopeStack.Push(scope)
+	createVar(arg, pop.(*lang.Block), scope, w.program)
+
+	typ := w.program.Structs["variable"]
+	block := pop.(*lang.Block)
+
+	loadPtr := block.Ir.NewGetElementPtr(typ, scope.tokens[arg], constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 0))
+	block.Ir.NewStore(constant.NewInt(types.I64, 0), loadPtr)
+
+	loadTypePtr := block.Ir.NewGetElementPtr(typ, scope.tokens[arg], constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 1))
+	block.Ir.NewStore(constant.NewInt(types.I64, int64(lang.INT_T)), loadTypePtr)
+	block.Vars["loop_index"] = scope.tokens[arg]
+	w.notCreateScope = true
+
 }
 func (w *TreeWalk) ExitRepeatBlock(ctx *parser.RepeatBlockContext) {
 	w.repeatBlock = true
