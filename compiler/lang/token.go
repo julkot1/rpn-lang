@@ -36,6 +36,7 @@ const (
 	TypeofToken      = `typeof`
 	AtToken          = `at`
 	AssignToken      = `:=`
+	LenToken         = `len`
 )
 
 type TokenType int
@@ -75,7 +76,7 @@ const (
 	RepeatT
 	PopTypeT
 	AtT
-	ScanFT
+	LenT
 	TypeofT
 	AssignT
 )
@@ -153,6 +154,8 @@ func StrToTokenType(str string) TokenType {
 		return AtT
 	case AssignToken:
 		return AssignT
+	case LenToken:
+		return LenT
 	}
 
 	return AddT

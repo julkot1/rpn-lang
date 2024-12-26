@@ -137,16 +137,19 @@ func (w *TreeWalk) EnterOperation(ctx *parser.OperationContext) {
 	if err != nil {
 		os.Exit(-1)
 	}
-	typ := lang.StrToTokenType(ctx.GetText())
+	typ := lang.StrToTokenType(ctx.Operaor().GetText())
 
 	prevent := ctx.STACK_PREVENTION() != nil
-
-	if typ == lang.AssignT {
+	switch typ {
+	case lang.AssignT:
 		AssignVarRef(w, top.(*lang.Block).Ir, prevent)
-		return
+		break
+	default:
+		CallFunc(w.program.Funcs[typ].IrFunc, top.(*lang.Block).Ir, w.program, prevent)
+		break
+
 	}
 
-	CallFunc(w.program.Funcs[typ].IrFunc, top.(*lang.Block).Ir, w.program, prevent)
 }
 
 func (w *TreeWalk) EnterStackOperation(ctx *parser.StackOperationContext) {
@@ -164,9 +167,10 @@ func (w *TreeWalk) EnterIdentifier(ctx *parser.IdentifierContext) {
 		os.Exit(-1)
 	}
 
-	if ctx.GetText() == lang.PrintToken {
-		CallFunc(w.program.Funcs[lang.PrintT].IrFunc, top.(*lang.Block).Ir, w.program, false)
-	} else if ctx.GetText() == lang.InputToken {
+	if ctx.ID(0).GetText() == lang.PrintToken {
+
+		CallFunc(w.program.Funcs[lang.PrintT].IrFunc, top.(*lang.Block).Ir, w.program, ctx.STACK_PREVENTION() != nil)
+	} else if ctx.ID(0).GetText() == lang.InputToken {
 		CallFunc(w.program.Funcs[lang.InputT].IrFunc, top.(*lang.Block).Ir, w.program, false)
 	} else {
 		topF, _ := w.functionStack.Top()

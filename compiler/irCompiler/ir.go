@@ -21,9 +21,6 @@ func DefineFuncs(program *lang.Program) {
 	program.Funcs[lang.OverT] = &lang.DefaultFunc{IrFunc: DefineOverFunction(program)}
 
 	program.Funcs[lang.TypeofT] = &lang.DefaultFunc{IrFunc: DefineTypeofFunction(program)}
-
-	program.Funcs[lang.AtT] = &lang.DefaultFunc{IrFunc: DefineAtFunction(program)}
-
 }
 
 func DefineGlobals(m *ir.Module) map[string]*ir.Global {
@@ -69,7 +66,7 @@ func CallFunc(function *ir.Func, block *ir.Block, program *lang.Program, prevent
 		if argc == 0 {
 			block.NewCall(function)
 		} else {
-			args := GetValues(program, argc, block)
+			args := GetPreventValues(program, argc, block)
 			block.NewCall(function, args...)
 		}
 		return

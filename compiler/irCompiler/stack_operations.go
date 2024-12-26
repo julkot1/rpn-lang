@@ -80,14 +80,20 @@ func GetPreventValues(program *lang.Program, argc int, block *ir.Block) []value.
 	stackSize := 100
 	stackType := types.NewArray(uint64(stackSize), types.I64)
 
-	args := make([]value.Value, argc)
-	//TO-DO make for types !!!
+	args := make([]value.Value, argc*2)
+	currentTop := block.NewLoad(types.I64, program.Globals["top"])
+
 	for i := 0; i < argc; i++ {
-		currentTop := block.NewLoad(types.I64, program.Globals["top"])
 		newTop := block.NewSub(currentTop, constant.NewInt(types.I64, 1+int64(i)))
 		stackPtr := block.NewGetElementPtr(stackType, program.Globals["stack"], constant.NewInt(types.I64, 0), newTop)
 		val := block.NewLoad(types.I64, stackPtr)
 		args[i] = val
+	}
+	for i := 0; i < argc; i++ {
+		newTop := block.NewSub(currentTop, constant.NewInt(types.I64, 1+int64(i)))
+		stackPtr := block.NewGetElementPtr(stackType, program.Globals["type_stack"], constant.NewInt(types.I64, 0), newTop)
+		val := block.NewLoad(types.I64, stackPtr)
+		args[i+argc] = val
 	}
 	return args
 }

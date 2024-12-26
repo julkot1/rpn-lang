@@ -26,4 +26,7 @@ typedef char *STC_STR;
 #define IS_ONE_OF_TYPE(type, type_a, type_b) (type_a == type || type_b == type)
 #define IS_ALL_TYPE(type, type_a, type_b) (type_a == type && type_b == type)
 #define IS_ALL_SAME_TYPE(type_a, type_b) (type_a == type_b)
+
+#define TO_STC_STRING(x) (STC_STR)(x)
+#define TO_INT(x) (STC_I64)(x)
 #endif

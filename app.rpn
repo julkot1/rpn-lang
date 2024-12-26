@@ -3,15 +3,9 @@ fun printL {
 }
 
 fun main {
-   4 a :=
-   5 b :=
-   "a: " print a printL
-   "b: " print b printL
-
-   a &b b &a
-   := :=
-   "Swapped" printL
-   "a: " print a printL
-   "b: " print b printL
+  "abcdefg" !len 0 swap repeat {
+    !at printL
+    1 +
+  }
 
 } 

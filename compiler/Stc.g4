@@ -46,7 +46,7 @@ push          : SIGNED_NUMBER
 varAssing   : varIdentifier ASSIGN_OPERATOR;
 varReference: REFERENCE_OPERATOR varIdentifier;
 varIdentifier: ID ((':' ID)+)?;
-identifier: ID ((':' ID)+)?;
+identifier: (STACK_PREVENTION)? ID ((':' ID)+)?;
 
 
 STACK_PREVENTION: '!';
@@ -90,7 +90,11 @@ ARITHMETIC_OPERATOR: '+'
                    ;  
 ASSIGN_OPERATOR    : ':=';
 REFERENCE_OPERATOR : '&';
-BUILD_IN_OPERATOR  : 'typeof';
+BUILD_IN_OPERATOR  : 'typeof'
+                   | 'at'
+                   | 'len'
+                   | 'call'
+                   ;
 
 ID: [a-zA-Z_][a-zA-Z_0-9]*;  
 
