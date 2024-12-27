@@ -6,7 +6,7 @@ prog          : (functionDef)+ EOF;
 functionDef   : 'fun' ID arguments? block; 
 
 
-subBlock      :( (operation | stackOperation | push | varReference | varAssign | identifier )+ (functionDef | ifBlock | repeatBlock)?  );
+subBlock      :( (arrayIndex| arrayNew | array | operation | stackOperation | push | varReference | varAssign | identifier)+ (functionDef | ifBlock | repeatBlock)?  );
 
 block         : '{' (subBlock)+'}';
 
@@ -41,13 +41,40 @@ push          : SIGNED_NUMBER
               | BOOL 
               | SIMPLE_TYPE
               ;
+arrayElement  : SIGNED_NUMBER 
+              | NUMBER
+              | SIGNED_FLOAT 
+              | FLOAT 
+              | SIGNED_FLOAT_E 
+              | FLOAT_E 
+              | BIN_NUMBER 
+              | HEX_NUMBER 
+              | CHAR 
+              | STRING 
+              | BOOL 
+              | SIMPLE_TYPE
+              | arrayIndex
+              | varIdentifier
+              | array
+              ;
+
+
+arrayIndex: varIdentifier '@' (NUMBER|varIdentifier );
+
+
+
+array: ARRAY_OPEN (arrayElement)+ ARRAY_CLOSE;
+arrayDescriber: ARRAY_OPEN NUMBER ARRAY_CLOSE;
+arrayNew: ARRAY_OPERATOR arrayDescriber arrayDescriber?;
 
 
 argument    : ID;
-varAssign   : varIdentifier ASSIGN_OPERATOR;
+varAssign   : (varIdentifier|arrayIndex) ASSIGN_OPERATOR;
 varReference: REFERENCE_OPERATOR varIdentifier;
 varIdentifier: ID ((':' ID)+)?;
 identifier: (STACK_PREVENTION)? ID ((':' ID)+)?;
+
+
 
 
 STACK_PREVENTION: '!';
@@ -96,6 +123,11 @@ BUILD_IN_OPERATOR  : 'typeof'
                    | 'len'
                    | 'call'
                    ;
+
+
+ARRAY_OPEN: '[';
+ARRAY_CLOSE: ']';
+ARRAY_OPERATOR: 'arr';
 
 ID: [a-zA-Z_][a-zA-Z_0-9]*;  
 

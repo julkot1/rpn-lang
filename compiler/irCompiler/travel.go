@@ -56,9 +56,36 @@ func (w *TreeWalk) EnterFunctionDef(ctx *parser.FunctionDefContext) {
 		fmt.Printf("Function %s is defined in other place\n \tline: %v: %s", ctx.ID().GetText(), line, lineText)
 		os.Exit(-1)
 	}
-	w.functionStack.Push(lang.NewFunction(ctx.ID().GetText(), w.program.Module))
-}
 
+	params := make([]string, 0)
+	if ctx.Arguments() != nil {
+		args := ctx.Arguments().AllArgument()
+		for _, arg := range args {
+			params = append(params, arg.GetText())
+		}
+		ok, str := isUnique(params)
+		if !ok {
+			fmt.Printf("parametr is not unique: %s in function %s\n\t line %v:", str, ctx.ID().GetText(), ctx.GetStart().GetLine())
+			os.Exit(-1)
+		}
+
+		for _, arg := range args {
+			params = append(params, arg.GetText()+".typ")
+		}
+	}
+	w.functionStack.Push(lang.NewFunction(ctx.ID().GetText(), w.program.Module, params))
+
+}
+func isUnique(arr []string) (bool, string) {
+	seen := make(map[string]bool)
+	for _, v := range arr {
+		if seen[v] {
+			return false, v // Duplicate found
+		}
+		seen[v] = true
+	}
+	return true, "" // All elements are unique
+}
 func (w *TreeWalk) ExitFunctionDef(ctx *parser.FunctionDefContext) {
 	pop, err := w.functionStack.Pop()
 

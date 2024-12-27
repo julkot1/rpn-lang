@@ -9,6 +9,14 @@ import (
 )
 
 func ParseToken(text string, block *lang.Block, fun *lang.Function, program *lang.Program, scope util.Stack, ctx *parser.IdentifierContext) {
+	if fun.IsParameter(text) {
+		param, paramType := fun.GetParam(text)
+		block.Ir.NewCall(program.Funcs[lang.PushT].IrFunc,
+			param,
+			paramType)
+		return
+	}
+
 	tok, ok := program.GlobalTokenTable[text]
 	if !ok {
 		if TokenExists(text, scope) {

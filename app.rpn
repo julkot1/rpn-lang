@@ -1,9 +1,12 @@
-fun printL {
-   print '\n' print
+
+fun printL(x) {
+  x print '\n' print
+}
+
+fun addMul(a b c) {
+  a
 }
 
 fun main {
-  "abcdefg" !len repeat (idx) {
-    idx !at printL pop 
-  }
-} 
+  4 3 2 addMul
+}
