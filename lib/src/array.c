@@ -1,5 +1,6 @@
 #include "array.h"
 #include "stc.h"
+#include <stdio.h>
 
 
 struct STC_VAR_STRUCT {
@@ -36,6 +37,21 @@ void stc_at(STC_I64 idx, STC_I64 array, STC_TYPE idx_typ, STC_TYPE array_typ)
         break;
     }
 }
+
+void stc_set(STC_I64 idx, STC_I64 array, STC_I64 val, STC_TYPE idx_typ, STC_TYPE array_typ, STC_TYPE val_typ) 
+{
+    STC_ARRAY_STRUCT *arr;
+    STC_VAR_STRUCT var={};
+    switch (array_typ) {
+        case STC_ARRAY_TYPE: 
+            arr = (STC_ARRAY_STRUCT*)array;
+            var.type = val_typ;
+            var.value = val;
+            arr->elem[idx] = var;
+        break;
+    }
+}
+
 
 
 void stc_len(STC_I64 array, STC_TYPE array_typ) 

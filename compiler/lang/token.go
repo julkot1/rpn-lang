@@ -37,6 +37,7 @@ const (
 	AtToken          = `at`
 	AssignToken      = `:=`
 	LenToken         = `len`
+	SetToken         = `set`
 )
 
 type TokenType int
@@ -79,6 +80,7 @@ const (
 	LenT
 	TypeofT
 	AssignT
+	SetT
 )
 
 type Token struct {
@@ -156,6 +158,8 @@ func StrToTokenType(str string) TokenType {
 		return AssignT
 	case LenToken:
 		return LenT
+	case SetToken:
+		return SetT
 	}
 
 	return AddT

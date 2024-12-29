@@ -102,9 +102,7 @@ func GetValues(program *lang.Program, argc int, block *ir.Block) []value.Value {
 	args := make([]value.Value, argc*2)
 	for i := 0; i < argc; i += 1 {
 		args[i] = block.NewCall(program.Funcs[lang.PopT].IrFunc)
-	}
-	for i := argc; i < argc*2; i += 1 {
-		args[i] = block.NewCall(program.Funcs[lang.PopTypeT].IrFunc)
+		args[argc+i] = block.NewCall(program.Funcs[lang.PopTypeT].IrFunc)
 	}
 	return args
 }

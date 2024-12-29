@@ -3,10 +3,8 @@ fun printL(x) {
   x print '\n' print
 }
 
-fun addMul(a b c) {
-  a a + c * printL
-}
-
 fun main {
-  [2 "df" [1 2 3]] 2 at printL
+  [2 1 3 7] x :=
+  21 x 1 set
+  x printL
 }

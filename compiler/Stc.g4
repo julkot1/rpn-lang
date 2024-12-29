@@ -120,6 +120,7 @@ ASSIGN_OPERATOR    : ':=';
 REFERENCE_OPERATOR : '&';
 BUILD_IN_OPERATOR  : 'typeof'
                    | 'at'
+                   | 'set'
                    | 'len'
                    | 'call'
                    ;
