@@ -12,6 +12,11 @@ Stack Code is a playful and experimental language built with Go and LLVM (versio
 
 -  **Easy C Binding**: Simplifies integration with C functions.
 
+
+## Doc
+
+https://stackcodedoc.netlify.app/
+
 ---
 
 ## Running Stack Code
@@ -126,16 +131,18 @@ The stack is the primary data space for operations. Each item on the stack is 64
 
 #### Basic Operations
 
-| **Name**  |  **Syntax** | **Operation** |
-| :---         |     :---:      |         :---: |
-| `push` | `a` | `[] -> [a]` |
-| `dup` | `\|>` | `[a] -> [a a]` |
-| `pop` | `pop` | `[a b] -> [b]` |
-| `swap` | `\|s` | `[a b] -> [b a]` |
-| `rotate` | `\|r` | `[a b c] -> [c b a]` |
+### Basic Operations
+
+| **Name**    | **Operation**        | **Description**                                          |
+|-------------|---------------------:|--------------------------------------------------------|
+| `push`      | `[] -> [a]`          | Pushes the value `a` onto the stack.                      |
+| `dup`       | `[a] -> [a a]`       | Duplicates the top element of the stack.                   |
+| `pop`       | `[a b] -> [b]`       | Removes the top element from the stack.                    |
+| `swap`      | `[a b] -> [b a]`     | Swaps the top two elements of the stack.                   |
+| `rotate`    | `[a b c] -> [c b a]` | Rotates the top three elements, moving the top element to the bottom. |
+| `over`      | `[a b] -> [a b a]`   | Duplicates the second top element of the stack.            |
 
 ---
-
 
 
 ### Type System
@@ -189,13 +196,13 @@ The `!` suffix ensures that values used in operations remain on the stack after 
 ```
 **Before**  `!+` operation:
 ```
-[4 5]
+[5 4]
 ```
 
 **After**  `!+` operation:
 
-```
-[9 4 5]
+```stack
+[5 4 9]
 ```
 ---
 
@@ -390,10 +397,3 @@ void stc_add(STC_I64 arg0, STC_I64 arg1, STC_TYPE arg2, STC_TYPE arg3);
 - The flexibility of the `STC` macro allows for complex rules and seamless C integration.
 
 ---
-
-
-
-
-
-
-

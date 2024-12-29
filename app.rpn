@@ -4,9 +4,9 @@ fun printL(x) {
 }
 
 fun addMul(a b c) {
-  a
+  a a + c * printL
 }
 
 fun main {
-  4 3 2 addMul
+  [2 "df" [1 2 3]] 2 at printL
 }

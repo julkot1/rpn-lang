@@ -44,6 +44,24 @@ type StcListener interface {
 	// EnterPush is called when entering the push production.
 	EnterPush(c *PushContext)
 
+	// EnterArrayElement is called when entering the arrayElement production.
+	EnterArrayElement(c *ArrayElementContext)
+
+	// EnterArrayIndex is called when entering the arrayIndex production.
+	EnterArrayIndex(c *ArrayIndexContext)
+
+	// EnterCapacity is called when entering the capacity production.
+	EnterCapacity(c *CapacityContext)
+
+	// EnterArray is called when entering the array production.
+	EnterArray(c *ArrayContext)
+
+	// EnterArrayDescriber is called when entering the arrayDescriber production.
+	EnterArrayDescriber(c *ArrayDescriberContext)
+
+	// EnterArrayNew is called when entering the arrayNew production.
+	EnterArrayNew(c *ArrayNewContext)
+
 	// EnterArgument is called when entering the argument production.
 	EnterArgument(c *ArgumentContext)
 
@@ -94,6 +112,24 @@ type StcListener interface {
 
 	// ExitPush is called when exiting the push production.
 	ExitPush(c *PushContext)
+
+	// ExitArrayElement is called when exiting the arrayElement production.
+	ExitArrayElement(c *ArrayElementContext)
+
+	// ExitArrayIndex is called when exiting the arrayIndex production.
+	ExitArrayIndex(c *ArrayIndexContext)
+
+	// ExitCapacity is called when exiting the capacity production.
+	ExitCapacity(c *CapacityContext)
+
+	// ExitArray is called when exiting the array production.
+	ExitArray(c *ArrayContext)
+
+	// ExitArrayDescriber is called when exiting the arrayDescriber production.
+	ExitArrayDescriber(c *ArrayDescriberContext)
+
+	// ExitArrayNew is called when exiting the arrayNew production.
+	ExitArrayNew(c *ArrayNewContext)
 
 	// ExitArgument is called when exiting the argument production.
 	ExitArgument(c *ArgumentContext)

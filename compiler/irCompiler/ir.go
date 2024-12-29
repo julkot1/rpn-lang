@@ -57,6 +57,9 @@ func DefineStructs() map[string]*types.StructType {
 	variable := types.NewStruct(types.I64, types.I64)
 	structs["variable"] = variable
 
+	array := types.NewStruct(types.I64, types.I64, types.NewPointer(variable))
+	structs["array"] = array
+
 	return structs
 }
 

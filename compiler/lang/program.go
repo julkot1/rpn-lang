@@ -37,6 +37,7 @@ type Program struct {
 	Funcs             map[TokenType]*DefaultFunc
 	BlockIndex        int
 	LoopIndex         int
+	ArrIndex          int
 	Structs           map[string]*types.StructType
 }
 
@@ -54,6 +55,12 @@ func (p *Program) GetFunction(name string, function *Function) *Function {
 
 func DefineTypes() {
 	types.I8Ptr = types.NewPointer(types.I8)
+}
+
+func (p *Program) NewArrayIndex() string {
+	idx := p.ArrIndex
+	p.ArrIndex++
+	return strconv.Itoa(idx)
 }
 
 func (p *Program) NewBlockIndex() string {

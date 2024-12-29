@@ -62,8 +62,8 @@ arrayElement  : SIGNED_NUMBER
 arrayIndex: varIdentifier '@' (NUMBER|varIdentifier );
 
 
-
-array: ARRAY_OPEN (arrayElement)+ ARRAY_CLOSE;
+capacity: 'c:' NUMBER;
+array: ARRAY_OPEN (arrayElement)+ ARRAY_CLOSE capacity?;
 arrayDescriber: ARRAY_OPEN NUMBER ARRAY_CLOSE;
 arrayNew: ARRAY_OPERATOR arrayDescriber arrayDescriber?;
 

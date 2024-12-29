@@ -287,3 +287,15 @@ func (w *TreeWalk) ExitRepeatBlock(ctx *parser.RepeatBlockContext) {
 	top.(*lang.Function).Blocks = append(top.(*lang.Function).Blocks, b)
 
 }
+
+func (w *TreeWalk) EnterArray(ctx *parser.ArrayContext) {
+	top, err := w.blockStack.Top()
+	if err != nil {
+		os.Exit(-1)
+	}
+	parent := ctx.GetParent()
+	_, ok := parent.(*parser.SubBlockContext)
+	if ok {
+		CreateArray(ctx, top.(*lang.Block), w.program)
+	}
+}

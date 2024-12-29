@@ -93,6 +93,42 @@ func (s *BaseStcListener) EnterPush(ctx *PushContext) {}
 // ExitPush is called when production push is exited.
 func (s *BaseStcListener) ExitPush(ctx *PushContext) {}
 
+// EnterArrayElement is called when production arrayElement is entered.
+func (s *BaseStcListener) EnterArrayElement(ctx *ArrayElementContext) {}
+
+// ExitArrayElement is called when production arrayElement is exited.
+func (s *BaseStcListener) ExitArrayElement(ctx *ArrayElementContext) {}
+
+// EnterArrayIndex is called when production arrayIndex is entered.
+func (s *BaseStcListener) EnterArrayIndex(ctx *ArrayIndexContext) {}
+
+// ExitArrayIndex is called when production arrayIndex is exited.
+func (s *BaseStcListener) ExitArrayIndex(ctx *ArrayIndexContext) {}
+
+// EnterCapacity is called when production capacity is entered.
+func (s *BaseStcListener) EnterCapacity(ctx *CapacityContext) {}
+
+// ExitCapacity is called when production capacity is exited.
+func (s *BaseStcListener) ExitCapacity(ctx *CapacityContext) {}
+
+// EnterArray is called when production array is entered.
+func (s *BaseStcListener) EnterArray(ctx *ArrayContext) {}
+
+// ExitArray is called when production array is exited.
+func (s *BaseStcListener) ExitArray(ctx *ArrayContext) {}
+
+// EnterArrayDescriber is called when production arrayDescriber is entered.
+func (s *BaseStcListener) EnterArrayDescriber(ctx *ArrayDescriberContext) {}
+
+// ExitArrayDescriber is called when production arrayDescriber is exited.
+func (s *BaseStcListener) ExitArrayDescriber(ctx *ArrayDescriberContext) {}
+
+// EnterArrayNew is called when production arrayNew is entered.
+func (s *BaseStcListener) EnterArrayNew(ctx *ArrayNewContext) {}
+
+// ExitArrayNew is called when production arrayNew is exited.
+func (s *BaseStcListener) ExitArrayNew(ctx *ArrayNewContext) {}
+
 // EnterArgument is called when production argument is entered.
 func (s *BaseStcListener) EnterArgument(ctx *ArgumentContext) {}
 

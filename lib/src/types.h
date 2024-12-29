@@ -29,4 +29,5 @@ typedef char *STC_STR;
 
 #define TO_STC_STRING(x) (STC_STR)(x)
 #define TO_INT(x) (STC_I64)(x)
+
 #endif
