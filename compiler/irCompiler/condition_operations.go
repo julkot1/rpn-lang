@@ -24,7 +24,7 @@ func LoadRepeat(program *lang.Program, block *lang.Block, nextBlock, loopBlock, 
 	var loadPtr *ir.InstGetElementPtr
 	if !ok {
 		counter = block.Ir.NewAlloca(types.I64)
-		block.Ir.NewStore(constant.NewInt(types.I64, 0), counter)
+		block.Ir.NewStore(constant.NewInt(types.I64, -1), counter)
 	} else {
 		typ := program.Structs["variable"]
 		loadPtr = block.Ir.NewGetElementPtr(typ, counter, constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 0))
@@ -33,6 +33,20 @@ func LoadRepeat(program *lang.Program, block *lang.Block, nextBlock, loopBlock, 
 	conditionBlockIr := conditionBlock.Ir
 
 	block.Ir.NewBr(conditionBlockIr)
+
+	var counterValBody *ir.InstLoad
+	if ok {
+		counterValBody = conditionBlock.Ir.NewLoad(types.I64, loadPtr)
+	} else {
+		counterValBody = conditionBlock.Ir.NewLoad(types.I64, counter)
+	}
+	newCounter := conditionBlock.Ir.NewAdd(constant.NewInt(types.I64, 1), counterValBody)
+	if !ok {
+		conditionBlock.Ir.NewStore(newCounter, counter)
+	} else {
+		conditionBlock.Ir.NewStore(newCounter, loadPtr)
+	}
+
 	var counterVal *ir.InstLoad
 	if ok {
 		counterVal = conditionBlockIr.NewLoad(types.I64, loadPtr)
@@ -43,18 +57,6 @@ func LoadRepeat(program *lang.Program, block *lang.Block, nextBlock, loopBlock, 
 
 	conditionBlockIr.NewCondBr(compare, loopBlock.Ir, nextBlock.Ir)
 
-	var counterValBody *ir.InstLoad
-	if ok {
-		counterValBody = loopBlock.Ir.NewLoad(types.I64, loadPtr)
-	} else {
-		counterValBody = loopBlock.Ir.NewLoad(types.I64, counter)
-	}
-	newCounter := loopBlock.Ir.NewAdd(constant.NewInt(types.I64, 1), counterValBody)
-	if !ok {
-		loopBlock.Ir.NewStore(newCounter, counter)
-	} else {
-		loopBlock.Ir.NewStore(newCounter, loadPtr)
-	}
 	loopBlock.Ir.NewBr(conditionBlockIr)
 	return nextBlock
 }

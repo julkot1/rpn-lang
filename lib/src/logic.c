@@ -105,7 +105,7 @@ void stc_less_or_eq(STC_I64 arg0, STC_I64 arg1, STC_TYPE arg2, STC_TYPE arg3)
 }
 STC_logic_bin_function or_funcs[STC_TYPES_SIZE][STC_TYPES_SIZE] = {
 	{stc_or_N, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, stc_or_N, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0},
@@ -122,7 +122,7 @@ void stc_or(STC_I64 arg0, STC_I64 arg1, STC_TYPE arg2, STC_TYPE arg3)
 }
 STC_logic_bin_function and_funcs[STC_TYPES_SIZE][STC_TYPES_SIZE] = {
 	{stc_and_N, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, stc_and_N, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0},

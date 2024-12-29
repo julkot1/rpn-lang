@@ -150,11 +150,12 @@ func (w *TreeWalk) ExitSubBlock(ctx *parser.SubBlockContext) {
 
 func (w *TreeWalk) EnterBlock(ctx *parser.BlockContext) {
 	if !w.notCreateScope {
-		scope := NewScope()
-		w.scopeStack.Push(scope)
-		w.nonFreeBlock = false
-	}
 
+		w.nonFreeBlock = false
+		w.notCreateScope = !w.notCreateScope
+	}
+	scope := NewScope()
+	w.scopeStack.Push(scope)
 }
 
 func (w *TreeWalk) ExitBlock(ctx *parser.BlockContext) {
@@ -231,7 +232,6 @@ func (w *TreeWalk) EnterIfBlock(ctx *parser.IfBlockContext) {
 	}
 
 	top.(*lang.Function).Blocks = append(top.(*lang.Function).Blocks, pop.(*lang.Block))
-
 	w.nonFreeBlock = true
 }
 func (w *TreeWalk) ExitIfBlock(ctx *parser.IfBlockContext) {
@@ -268,7 +268,7 @@ func (w *TreeWalk) EnterRepeatBlock(ctx *parser.RepeatBlockContext) {
 	block := pop.(*lang.Block)
 
 	loadPtr := block.Ir.NewGetElementPtr(typ, scope.tokens[arg], constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 0))
-	block.Ir.NewStore(constant.NewInt(types.I64, 0), loadPtr)
+	block.Ir.NewStore(constant.NewInt(types.I64, -1), loadPtr)
 
 	loadTypePtr := block.Ir.NewGetElementPtr(typ, scope.tokens[arg], constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 1))
 	block.Ir.NewStore(constant.NewInt(types.I64, int64(lang.INT_T)), loadTypePtr)
@@ -285,6 +285,10 @@ func (w *TreeWalk) ExitRepeatBlock(ctx *parser.RepeatBlockContext) {
 	b := lang.NewBlockIr(w.program.NewBlockIndex(), true, top.(*lang.Function), false, false)
 	b.LoopCondition = true
 	top.(*lang.Function).Blocks = append(top.(*lang.Function).Blocks, b)
+
+	if ctx.Arguments() != nil {
+		w.scopeStack.Pop()
+	}
 
 }
 
