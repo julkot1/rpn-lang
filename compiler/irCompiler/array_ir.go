@@ -4,9 +4,11 @@ import (
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/types"
+	"github.com/llir/llvm/ir/value"
 	"math"
 	"rpn/lang"
 	"rpn/parser"
+	"rpn/util"
 	"strconv"
 )
 
@@ -159,4 +161,35 @@ func getSize(ctx *parser.ArrayContext) (int64, int64) {
 		capacity = length
 	}
 	return int64(length), int64(capacity)
+}
+
+func getElementAtIndex(block *lang.Block, scope util.Stack, program *lang.Program, base string, index string) {
+	arrVar := GetVar(base, program, scope)
+	varType := program.Structs["variable"]
+
+	arr := block.Ir.NewGetElementPtr(varType, arrVar, constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 0))
+	arrValue := block.Ir.NewLoad(types.I64, arr)
+	arrT := block.Ir.NewGetElementPtr(varType, arrVar, constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 1))
+	arrTypeValue := block.Ir.NewLoad(types.I64, arrT)
+
+	indexValue, indexType := getIndex(block, index, program, scope)
+
+	fun := program.Funcs[lang.AtT].IrFunc
+	block.Ir.NewCall(fun, indexValue, arrValue, indexType, arrTypeValue)
+}
+
+func getIndex(block *lang.Block, index string, program *lang.Program, scope util.Stack) (value.Value, value.Value) {
+	val, err := strconv.Atoi(index)
+	if err != nil {
+		varType := program.Structs["variable"]
+
+		varPtr := GetVar(index, program, scope)
+		load := block.Ir.NewGetElementPtr(varType, varPtr, constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 0))
+		loadValue := block.Ir.NewLoad(types.I64, load)
+		typeT := block.Ir.NewGetElementPtr(varType, varPtr, constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 1))
+		typeValue := block.Ir.NewLoad(types.I64, typeT)
+
+		return loadValue, typeValue
+	}
+	return constant.NewInt(types.I64, int64(val)), constant.NewInt(types.I64, int64(lang.INT_T))
 }

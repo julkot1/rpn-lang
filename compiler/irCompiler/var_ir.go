@@ -36,6 +36,20 @@ func TokenExists(token string, stack util.Stack) bool {
 	}
 	return false
 }
+
+func GetVar(token string, program *lang.Program, scope util.Stack) *ir.InstAlloca {
+	_, ok := program.GlobalTokenTable[token]
+	if !ok {
+		if TokenExists(token, scope) {
+			return GetToken(token, scope)
+		}
+		fmt.Printf("variable '%s' does not exist:\n \tline\n", token)
+		os.Exit(1)
+		return nil
+	}
+	return nil
+}
+
 func GetToken(token string, stack util.Stack) *ir.InstAlloca {
 	for _, sc := range stack.Items() {
 		if sc.(*Scope).IsInScope(token) {

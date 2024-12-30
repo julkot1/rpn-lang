@@ -303,3 +303,14 @@ func (w *TreeWalk) EnterArray(ctx *parser.ArrayContext) {
 		CreateArray(ctx, top.(*lang.Block), w.program)
 	}
 }
+func (w *TreeWalk) EnterArrayIndex(ctx *parser.ArrayIndexContext) {
+	base := ctx.ArrayBase().GetText()
+	index := ctx.ArrayIndexShift().GetText()
+
+	topBlock, err := w.blockStack.Top()
+	if err != nil {
+		os.Exit(-1)
+	}
+
+	getElementAtIndex(topBlock.(*lang.Block), w.scopeStack, w.program, base, index)
+}

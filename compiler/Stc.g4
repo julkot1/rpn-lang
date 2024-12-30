@@ -14,6 +14,7 @@ ifBlock       : 'if' block (elseBlock)?;
 elseBlock     : 'else' block;
 repeatBlock   : 'repeat' arguments? block;
 
+
 arguments : '(' argument+ ')' ;
 
 operation     : STACK_PREVENTION? operaor;
@@ -58,8 +59,9 @@ arrayElement  : SIGNED_NUMBER
               | array
               ;
 
-
-arrayIndex: varIdentifier '@' (NUMBER|varIdentifier );
+arrayBase : varIdentifier;
+arrayIndexShift: (NUMBER|varIdentifier );
+arrayIndex:  arrayBase '@' arrayIndexShift;
 
 
 capacity: 'c:' NUMBER;
@@ -129,6 +131,8 @@ BUILD_IN_OPERATOR  : 'typeof'
 ARRAY_OPEN: '[';
 ARRAY_CLOSE: ']';
 ARRAY_OPERATOR: 'arr';
+
+AT: '@';
 
 ID: [a-zA-Z_][a-zA-Z_0-9]*;  
 

@@ -18,33 +18,29 @@ fun printRule(x) {
 
 fun main {
   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1] ar :=
-  [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]out :=
+  [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] out :=
   ar printRule
   25 repeat {
      ar len repeat (idx) {
-      0 left :=
-
+      0
       idx 0 != if {
-        ar idx 1 - at left :=
+        pop ar idx 1 - at 4 *
       }
       
-      ar idx at center := 
+      ar idx at 2 *
 
-      0 right :=
-
+      0 
       idx 1 + ar len != if {
-        ar idx 1 + at right := 
+        pop ar idx 1 + at
       }
-
-      right center 2 * left 4 *
       + + a :=
-  
+
       7 a ==  4 a ==  0 a == or or
       if {
         0 out idx set
       }
 
-      1 a == 2 a == or 3 a == 5 a == or or 6 a == or
+      1 a == 2 a ==  3 a == 5 a ==  6 a == or or or or
       if {
         1 out idx set
       }

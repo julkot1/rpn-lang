@@ -99,6 +99,18 @@ func (s *BaseStcListener) EnterArrayElement(ctx *ArrayElementContext) {}
 // ExitArrayElement is called when production arrayElement is exited.
 func (s *BaseStcListener) ExitArrayElement(ctx *ArrayElementContext) {}
 
+// EnterArrayBase is called when production arrayBase is entered.
+func (s *BaseStcListener) EnterArrayBase(ctx *ArrayBaseContext) {}
+
+// ExitArrayBase is called when production arrayBase is exited.
+func (s *BaseStcListener) ExitArrayBase(ctx *ArrayBaseContext) {}
+
+// EnterArrayIndexShift is called when production arrayIndexShift is entered.
+func (s *BaseStcListener) EnterArrayIndexShift(ctx *ArrayIndexShiftContext) {}
+
+// ExitArrayIndexShift is called when production arrayIndexShift is exited.
+func (s *BaseStcListener) ExitArrayIndexShift(ctx *ArrayIndexShiftContext) {}
+
 // EnterArrayIndex is called when production arrayIndex is entered.
 func (s *BaseStcListener) EnterArrayIndex(ctx *ArrayIndexContext) {}
 

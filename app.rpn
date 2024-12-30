@@ -1,0 +1,9 @@
+fun printL(x) {
+    x print '\n' print
+}
+
+fun main{
+    3 idx :=
+    [2 1 221 4 5] a :=
+    a@idx printL
+}

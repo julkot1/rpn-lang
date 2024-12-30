@@ -47,6 +47,12 @@ type StcListener interface {
 	// EnterArrayElement is called when entering the arrayElement production.
 	EnterArrayElement(c *ArrayElementContext)
 
+	// EnterArrayBase is called when entering the arrayBase production.
+	EnterArrayBase(c *ArrayBaseContext)
+
+	// EnterArrayIndexShift is called when entering the arrayIndexShift production.
+	EnterArrayIndexShift(c *ArrayIndexShiftContext)
+
 	// EnterArrayIndex is called when entering the arrayIndex production.
 	EnterArrayIndex(c *ArrayIndexContext)
 
@@ -115,6 +121,12 @@ type StcListener interface {
 
 	// ExitArrayElement is called when exiting the arrayElement production.
 	ExitArrayElement(c *ArrayElementContext)
+
+	// ExitArrayBase is called when exiting the arrayBase production.
+	ExitArrayBase(c *ArrayBaseContext)
+
+	// ExitArrayIndexShift is called when exiting the arrayIndexShift production.
+	ExitArrayIndexShift(c *ArrayIndexShiftContext)
 
 	// ExitArrayIndex is called when exiting the arrayIndex production.
 	ExitArrayIndex(c *ArrayIndexContext)

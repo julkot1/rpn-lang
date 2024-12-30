@@ -11,22 +11,20 @@ type PreprocessorType int32
 type MacroId int32
 
 const (
-	PREPROCESSOR_MACRO_T PreprocessorType = iota
-	PREPROCESSOR_INT_T
-	PREPROCESSOR_STRING
-	PREPROCESSOR_VAR_T
+	PreprocessorMacroT PreprocessorType = iota
+	PreprocessorIntT
+	PreprocessorString
+	PreprocessorVarT
 )
 
 var MarcosName = [...]string{
 	"STC", "NAME", "CODE", "CAN_PREVENT", "TYPE", "FUNCTION"}
 
 const (
-	MACRO_STC MacroId = iota
-	MACRO_NAME
-	MACRO_CODE
-	MACRO_CAN_PREVENT
-	MACRO_TYPE
-	MACRO_FUNCTION
+	MacroStc MacroId = iota
+	MacroName
+	MacroCode
+	MacroCanPrevent
 )
 
 type PreprocessorToken struct {
@@ -52,23 +50,23 @@ func analyzeAst(ast *PreprocessorToken) *PreprocessorToken {
 		i, err := strconv.Atoi(ast.Text)
 		if err == nil {
 			ast.Value = i
-			ast.Typ = PREPROCESSOR_INT_T
+			ast.Typ = PreprocessorIntT
 			return ast
 		}
 		if strings.HasPrefix(ast.Text, "\"") && strings.HasSuffix(ast.Text, "\"") {
-			ast.Typ = PREPROCESSOR_STRING
+			ast.Typ = PreprocessorString
 			ast.Value = ast.Text[1 : len(ast.Text)-1]
 			return ast
 		}
 		if isMacro(ast.Text) {
-			ast.Typ = PREPROCESSOR_MACRO_T
+			ast.Typ = PreprocessorMacroT
 		} else {
-			ast.Typ = PREPROCESSOR_VAR_T
+			ast.Typ = PreprocessorVarT
 		}
 		ast.Value = ast.Text
 		return ast
 	}
-	ast.Typ = PREPROCESSOR_MACRO_T
+	ast.Typ = PreprocessorMacroT
 	ast.Value = ast.Text
 	for index, arg := range ast.Args {
 		ast.Args[index] = *analyzeAst(&arg)

@@ -18,7 +18,7 @@ type TypesMatch struct {
 }
 
 func CreateSTCBindConfig(root PreprocessorToken) (*STCBindConfig, error) {
-	if root.Value != MarcosName[MACRO_STC] {
+	if root.Value != MarcosName[MacroStc] {
 		return nil, errors.New("config must start with macro STC(...)")
 	}
 	cp := getCanPrevent(root)
@@ -38,11 +38,11 @@ func CreateSTCBindConfig(root PreprocessorToken) (*STCBindConfig, error) {
 
 func getName(root PreprocessorToken) (string, error) {
 	for _, arg := range root.Args {
-		if arg.Text == MarcosName[MACRO_NAME] {
+		if arg.Text == MarcosName[MacroName] {
 			if len(arg.Args) != 1 {
 				return "", errors.New("code must contain one arg")
 			}
-			if arg.Args[0].Typ != PREPROCESSOR_STRING {
+			if arg.Args[0].Typ != PreprocessorString {
 				return "", errors.New("code must contain string type arg")
 			}
 			return arg.Args[0].Value.(string), nil
@@ -53,11 +53,11 @@ func getName(root PreprocessorToken) (string, error) {
 
 func getCode(root PreprocessorToken) (int, error) {
 	for _, arg := range root.Args {
-		if arg.Text == MarcosName[MACRO_CODE] {
+		if arg.Text == MarcosName[MacroCode] {
 			if len(arg.Args) != 1 {
 				return -1, errors.New("code must contain one arg")
 			}
-			if arg.Args[0].Typ != PREPROCESSOR_INT_T {
+			if arg.Args[0].Typ != PreprocessorIntT {
 				return -1, errors.New("code must contain int type arg")
 			}
 			return arg.Args[0].Value.(int), nil
@@ -68,7 +68,7 @@ func getCode(root PreprocessorToken) (int, error) {
 
 func getCanPrevent(root PreprocessorToken) bool {
 	for _, arg := range root.Args {
-		if arg.Text == MarcosName[MACRO_CAN_PREVENT] {
+		if arg.Text == MarcosName[MacroCanPrevent] {
 			return true
 		}
 	}
