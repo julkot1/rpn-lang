@@ -1,11 +1,13 @@
 package irCompiler
 
 import (
+	"fmt"
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/types"
 	"github.com/llir/llvm/ir/value"
 	"math"
+	"os"
 	"rpn/lang"
 	"rpn/parser"
 	"rpn/util"
@@ -163,33 +165,62 @@ func getSize(ctx *parser.ArrayContext) (int64, int64) {
 	return int64(length), int64(capacity)
 }
 
-func getElementAtIndex(block *lang.Block, scope util.Stack, program *lang.Program, base string, index string) {
-	arrVar := GetVar(base, program, scope)
-	varType := program.Structs["variable"]
-
-	arr := block.Ir.NewGetElementPtr(varType, arrVar, constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 0))
-	arrValue := block.Ir.NewLoad(types.I64, arr)
-	arrT := block.Ir.NewGetElementPtr(varType, arrVar, constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 1))
-	arrTypeValue := block.Ir.NewLoad(types.I64, arrT)
-
-	indexValue, indexType := getIndex(block, index, program, scope)
+func getElementAtIndex(block *lang.Block, scope util.Stack, program *lang.Program, base string, index string, function *lang.Function) {
+	arr, arrT := GetVar(base, program, scope, block)
 
 	fun := program.Funcs[lang.AtT].IrFunc
+
+	indexValue, indexType := getIndex(block, index, program, scope, function)
+	if arr != nil {
+
+		block.Ir.NewCall(fun, indexValue, arr, indexType, arrT)
+		return
+	}
+	arrValue, arrTypeValue := function.GetParam(base)
+	if arrValue == nil {
+		fmt.Printf("variable '%s' does not exist:\n \tline\n", index)
+		os.Exit(1)
+	}
 	block.Ir.NewCall(fun, indexValue, arrValue, indexType, arrTypeValue)
+
 }
 
-func getIndex(block *lang.Block, index string, program *lang.Program, scope util.Stack) (value.Value, value.Value) {
+func getIndex(block *lang.Block, index string, program *lang.Program, scope util.Stack, function *lang.Function) (value.Value, value.Value) {
 	val, err := strconv.Atoi(index)
 	if err != nil {
-		varType := program.Structs["variable"]
+		load, typeT := GetVar(index, program, scope, block)
 
-		varPtr := GetVar(index, program, scope)
-		load := block.Ir.NewGetElementPtr(varType, varPtr, constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 0))
-		loadValue := block.Ir.NewLoad(types.I64, load)
-		typeT := block.Ir.NewGetElementPtr(varType, varPtr, constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 1))
-		typeValue := block.Ir.NewLoad(types.I64, typeT)
+		if load != nil {
+			return load, typeT
+		} else {
+			loadValue, typeValue := function.GetParam(index)
+			if loadValue == nil {
+				fmt.Printf("variable '%s' does not exist:\n \tline\n", index)
+				os.Exit(1)
+			}
+			return loadValue, typeValue
+		}
 
-		return loadValue, typeValue
 	}
 	return constant.NewInt(types.I64, int64(val)), constant.NewInt(types.I64, int64(lang.INT_T))
+}
+
+func AssignArrayElement(block *lang.Block, index parser.IArrayIndexContext, scope util.Stack, program *lang.Program, function *lang.Function) {
+
+	indexValue, indexType := getIndex(block, index.ArrayIndexShift().GetText(), program, scope, function)
+	args := GetValues(program, 1, block.Ir)
+	setFun := program.Funcs[lang.SetT].IrFunc
+
+	arr, arrT := GetVar(index.ArrayBase().GetText(), program, scope, block)
+	if arr == nil {
+		param, typ := function.GetParam(index.ArrayBase().GetText())
+		if param == nil {
+			fmt.Printf("variable '%s' does not exist:\n \tline\n", index.ArrayBase().GetText())
+			os.Exit(1)
+		}
+		block.Ir.NewCall(setFun, indexValue, param, args[0], indexType, typ, args[1])
+	} else {
+		block.Ir.NewCall(setFun, indexValue, arr, args[0], indexType, arrT, args[1])
+
+	}
 }

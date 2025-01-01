@@ -37,17 +37,21 @@ func TokenExists(token string, stack util.Stack) bool {
 	return false
 }
 
-func GetVar(token string, program *lang.Program, scope util.Stack) *ir.InstAlloca {
+func GetVar(token string, program *lang.Program, scope util.Stack, block *lang.Block) (*ir.InstLoad, *ir.InstLoad) {
 	_, ok := program.GlobalTokenTable[token]
 	if !ok {
 		if TokenExists(token, scope) {
-			return GetToken(token, scope)
+			variable := GetToken(token, scope)
+			varType := program.Structs["variable"]
+
+			variableLoad := block.Ir.NewGetElementPtr(varType, variable, constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 0))
+			variableType := block.Ir.NewGetElementPtr(varType, variable, constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 1))
+
+			return block.Ir.NewLoad(types.I64, variableLoad), block.Ir.NewLoad(types.I64, variableType)
 		}
-		fmt.Printf("variable '%s' does not exist:\n \tline\n", token)
-		os.Exit(1)
-		return nil
+		return nil, nil
 	}
-	return nil
+	return nil, nil
 }
 
 func GetToken(token string, stack util.Stack) *ir.InstAlloca {

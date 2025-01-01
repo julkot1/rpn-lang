@@ -2,8 +2,16 @@ fun printL(x) {
     x print '\n' print
 }
 
-fun main{
-    3 idx :=
-    [2 1 221 4 5] a :=
-    a@idx printL
+fun at (idx array) {
+    array@idx
+}
+fun set (idx array value) {
+    value array@idx :=
+}
+
+fun main {
+    [1 2 5] a :=
+    123 a@0 :=
+    232 a 1 set
+    a printL
 }

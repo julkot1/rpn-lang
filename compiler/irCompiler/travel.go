@@ -98,10 +98,15 @@ func (w *TreeWalk) ExitFunctionDef(ctx *parser.FunctionDefContext) {
 
 func (w *TreeWalk) EnterVarAssign(ctx *parser.VarAssignContext) {
 	top, err := w.blockStack.Top()
-	if err != nil {
+	topF, e := w.functionStack.Top()
+	if err != nil || e != nil {
 		os.Exit(-1)
 	}
-	AssignVar(top.(*lang.Block), ctx.VarIdentifier().GetText(), w.scopeStack, w.program)
+	if ctx.ArrayIndex() != nil {
+		AssignArrayElement(top.(*lang.Block), ctx.ArrayIndex(), w.scopeStack, w.program, topF.(*lang.Function))
+	} else {
+		AssignVar(top.(*lang.Block), ctx.VarIdentifier().GetText(), w.scopeStack, w.program)
+	}
 }
 
 func (w *TreeWalk) EnterVarReference(ctx *parser.VarReferenceContext) {
@@ -304,13 +309,19 @@ func (w *TreeWalk) EnterArray(ctx *parser.ArrayContext) {
 	}
 }
 func (w *TreeWalk) EnterArrayIndex(ctx *parser.ArrayIndexContext) {
+	parent := ctx.GetParent()
+	_, ok := parent.(*parser.VarAssignContext)
+	if ok {
+		return
+	}
 	base := ctx.ArrayBase().GetText()
 	index := ctx.ArrayIndexShift().GetText()
 
 	topBlock, err := w.blockStack.Top()
+	topF, err := w.functionStack.Top()
 	if err != nil {
 		os.Exit(-1)
 	}
 
-	getElementAtIndex(topBlock.(*lang.Block), w.scopeStack, w.program, base, index)
+	getElementAtIndex(topBlock.(*lang.Block), w.scopeStack, w.program, base, index, topF.(*lang.Function))
 }

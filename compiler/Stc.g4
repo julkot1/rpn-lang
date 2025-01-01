@@ -6,7 +6,7 @@ prog          : (functionDef)+ EOF;
 functionDef   : 'fun' ID arguments? block; 
 
 
-subBlock      :( (arrayIndex| arrayNew | array | operation | stackOperation | push | varReference | varAssign | identifier)+ (functionDef | ifBlock | repeatBlock)?  );
+subBlock      :( (varReference | varAssign | arrayIndex| arrayNew | array | operation | stackOperation | push | identifier)+ (functionDef | ifBlock | repeatBlock)?  );
 
 block         : '{' (subBlock)+'}';
 
@@ -121,8 +121,6 @@ ARITHMETIC_OPERATOR: '+'
 ASSIGN_OPERATOR    : ':=';
 REFERENCE_OPERATOR : '&';
 BUILD_IN_OPERATOR  : 'typeof'
-                   | 'at'
-                   | 'set'
                    | 'len'
                    | 'call'
                    ;

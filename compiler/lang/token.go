@@ -34,10 +34,10 @@ const (
 	AndToken         = `and`
 	RepeatToken      = `repeat`
 	TypeofToken      = `typeof`
-	AtToken          = `at`
+	AtToken          = `@`
 	AssignToken      = `:=`
 	LenToken         = `len`
-	SetToken         = `set`
+	SetToken         = `.tok_set.`
 )
 
 type TokenType int

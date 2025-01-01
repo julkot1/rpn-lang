@@ -89,9 +89,9 @@ func stcParserInit() {
 		1, 0, 0, 0, 53, 54, 1, 0, 0, 0, 54, 55, 1, 0, 0, 0, 55, 56, 5, 0, 0, 1,
 		56, 1, 1, 0, 0, 0, 57, 58, 5, 1, 0, 0, 58, 60, 5, 38, 0, 0, 59, 61, 3,
 		14, 7, 0, 60, 59, 1, 0, 0, 0, 60, 61, 1, 0, 0, 0, 61, 62, 1, 0, 0, 0, 62,
-		63, 3, 6, 3, 0, 63, 3, 1, 0, 0, 0, 64, 74, 3, 30, 15, 0, 65, 74, 3, 38,
-		19, 0, 66, 74, 3, 34, 17, 0, 67, 74, 3, 16, 8, 0, 68, 74, 3, 20, 10, 0,
-		69, 74, 3, 22, 11, 0, 70, 74, 3, 44, 22, 0, 71, 74, 3, 42, 21, 0, 72, 74,
+		63, 3, 6, 3, 0, 63, 3, 1, 0, 0, 0, 64, 74, 3, 44, 22, 0, 65, 74, 3, 42,
+		21, 0, 66, 74, 3, 30, 15, 0, 67, 74, 3, 38, 19, 0, 68, 74, 3, 34, 17, 0,
+		69, 74, 3, 16, 8, 0, 70, 74, 3, 20, 10, 0, 71, 74, 3, 22, 11, 0, 72, 74,
 		3, 48, 24, 0, 73, 64, 1, 0, 0, 0, 73, 65, 1, 0, 0, 0, 73, 66, 1, 0, 0,
 		0, 73, 67, 1, 0, 0, 0, 73, 68, 1, 0, 0, 0, 73, 69, 1, 0, 0, 0, 73, 70,
 		1, 0, 0, 0, 73, 71, 1, 0, 0, 0, 73, 72, 1, 0, 0, 0, 74, 75, 1, 0, 0, 0,
@@ -581,6 +581,10 @@ type ISubBlockContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
+	AllVarReference() []IVarReferenceContext
+	VarReference(i int) IVarReferenceContext
+	AllVarAssign() []IVarAssignContext
+	VarAssign(i int) IVarAssignContext
 	AllArrayIndex() []IArrayIndexContext
 	ArrayIndex(i int) IArrayIndexContext
 	AllArrayNew() []IArrayNewContext
@@ -593,10 +597,6 @@ type ISubBlockContext interface {
 	StackOperation(i int) IStackOperationContext
 	AllPush() []IPushContext
 	Push(i int) IPushContext
-	AllVarReference() []IVarReferenceContext
-	VarReference(i int) IVarReferenceContext
-	AllVarAssign() []IVarAssignContext
-	VarAssign(i int) IVarAssignContext
 	AllIdentifier() []IIdentifierContext
 	Identifier(i int) IIdentifierContext
 	FunctionDef() IFunctionDefContext
@@ -638,6 +638,88 @@ func NewSubBlockContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 }
 
 func (s *SubBlockContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *SubBlockContext) AllVarReference() []IVarReferenceContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IVarReferenceContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IVarReferenceContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IVarReferenceContext); ok {
+			tst[i] = t.(IVarReferenceContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *SubBlockContext) VarReference(i int) IVarReferenceContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IVarReferenceContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IVarReferenceContext)
+}
+
+func (s *SubBlockContext) AllVarAssign() []IVarAssignContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IVarAssignContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IVarAssignContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IVarAssignContext); ok {
+			tst[i] = t.(IVarAssignContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *SubBlockContext) VarAssign(i int) IVarAssignContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IVarAssignContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IVarAssignContext)
+}
 
 func (s *SubBlockContext) AllArrayIndex() []IArrayIndexContext {
 	children := s.GetChildren()
@@ -885,88 +967,6 @@ func (s *SubBlockContext) Push(i int) IPushContext {
 	return t.(IPushContext)
 }
 
-func (s *SubBlockContext) AllVarReference() []IVarReferenceContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(IVarReferenceContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]IVarReferenceContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(IVarReferenceContext); ok {
-			tst[i] = t.(IVarReferenceContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *SubBlockContext) VarReference(i int) IVarReferenceContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IVarReferenceContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IVarReferenceContext)
-}
-
-func (s *SubBlockContext) AllVarAssign() []IVarAssignContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(IVarAssignContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]IVarAssignContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(IVarAssignContext); ok {
-			tst[i] = t.(IVarAssignContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *SubBlockContext) VarAssign(i int) IVarAssignContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IVarAssignContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IVarAssignContext)
-}
-
 func (s *SubBlockContext) AllIdentifier() []IIdentifierContext {
 	children := s.GetChildren()
 	len := 0
@@ -1101,49 +1101,49 @@ func (p *StcParser) SubBlock() (localctx ISubBlockContext) {
 			case 1:
 				{
 					p.SetState(64)
-					p.ArrayIndex()
+					p.VarReference()
 				}
 
 			case 2:
 				{
 					p.SetState(65)
-					p.ArrayNew()
+					p.VarAssign()
 				}
 
 			case 3:
 				{
 					p.SetState(66)
-					p.Array()
+					p.ArrayIndex()
 				}
 
 			case 4:
 				{
 					p.SetState(67)
-					p.Operation()
+					p.ArrayNew()
 				}
 
 			case 5:
 				{
 					p.SetState(68)
-					p.StackOperation()
+					p.Array()
 				}
 
 			case 6:
 				{
 					p.SetState(69)
-					p.Push()
+					p.Operation()
 				}
 
 			case 7:
 				{
 					p.SetState(70)
-					p.VarReference()
+					p.StackOperation()
 				}
 
 			case 8:
 				{
 					p.SetState(71)
-					p.VarAssign()
+					p.Push()
 				}
 
 			case 9:
