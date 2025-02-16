@@ -11,6 +11,7 @@ const (
 	ARRAY_T
 	REF_T
 	Type_T
+	ANY_T
 )
 
 type PushableToken struct {

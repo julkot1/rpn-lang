@@ -2,7 +2,7 @@
 
 #MFI
 
-echo "Building Stc Compiler"
+echo "Building STC Compiler"
 
 cd compiler
 go build
@@ -90,7 +90,7 @@ else
     if [[ "$answer" =~ ^[Yy]$ ]]; then
         # Check if the symlink already exists
         if [ -e "/usr/local/bin/stc" ]; then
-            echo "The symlink '$symlink' already exists."
+            echo "The symlink 'stc' already exists."
         else
             # Create the symlink
             sudo ln -s "$path/rpn" "/usr/local/bin/stc"

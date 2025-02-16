@@ -20,6 +20,15 @@ type StcListener interface {
 	// EnterBlock is called when entering the block production.
 	EnterBlock(c *BlockContext)
 
+	// EnterNewOperator is called when entering the newOperator production.
+	EnterNewOperator(c *NewOperatorContext)
+
+	// EnterStruct is called when entering the struct production.
+	EnterStruct(c *StructContext)
+
+	// EnterStructBody is called when entering the structBody production.
+	EnterStructBody(c *StructBodyContext)
+
 	// EnterIfBlock is called when entering the ifBlock production.
 	EnterIfBlock(c *IfBlockContext)
 
@@ -94,6 +103,15 @@ type StcListener interface {
 
 	// ExitBlock is called when exiting the block production.
 	ExitBlock(c *BlockContext)
+
+	// ExitNewOperator is called when exiting the newOperator production.
+	ExitNewOperator(c *NewOperatorContext)
+
+	// ExitStruct is called when exiting the struct production.
+	ExitStruct(c *StructContext)
+
+	// ExitStructBody is called when exiting the structBody production.
+	ExitStructBody(c *StructBodyContext)
 
 	// ExitIfBlock is called when exiting the ifBlock production.
 	ExitIfBlock(c *IfBlockContext)

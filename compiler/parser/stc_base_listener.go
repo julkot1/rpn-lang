@@ -45,6 +45,24 @@ func (s *BaseStcListener) EnterBlock(ctx *BlockContext) {}
 // ExitBlock is called when production block is exited.
 func (s *BaseStcListener) ExitBlock(ctx *BlockContext) {}
 
+// EnterNewOperator is called when production newOperator is entered.
+func (s *BaseStcListener) EnterNewOperator(ctx *NewOperatorContext) {}
+
+// ExitNewOperator is called when production newOperator is exited.
+func (s *BaseStcListener) ExitNewOperator(ctx *NewOperatorContext) {}
+
+// EnterStruct is called when production struct is entered.
+func (s *BaseStcListener) EnterStruct(ctx *StructContext) {}
+
+// ExitStruct is called when production struct is exited.
+func (s *BaseStcListener) ExitStruct(ctx *StructContext) {}
+
+// EnterStructBody is called when production structBody is entered.
+func (s *BaseStcListener) EnterStructBody(ctx *StructBodyContext) {}
+
+// ExitStructBody is called when production structBody is exited.
+func (s *BaseStcListener) ExitStructBody(ctx *StructBodyContext) {}
+
 // EnterIfBlock is called when production ifBlock is entered.
 func (s *BaseStcListener) EnterIfBlock(ctx *IfBlockContext) {}
 

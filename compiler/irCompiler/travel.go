@@ -325,3 +325,25 @@ func (w *TreeWalk) EnterArrayIndex(ctx *parser.ArrayIndexContext) {
 
 	getElementAtIndex(topBlock.(*lang.Block), w.scopeStack, w.program, base, index, topF.(*lang.Function))
 }
+
+func (w *TreeWalk) EnterStruct(ctx *parser.StructContext) {
+	name := ctx.ID().GetText()
+	err := w.program.AddGlobalToken(name, lang.PStruct)
+	if err != nil {
+		os.Exit(-1)
+	}
+
+	args := getArgs(ctx.StructBody().AllID(), name)
+	createStructDefinition(name, args, w.program)
+
+}
+
+func (w *TreeWalk) EnterNewOperator(ctx *parser.NewOperatorContext) {
+	top, err := w.blockStack.Top()
+	if err != nil {
+		os.Exit(-1)
+	}
+	name := ctx.ID().GetText()
+	createStruct(name, top.(*lang.Block), w.program)
+
+}

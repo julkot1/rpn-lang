@@ -1,17 +1,9 @@
-fun printL(x) {
-    x print '\n' print
-}
-
-fun at (idx array) {
-    array@idx
-}
-fun set (idx array value) {
-    value array@idx :=
+struct foo {
+    a b c
 }
 
 fun main {
-    [1 2 5] a :=
-    123 a@0 :=
-    232 a 1 set
-    a printL
+   new:foo
+   32 f :=
+   f print
 }

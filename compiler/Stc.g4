@@ -1,14 +1,22 @@
 
 grammar Stc;
 
-prog          : (functionDef)+ EOF;
+prog          : (functionDef | struct)+ EOF;
 
 functionDef   : 'fun' ID arguments? block; 
 
 
-subBlock      :( (varReference | varAssign | arrayIndex| arrayNew | array | operation | stackOperation | push | identifier)+ (functionDef | ifBlock | repeatBlock)?  );
+subBlock      :( (newOperator | varReference | varAssign | arrayIndex| arrayNew | array | operation | stackOperation | push | identifier)+ (functionDef | ifBlock | repeatBlock)?  );
 
 block         : '{' (subBlock)+'}';
+
+
+newOperator     : NEW ':' ID;
+
+struct        : STRUCT_DEFINITION ID structBody;
+
+structBody    : '{' ID+ '}';
+
 
 ifBlock       : 'if' block (elseBlock)?;
 elseBlock     : 'else' block;
@@ -77,8 +85,8 @@ varIdentifier: ID ((':' ID)+)?;
 identifier: (STACK_PREVENTION)? ID ((':' ID)+)?;
 
 
-
-
+NEW: 'new';
+STRUCT_DEFINITION: 'struct';
 STACK_PREVENTION: '!';
 
 NUMBER: DIGIT+; // Unsigned number
