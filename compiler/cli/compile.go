@@ -19,7 +19,7 @@ import (
 
 func Save(program *lang.Program, config config.TOMLConfig) {
 
-	file, err := os.Create(config.GetPath(config.Config.Destination + "/output.ll"))
+	file, err := os.Create(safeJoin(getCurrentDir(), "output.ll"))
 	if err != nil {
 		log.Fatalf("failed to create file: %s", err)
 	}
@@ -60,7 +60,7 @@ func CompileStcLibs(config config.TOMLConfig) {
 }
 
 func Compile(config config.TOMLConfig, path string, compilationCfg CompilationConfig) {
-	input, _ := antlr.NewFileStream(config.GetPath(path))
+	input, _ := antlr.NewFileStream(path)
 	lex := parser.NewStcLexer(input)
 	stream := antlr.NewCommonTokenStream(lex, 0)
 	p := parser.NewStcParser(stream)
@@ -77,6 +77,7 @@ func Compile(config config.TOMLConfig, path string, compilationCfg CompilationCo
 	lib.GenerateDefinitions(program)
 
 	irCompiler.LoadProgram(program)
+
 	Save(program, config)
 	LinkFiles(program, config)
 
@@ -84,7 +85,7 @@ func Compile(config config.TOMLConfig, path string, compilationCfg CompilationCo
 }
 
 func BuildBinary(config config.TOMLConfig, cfg CompilationConfig) {
-	llPath := config.GetPath(config.Config.Destination) + "/output.ll"
+	llPath := safeJoin(getCurrentDir(), "output.ll")
 
 	cmd := exec.Command(
 		config.Config.ClangPath, llPath, "-lm", "-fPIE", "-pie", getOpt(cfg.Optimization), "-o", cfg.OutFile)
@@ -114,7 +115,7 @@ func getOpt(opt int) string {
 func LinkFiles(program *lang.Program, tomlConfig config.TOMLConfig) {
 	args := getFilesToLink(tomlConfig)
 	args = append(args, "-o")
-	args = append(args, tomlConfig.GetPath(tomlConfig.Config.Destination)+"/output.ll")
+	args = append(args, safeJoin(getCurrentDir(), "output.ll"))
 	cmd := exec.Command(tomlConfig.Config.LinkerPath, args...)
 	err := cmd.Run()
 	if err != nil {
@@ -130,10 +131,10 @@ func getFilesToLink(config config.TOMLConfig) []string {
 		base := filepath.Base(libPath)
 		ext := filepath.Ext(base)
 		nameWithoutExt := strings.TrimSuffix(base, ext)
-		outPath := config.GetPath(config.Libs.LibBin) + "/" + nameWithoutExt + ".ll"
+		outPath := safeJoin(config.GetPath(config.Libs.LibBin), nameWithoutExt+".ll")
 		str = append(str, outPath)
 	}
-	str = append(str, config.GetPath(config.Config.Destination)+"/output.ll")
+	str = append(str, safeJoin(getCurrentDir(), "output.ll"))
 	return str
 
 }

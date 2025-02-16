@@ -1,8 +1,5 @@
 [Config]
-root_path = ".."
-destination = "build"
-compile_libs = true
-compilation_script = "compile.sh"
+root_path = "/home/julian/GolandProjects/rpn-lang"
 clang_path = "/usr/lib/llvm14/bin/clang"
 linker_path = "/usr/lib/llvm14/bin/llvm-link"
 llc_path =  "/usr/lib/llvm14/bin/llc"

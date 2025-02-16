@@ -3,16 +3,14 @@ package config
 import (
 	"fmt"
 	"github.com/BurntSushi/toml"
+	"path/filepath"
 )
 
 type Config struct {
-	RootPath    string `toml:"root_path"`
-	Destination string `toml:"destination"`
-	CompileLibs bool   `toml:"compile_libs"`
-	ClangPath   string `toml:"clang_path"`
-	LlcPath     string `toml:"llc_path"`
-	LLDisPath   string `toml:"llc_dis_path"`
-	LinkerPath  string `toml:"linker_path"`
+	RootPath   string `toml:"root_path"`
+	ClangPath  string `toml:"clang_path"`
+	LLDisPath  string `toml:"llc_dis_path"`
+	LinkerPath string `toml:"linker_path"`
 }
 
 type Libs struct {
@@ -27,7 +25,7 @@ type TOMLConfig struct {
 }
 
 func (c *TOMLConfig) GetPath(file string) string {
-	return c.Config.RootPath + "/" + file
+	return filepath.Join(c.Config.RootPath, file)
 }
 
 func CreateTOMLConfig(path string) TOMLConfig {
