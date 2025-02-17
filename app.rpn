@@ -1,17 +1,20 @@
-fun printL(x) {
-    x print '\n' print
+struct Point {
+    x <I64>
+    y <I64>
 }
 
-fun at (idx array) {
-    array@idx
-}
-fun set (idx array value) {
-    value array@idx :=
-}
 
 fun main {
-    [1 2 5] a :=
-    123 a@0 :=
-    232 a 1 set
-    a printL
+   new:Point p<Point> :=
+   3 p:x :=
+   4 p:y :=
+   p:x print '\n' print
+   p:y print '\n' print
+
+   new:Point p2<Point> :=
+   p:x 2 * p2:x :=
+   p:y 2 * p2:y :=
+   p2:x print '\n' print
+   p2:y print '\n' print
+
 }

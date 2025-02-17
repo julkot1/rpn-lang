@@ -19,6 +19,8 @@ typedef char *STC_STR;
 #define STC_ARRAY_TYPE 0x5
 #define STC_REF_TYPE 0x6
 #define STC_TYPE_TYPE 0x7
+#define STC_STRUCT_TYPE 0x8
+
 
 #define STC_TYPES_SIZE 8
 

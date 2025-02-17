@@ -105,7 +105,7 @@ func (w *TreeWalk) EnterVarAssign(ctx *parser.VarAssignContext) {
 	if ctx.ArrayIndex() != nil {
 		AssignArrayElement(top.(*lang.Block), ctx.ArrayIndex(), w.scopeStack, w.program, topF.(*lang.Function))
 	} else {
-		AssignVar(top.(*lang.Block), ctx.VarIdentifier().GetText(), w.scopeStack, w.program)
+		AssignVar(top.(*lang.Block), ctx, w.scopeStack, w.program)
 	}
 }
 
@@ -219,8 +219,12 @@ func (w *TreeWalk) EnterIdentifier(ctx *parser.IdentifierContext) {
 	} else if ctx.ID(0).GetText() == lang.InputToken {
 		CallFunc(w.program.Funcs[lang.InputT].IrFunc, top.(*lang.Block).Ir, w.program, false)
 	} else {
+		_, ok := ctx.GetParent().(*parser.VarAssignContext)
+		if ok {
+			return
+		}
 		topF, _ := w.functionStack.Top()
-		ParseToken(ctx.GetText(), top.(*lang.Block), topF.(*lang.Function), w.program, w.scopeStack, ctx)
+		ParseToken(ctx, top.(*lang.Block), topF.(*lang.Function), w.program, w.scopeStack, ctx)
 	}
 
 }
@@ -267,16 +271,12 @@ func (w *TreeWalk) EnterRepeatBlock(ctx *parser.RepeatBlockContext) {
 	arg := ctx.Arguments().AllArgument()[0].GetText()
 	scope := NewScope()
 	w.scopeStack.Push(scope)
-	createVar(arg, pop.(*lang.Block), scope, w.program)
+	createVar(arg, lang.INT_T, "", pop.(*lang.Block), scope)
 
-	typ := w.program.Structs["variable"]
 	block := pop.(*lang.Block)
 
-	loadPtr := block.Ir.NewGetElementPtr(typ, scope.tokens[arg], constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 0))
-	block.Ir.NewStore(constant.NewInt(types.I64, -1), loadPtr)
-
-	loadTypePtr := block.Ir.NewGetElementPtr(typ, scope.tokens[arg], constant.NewInt(types.I32, 0), constant.NewInt(types.I32, 1))
-	block.Ir.NewStore(constant.NewInt(types.I64, int64(lang.INT_T)), loadTypePtr)
+	block.Ir.NewStore(constant.NewInt(types.I64, -1), scope.tokens[arg].Ir)
+	scope.tokens[arg].Type = lang.INT_T
 	block.Vars["loop_index"] = scope.tokens[arg]
 	w.notCreateScope = true
 
@@ -324,4 +324,26 @@ func (w *TreeWalk) EnterArrayIndex(ctx *parser.ArrayIndexContext) {
 	}
 
 	getElementAtIndex(topBlock.(*lang.Block), w.scopeStack, w.program, base, index, topF.(*lang.Function))
+}
+
+func (w *TreeWalk) EnterStruct(ctx *parser.StructContext) {
+	name := ctx.ID().GetText()
+	err := w.program.AddGlobalToken(name, lang.PStruct)
+	if err != nil {
+		os.Exit(-1)
+	}
+
+	args := getArgs(ctx.StructBody().AllStructElement(), name, w.program)
+	createStructDefinition(name, args, w.program)
+
+}
+
+func (w *TreeWalk) EnterNewOperator(ctx *parser.NewOperatorContext) {
+	top, err := w.blockStack.Top()
+	if err != nil {
+		os.Exit(-1)
+	}
+	name := ctx.ID().GetText()
+	createStruct(name, top.(*lang.Block), w.program)
+
 }

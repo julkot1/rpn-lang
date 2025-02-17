@@ -20,6 +20,7 @@ const (
 	PDefaultFunc
 	PStaticFunc
 	PVar
+	PStruct
 )
 
 type Program struct {
@@ -39,6 +40,7 @@ type Program struct {
 	LoopIndex         int
 	ArrIndex          int
 	Structs           map[string]*types.StructType
+	StcStruct         map[string]*StcStruct
 }
 
 func (p *Program) GetFunction(name string, function *Function) *Function {
@@ -82,6 +84,7 @@ func NewProgram() *Program {
 	program.Funcs = make(map[TokenType]*DefaultFunc)
 	program.StringTable = NewStringTable()
 	program.StaticLibsModules = make([]*ir.Module, 0)
+	program.StcStruct = make(map[string]*StcStruct)
 	return program
 
 }

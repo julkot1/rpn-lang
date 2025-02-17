@@ -1,14 +1,46 @@
 
 grammar Stc;
 
-prog          : (functionDef)+ EOF;
+prog          : (functionDef | struct)+ EOF;
 
 functionDef   : 'fun' ID arguments? block; 
 
 
-subBlock      :( (varReference | varAssign | arrayIndex| arrayNew | array | operation | stackOperation | push | identifier)+ (functionDef | ifBlock | repeatBlock)?  );
+type           : (SIMPLE_TYPE) | ID | SIMPLE_TYPE '<'(type | ID) '>';
+
+
+subBlock      :( (    
+                        newOperator 
+                        | varReference 
+                        | varAssign 
+                        | arrayIndex
+                        | arrayNew
+                        | array 
+                        | operation
+                        | stackOperation 
+                        | push 
+                        | identifier
+                    )+ 
+                    (
+                        functionDef 
+                        | ifBlock 
+                        | repeatBlock
+                    )?  
+                );
 
 block         : '{' (subBlock)+'}';
+
+
+newOperator   : NEW ':' ID;
+
+struct        : STRUCT_DEFINITION ID structBody;
+
+structElement : ID varType;
+structBody    : '{' structElement+ '}';
+
+
+
+
 
 ifBlock       : 'if' block (elseBlock)?;
 elseBlock     : 'else' block;
@@ -71,14 +103,16 @@ arrayNew: ARRAY_OPERATOR arrayDescriber arrayDescriber?;
 
 
 argument    : ID;
-varAssign   : (varIdentifier|arrayIndex) ASSIGN_OPERATOR;
+varAssign   : (varAssignIdentifier|arrayIndex|identifier) ASSIGN_OPERATOR;
+varAssignIdentifier : varIdentifier  varType;
+varType: '<'type'>';
 varReference: REFERENCE_OPERATOR varIdentifier;
 varIdentifier: ID ((':' ID)+)?;
 identifier: (STACK_PREVENTION)? ID ((':' ID)+)?;
 
 
-
-
+NEW: 'new';
+STRUCT_DEFINITION: 'struct';
 STACK_PREVENTION: '!';
 
 NUMBER: DIGIT+; // Unsigned number
@@ -96,11 +130,13 @@ STRING: '"' (ESC | ~["\\])* '"';
 CHAR: '\'' (ESC | ~['\\]) '\'';
 BOOL: 'true' | 'false';
 fragment ESC: '\\' [btnfr"'\\];
-SIMPLE_TYPE        : 'I64' 
+SIMPLE_TYPE        : 'I64'
                    | 'I8' 
                    | 'Str' 
-                   | 'Float' 
+                   | 'F64' 
+                   | 'Arr'
                    | 'Bool'
+                   | 'Struct'
                    ;
 LOGIC_OPERATOR     : '<=' 
                    | '>='

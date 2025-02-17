@@ -17,3 +17,13 @@ func ReverseSlice(slice interface{}) {
 		swap(i, j)
 	}
 }
+func IsUnique[T comparable](arr []T) bool {
+	seen := make(map[T]bool) // Map to track seen values
+	for _, v := range arr {
+		if seen[v] { // If the value is already in the map, it's a duplicate
+			return false
+		}
+		seen[v] = true
+	}
+	return true
+}
