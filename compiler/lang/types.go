@@ -11,10 +11,11 @@ const (
 	ARRAY_T
 	REF_T
 	Type_T
+	Struct_T
 	ANY_T
 )
 
-func StringToType(s string) Type {
+func StringToType(s string, program *Program) Type {
 	newS := s[1 : len(s)-1]
 	switch newS {
 	case "I64":
@@ -36,7 +37,21 @@ func StringToType(s string) Type {
 	case "Any":
 		return ANY_T
 	}
+
+	if isStruct(newS, program) {
+		return Struct_T
+	}
+
 	return 0
+}
+
+func isStruct(s string, program *Program) bool {
+	for _, x := range program.StcStruct {
+		if x.Name == s {
+			return true
+		}
+	}
+	return false
 }
 
 type PushableToken struct {

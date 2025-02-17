@@ -68,23 +68,46 @@ func PushToken(variable *lang.Var, block *lang.Block, program *lang.Program) {
 		constant.NewInt(types.I64, int64(variable.Type)))
 }
 
-func createVar(text string, typ lang.Type, block *lang.Block, scope *Scope) {
+func createVar(text string, typ lang.Type, typS string, block *lang.Block, scope *Scope) {
 	variableIr := block.Ir.NewAlloca(types.I64)
-	variable := &lang.Var{Name: text, Type: typ, Ir: variableIr}
+	variable := &lang.Var{Name: text, Type: typ, Ir: variableIr, ComplexType: typS[1 : len(typS)-1]}
 	scope.Push(text, variable)
 
 }
 
-func AssignVar(block *lang.Block, name string, typ lang.Type, stack util.Stack, program *lang.Program) {
-	tok := GetToken(name, stack)
-	if tok == nil {
-		top, _ := stack.Top()
-		createVar(name, typ, block, top.(*Scope))
-		tok = top.(*Scope).tokens[name]
-	}
-	args := GetValues(program, 1, block.Ir)
+func AssignVar(block *lang.Block, ctx *parser.VarAssignContext, stack util.Stack, program *lang.Program) {
 
-	block.Ir.NewStore(args[0], tok.Ir)
+	if ctx.VarAssignIdentifier() != nil {
+		name := ctx.VarAssignIdentifier().VarIdentifier().GetText()
+		typ := ctx.VarAssignIdentifier().VarType().GetText()
+		tok := GetToken(name, stack)
+		if tok == nil {
+			top, _ := stack.Top()
+			createVar(name, lang.StringToType(typ, program), typ, block, top.(*Scope))
+			tok = top.(*Scope).tokens[name]
+		}
+		args := GetValues(program, 1, block.Ir)
+
+		block.Ir.NewStore(args[0], tok.Ir)
+		return
+	}
+	if ctx.Identifier() != nil {
+		idCtx := ctx.Identifier()
+		id := GetIdentifier(idCtx.(*parser.IdentifierContext))
+		token := GetToken(id.Base, stack)
+		if token == nil {
+			fmt.Printf("Var %s not declarated", id.Base)
+			os.Exit(1)
+		}
+		stcStruct := program.StcStruct[token.ComplexType]
+		idx := GetStructFieldIndex(id, token, program)
+		load := block.Ir.NewLoad(types.I64, token.Ir)
+		ptr := block.Ir.NewIntToPtr(load, types.NewPointer(stcStruct.IrType))
+		gep := block.Ir.NewGetElementPtr(stcStruct.IrType, ptr, constant.NewInt(types.I32, 0), constant.NewInt(types.I32, int64(idx)))
+		args := GetValues(program, 1, block.Ir)
+
+		block.Ir.NewStore(args[0], gep)
+	}
 
 }
 func PushReference(block *lang.Block, text string, w *TreeWalk, ctx *parser.VarReferenceContext) {

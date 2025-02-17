@@ -6,7 +6,7 @@ prog          : (functionDef | struct)+ EOF;
 functionDef   : 'fun' ID arguments? block; 
 
 
-type           : (SIMPLE_TYPE) | SIMPLE_TYPE '<'(type | ID) '>';
+type           : (SIMPLE_TYPE) | ID | SIMPLE_TYPE '<'(type | ID) '>';
 
 
 subBlock      :( (    
@@ -35,7 +35,7 @@ newOperator   : NEW ':' ID;
 
 struct        : STRUCT_DEFINITION ID structBody;
 
-structElement : ID '<' type '>';
+structElement : ID varType;
 structBody    : '{' structElement+ '}';
 
 
@@ -103,7 +103,7 @@ arrayNew: ARRAY_OPERATOR arrayDescriber arrayDescriber?;
 
 
 argument    : ID;
-varAssign   : (varAssignIdentifier|arrayIndex) ASSIGN_OPERATOR;
+varAssign   : (varAssignIdentifier|arrayIndex|identifier) ASSIGN_OPERATOR;
 varAssignIdentifier : varIdentifier  varType;
 varType: '<'type'>';
 varReference: REFERENCE_OPERATOR varIdentifier;

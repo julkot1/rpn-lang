@@ -1,5 +1,20 @@
+struct Point {
+    x <I64>
+    y <I64>
+}
+
 
 fun main {
-   [1 2 2] ar<Arr> :=
-   ar@1 print
+   new:Point p<Point> :=
+   3 p:x :=
+   4 p:y :=
+   p:x print '\n' print
+   p:y print '\n' print
+
+   new:Point p2<Point> :=
+   p:x 2 * p2:x :=
+   p:y 2 * p2:y :=
+   p2:x print '\n' print
+   p2:y print '\n' print
+
 }

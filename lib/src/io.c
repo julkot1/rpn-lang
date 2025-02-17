@@ -19,8 +19,8 @@ typedef struct STC_ARRAY_STRUCT STC_ARRAY_STRUCT ;
 
 
 void stc_print(STC_I64 val, STC_TYPE typ){
-    char *types[8] = {
-        "I64", "Bool", "I8", "F64", "Str", "Array", "Ref", "Type"
+    char *types[9] = {
+        "I64", "Bool", "I8", "F64", "Str", "Array", "Ref", "Type", "Struct"
     };
     STC_ARRAY_STRUCT *ar;
     STC_VAR_STRUCT el;
@@ -40,6 +40,9 @@ void stc_print(STC_I64 val, STC_TYPE typ){
         break;
         case STC_TYPE_TYPE:
             PRINT_STRING(types[val]);        
+        break;
+        case STC_STRUCT_TYPE:
+            PRINT_I64(val);     
         break;
         case STC_ARRAY_TYPE:
             ar = (STC_ARRAY_STRUCT*)val;
