@@ -6,16 +6,40 @@ prog          : (functionDef | struct)+ EOF;
 functionDef   : 'fun' ID arguments? block; 
 
 
-subBlock      :( (newOperator | varReference | varAssign | arrayIndex| arrayNew | array | operation | stackOperation | push | identifier)+ (functionDef | ifBlock | repeatBlock)?  );
+type           : (SIMPLE_TYPE) | SIMPLE_TYPE '<'(type | ID) '>';
+
+
+subBlock      :( (    
+                        newOperator 
+                        | varReference 
+                        | varAssign 
+                        | arrayIndex
+                        | arrayNew
+                        | array 
+                        | operation
+                        | stackOperation 
+                        | push 
+                        | identifier
+                    )+ 
+                    (
+                        functionDef 
+                        | ifBlock 
+                        | repeatBlock
+                    )?  
+                );
 
 block         : '{' (subBlock)+'}';
 
 
-newOperator     : NEW ':' ID;
+newOperator   : NEW ':' ID;
 
 struct        : STRUCT_DEFINITION ID structBody;
 
-structBody    : '{' ID+ '}';
+structElement : ID '<' type '>';
+structBody    : '{' structElement+ '}';
+
+
+
 
 
 ifBlock       : 'if' block (elseBlock)?;
@@ -79,7 +103,9 @@ arrayNew: ARRAY_OPERATOR arrayDescriber arrayDescriber?;
 
 
 argument    : ID;
-varAssign   : (varIdentifier|arrayIndex) ASSIGN_OPERATOR;
+varAssign   : (varAssignIdentifier|arrayIndex) ASSIGN_OPERATOR;
+varAssignIdentifier : varIdentifier  varType;
+varType: '<'type'>';
 varReference: REFERENCE_OPERATOR varIdentifier;
 varIdentifier: ID ((':' ID)+)?;
 identifier: (STACK_PREVENTION)? ID ((':' ID)+)?;
@@ -104,11 +130,13 @@ STRING: '"' (ESC | ~["\\])* '"';
 CHAR: '\'' (ESC | ~['\\]) '\'';
 BOOL: 'true' | 'false';
 fragment ESC: '\\' [btnfr"'\\];
-SIMPLE_TYPE        : 'I64' 
+SIMPLE_TYPE        : 'I64'
                    | 'I8' 
                    | 'Str' 
-                   | 'Float' 
+                   | 'F64' 
+                   | 'Arr'
                    | 'Bool'
+                   | 'Struct'
                    ;
 LOGIC_OPERATOR     : '<=' 
                    | '>='

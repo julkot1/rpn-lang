@@ -1,9 +1,5 @@
-struct foo {
-    a b c
-}
 
 fun main {
-   new:foo
-   32 f :=
-   f print
+   [1 2 2] ar<Arr> :=
+   ar@1 print
 }

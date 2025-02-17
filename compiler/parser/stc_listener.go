@@ -14,6 +14,9 @@ type StcListener interface {
 	// EnterFunctionDef is called when entering the functionDef production.
 	EnterFunctionDef(c *FunctionDefContext)
 
+	// EnterType is called when entering the type production.
+	EnterType(c *TypeContext)
+
 	// EnterSubBlock is called when entering the subBlock production.
 	EnterSubBlock(c *SubBlockContext)
 
@@ -25,6 +28,9 @@ type StcListener interface {
 
 	// EnterStruct is called when entering the struct production.
 	EnterStruct(c *StructContext)
+
+	// EnterStructElement is called when entering the structElement production.
+	EnterStructElement(c *StructElementContext)
 
 	// EnterStructBody is called when entering the structBody production.
 	EnterStructBody(c *StructBodyContext)
@@ -83,6 +89,12 @@ type StcListener interface {
 	// EnterVarAssign is called when entering the varAssign production.
 	EnterVarAssign(c *VarAssignContext)
 
+	// EnterVarAssignIdentifier is called when entering the varAssignIdentifier production.
+	EnterVarAssignIdentifier(c *VarAssignIdentifierContext)
+
+	// EnterVarType is called when entering the varType production.
+	EnterVarType(c *VarTypeContext)
+
 	// EnterVarReference is called when entering the varReference production.
 	EnterVarReference(c *VarReferenceContext)
 
@@ -98,6 +110,9 @@ type StcListener interface {
 	// ExitFunctionDef is called when exiting the functionDef production.
 	ExitFunctionDef(c *FunctionDefContext)
 
+	// ExitType is called when exiting the type production.
+	ExitType(c *TypeContext)
+
 	// ExitSubBlock is called when exiting the subBlock production.
 	ExitSubBlock(c *SubBlockContext)
 
@@ -109,6 +124,9 @@ type StcListener interface {
 
 	// ExitStruct is called when exiting the struct production.
 	ExitStruct(c *StructContext)
+
+	// ExitStructElement is called when exiting the structElement production.
+	ExitStructElement(c *StructElementContext)
 
 	// ExitStructBody is called when exiting the structBody production.
 	ExitStructBody(c *StructBodyContext)
@@ -166,6 +184,12 @@ type StcListener interface {
 
 	// ExitVarAssign is called when exiting the varAssign production.
 	ExitVarAssign(c *VarAssignContext)
+
+	// ExitVarAssignIdentifier is called when exiting the varAssignIdentifier production.
+	ExitVarAssignIdentifier(c *VarAssignIdentifierContext)
+
+	// ExitVarType is called when exiting the varType production.
+	ExitVarType(c *VarTypeContext)
 
 	// ExitVarReference is called when exiting the varReference production.
 	ExitVarReference(c *VarReferenceContext)

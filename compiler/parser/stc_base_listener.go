@@ -33,6 +33,12 @@ func (s *BaseStcListener) EnterFunctionDef(ctx *FunctionDefContext) {}
 // ExitFunctionDef is called when production functionDef is exited.
 func (s *BaseStcListener) ExitFunctionDef(ctx *FunctionDefContext) {}
 
+// EnterType is called when production type is entered.
+func (s *BaseStcListener) EnterType(ctx *TypeContext) {}
+
+// ExitType is called when production type is exited.
+func (s *BaseStcListener) ExitType(ctx *TypeContext) {}
+
 // EnterSubBlock is called when production subBlock is entered.
 func (s *BaseStcListener) EnterSubBlock(ctx *SubBlockContext) {}
 
@@ -56,6 +62,12 @@ func (s *BaseStcListener) EnterStruct(ctx *StructContext) {}
 
 // ExitStruct is called when production struct is exited.
 func (s *BaseStcListener) ExitStruct(ctx *StructContext) {}
+
+// EnterStructElement is called when production structElement is entered.
+func (s *BaseStcListener) EnterStructElement(ctx *StructElementContext) {}
+
+// ExitStructElement is called when production structElement is exited.
+func (s *BaseStcListener) ExitStructElement(ctx *StructElementContext) {}
 
 // EnterStructBody is called when production structBody is entered.
 func (s *BaseStcListener) EnterStructBody(ctx *StructBodyContext) {}
@@ -170,6 +182,18 @@ func (s *BaseStcListener) EnterVarAssign(ctx *VarAssignContext) {}
 
 // ExitVarAssign is called when production varAssign is exited.
 func (s *BaseStcListener) ExitVarAssign(ctx *VarAssignContext) {}
+
+// EnterVarAssignIdentifier is called when production varAssignIdentifier is entered.
+func (s *BaseStcListener) EnterVarAssignIdentifier(ctx *VarAssignIdentifierContext) {}
+
+// ExitVarAssignIdentifier is called when production varAssignIdentifier is exited.
+func (s *BaseStcListener) ExitVarAssignIdentifier(ctx *VarAssignIdentifierContext) {}
+
+// EnterVarType is called when production varType is entered.
+func (s *BaseStcListener) EnterVarType(ctx *VarTypeContext) {}
+
+// ExitVarType is called when production varType is exited.
+func (s *BaseStcListener) ExitVarType(ctx *VarTypeContext) {}
 
 // EnterVarReference is called when production varReference is entered.
 func (s *BaseStcListener) EnterVarReference(ctx *VarReferenceContext) {}

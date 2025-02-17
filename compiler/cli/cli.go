@@ -50,7 +50,8 @@ Flags:
 			}
 
 			fmt.Printf("Compiling files with optimization level -O%d:\n", cli.CompilationCfg.Optimization)
-			conf := config.CreateTOMLConfig("/etc/stc/stconfig.toml")
+			//conf := config.CreateTOMLConfig("/etc/stc/stconfig.toml")
+			conf := config.CreateTOMLConfig("config.debug.toml")
 			for _, file := range args {
 				Compile(conf, file, cli.CompilationCfg)
 			}
@@ -70,7 +71,9 @@ func createCompileLibs(cli *CLI) *cobra.Command {
 
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Println("Compile stc default libs")
-			conf := config.CreateTOMLConfig("/etc/stc/stconfig.toml")
+			//conf := config.CreateTOMLConfig("/etc/stc/stconfig.toml")
+			conf := config.CreateTOMLConfig("config.debug.toml")
+
 			CompileStcLibs(conf)
 		},
 	}
