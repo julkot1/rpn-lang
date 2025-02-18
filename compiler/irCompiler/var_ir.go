@@ -5,6 +5,7 @@ import (
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/types"
+	"github.com/llir/llvm/ir/value"
 	"os"
 	"rpn/lang"
 	"rpn/parser"
@@ -62,17 +63,24 @@ func GetToken(token string, stack util.Stack) *lang.Var {
 func PushToken(variable *lang.Var, block *lang.Block, program *lang.Program) {
 
 	load := block.Ir.NewLoad(types.I64, variable.Ir)
-
 	block.Ir.NewCall(program.Funcs[lang.PushT].IrFunc,
 		load,
 		constant.NewInt(types.I64, int64(variable.Type)))
+
 }
 
-func createVar(text string, typ lang.Type, typS string, block *lang.Block, scope *Scope) {
+func createVar(text string, typ lang.Type, typS string, block *lang.Block, scope *Scope, program *lang.Program) {
 	variableIr := block.Ir.NewAlloca(types.I64)
 	variable := &lang.Var{Name: text, Type: typ, Ir: variableIr, ComplexType: typS[1 : len(typS)-1]}
+	if typ == lang.Struct_T {
+		variable.Size = GetStructSize(variable.ComplexType, program)
+	}
 	scope.Push(text, variable)
 
+}
+
+func GetStructSize(complexType string, program *lang.Program) int64 {
+	return int64(len(program.StcStruct[complexType].Args) * 8)
 }
 
 func AssignVar(block *lang.Block, ctx *parser.VarAssignContext, stack util.Stack, program *lang.Program) {
@@ -83,11 +91,14 @@ func AssignVar(block *lang.Block, ctx *parser.VarAssignContext, stack util.Stack
 		tok := GetToken(name, stack)
 		if tok == nil {
 			top, _ := stack.Top()
-			createVar(name, lang.StringToType(typ, program), typ, block, top.(*Scope))
+			createVar(name, lang.StringToType(typ, program), typ, block, top.(*Scope), program)
 			tok = top.(*Scope).tokens[name]
 		}
 		args := GetValues(program, 1, block.Ir)
-
+		if tok.Type == lang.Struct_T {
+			AssignStruct(args, tok, block, program)
+			return
+		}
 		block.Ir.NewStore(args[0], tok.Ir)
 		return
 	}
@@ -108,6 +119,29 @@ func AssignVar(block *lang.Block, ctx *parser.VarAssignContext, stack util.Stack
 
 		block.Ir.NewStore(args[0], gep)
 	}
+
+}
+
+func AssignStruct(args []value.Value, tok *lang.Var, block *lang.Block, program *lang.Program) {
+	memcpy := program.StaticFunctions["copy"].IrFunc
+	name := tok.ComplexType
+	x, ok := program.GlobalTokenTable[name]
+	if !ok {
+		fmt.Println("No such struct: " + name)
+		os.Exit(1)
+	}
+	if x != lang.PStruct {
+		fmt.Println("Token " + name + " is not a struct")
+	}
+	stcStruct := program.StcStruct[name]
+	alloc := block.Ir.NewAlloca(stcStruct.IrType)
+
+	ptrI64 := block.Ir.NewPtrToInt(alloc, types.I64)
+
+	typI := constant.NewInt(types.I64, int64(tok.Type))
+	block.Ir.NewCall(memcpy, ptrI64, args[0], constant.NewInt(types.I64, tok.Size), typI, typI, typI)
+
+	block.Ir.NewStore(ptrI64, tok.Ir)
 
 }
 func PushReference(block *lang.Block, text string, w *TreeWalk, ctx *parser.VarReferenceContext) {

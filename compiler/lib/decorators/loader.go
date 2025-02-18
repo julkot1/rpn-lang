@@ -65,6 +65,6 @@ func getFuncName(line string) string {
 	return s[:end]
 }
 func isFunctionDef(line string) bool {
-	funcDeclRegex := regexp.MustCompile(`^\s*\w+\s+\w+\s*\([^)]*\)\s*;?\s*$`)
+	funcDeclRegex := regexp.MustCompile(`^\s*(inline\s+)?\w+\s+\w+\s*\([^)]*\)\s*;?\s*$`)
 	return funcDeclRegex.MatchString(line)
 }

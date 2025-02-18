@@ -6,5 +6,6 @@ type Var struct {
 	Name        string
 	Type        Type
 	ComplexType string
+	Size        int64
 	Ir          *ir.InstAlloca
 }
