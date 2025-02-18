@@ -138,8 +138,7 @@ func AssignStruct(args []value.Value, tok *lang.Var, block *lang.Block, program 
 
 	ptrI64 := block.Ir.NewPtrToInt(alloc, types.I64)
 
-	typI := constant.NewInt(types.I64, int64(tok.Type))
-	block.Ir.NewCall(memcpy, ptrI64, args[0], constant.NewInt(types.I64, tok.Size), typI, typI, typI)
+	block.Ir.NewCall(memcpy, ptrI64, args[0], constant.NewInt(types.I64, tok.Size))
 
 	block.Ir.NewStore(ptrI64, tok.Ir)
 
