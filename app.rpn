@@ -9,10 +9,9 @@ fun printL(x) {
 }
 fun newPoint {
     new:Point p :=
-    321 p:x :=
-    121 p:y :=
-    13 p:z :=
-    p:x printL
+    2 p:x :=
+    4 p:y :=
+    5 p:z :=
     p
 }
 
@@ -21,9 +20,21 @@ fun main {
     12 bar:x := 
     2 bar:y :=
     232 bar:z :=
-    1 1 1 1 
+    "point bar: " printL
+    bar:y printL
+    bar:x printL
+    bar:z printL
+
     newPoint t<Point> :=
+    "point t: " printL
     t:y printL
     t:x printL
     t:z printL
+    
+    t foo<Point> :=
+    "point foo: " printL
+    foo:y printL
+    foo:x printL
+    foo:z printL
+
 }
