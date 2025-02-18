@@ -10,7 +10,8 @@ type           : (SIMPLE_TYPE) | ID | SIMPLE_TYPE '<'(type | ID) '>';
 
 
 subBlock      :( (    
-                        newOperator 
+                        newStructAssign
+                        | newOperator 
                         | varReference 
                         | varAssign 
                         | arrayIndex
@@ -30,6 +31,7 @@ subBlock      :( (
 
 block         : '{' (subBlock)+'}';
 
+newStructAssign   : NEW ':' ID ID ASSIGN_OPERATOR;
 
 newOperator   : NEW ':' ID;
 
@@ -159,6 +161,7 @@ REFERENCE_OPERATOR : '&';
 BUILD_IN_OPERATOR  : 'typeof'
                    | 'len'
                    | 'call'
+                   | 'copy'
                    ;
 
 

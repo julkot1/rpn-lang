@@ -24,13 +24,13 @@ func getArgs(id []parser.IStructElementContext, name string, program *lang.Progr
 }
 
 func createStructDefinition(name string, args []lang.StructElement, program *lang.Program) {
-	irType := createStructIr(args, program)
+	irType := createStructIr(args)
 	x := &lang.StcStruct{Name: name, Args: args, IrType: irType}
 	program.StcStruct[name] = x
 
 }
 
-func createStructIr(args []lang.StructElement, program *lang.Program) *types.StructType {
+func createStructIr(args []lang.StructElement) *types.StructType {
 	irArgs := make([]types.Type, len(args))
 
 	for idx, _ := range args {

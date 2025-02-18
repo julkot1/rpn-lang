@@ -9,6 +9,6 @@ llc_dis_path =  "/usr/lib/llvm14/bin/llvm-dis"
 lib_root = "lib/src"
 lib_path = "lib/bin"
 lib_raw = [
-    "arithmetic", "logic", "io", "array"
+    "arithmetic", "logic", "io", "array", "mem"
 ]
 

@@ -271,7 +271,7 @@ func (w *TreeWalk) EnterRepeatBlock(ctx *parser.RepeatBlockContext) {
 	arg := ctx.Arguments().AllArgument()[0].GetText()
 	scope := NewScope()
 	w.scopeStack.Push(scope)
-	createVar(arg, lang.INT_T, "", pop.(*lang.Block), scope)
+	createVar(arg, lang.INT_T, "", pop.(*lang.Block), scope, w.program)
 
 	block := pop.(*lang.Block)
 
@@ -346,4 +346,40 @@ func (w *TreeWalk) EnterNewOperator(ctx *parser.NewOperatorContext) {
 	name := ctx.ID().GetText()
 	createStruct(name, top.(*lang.Block), w.program)
 
+}
+
+func (w *TreeWalk) EnterNewStructAssign(ctx *parser.NewStructAssignContext) {
+	top, err := w.blockStack.Top()
+	if err != nil {
+		os.Exit(-1)
+	}
+	name := ctx.ID(0).GetText()
+	varName := ctx.ID(1).GetText()
+
+	createStructAndAssign(name, varName, top.(*lang.Block), w.program, w.scopeStack)
+
+}
+
+func createStructAndAssign(structName string, varName string, block *lang.Block, program *lang.Program, stack util.Stack) {
+
+	tok := GetToken(varName, stack)
+	if tok == nil {
+		top, _ := stack.Top()
+		createVar(varName, lang.Struct_T, "<"+structName+">", block, top.(*Scope), program)
+		tok = top.(*Scope).tokens[varName]
+	}
+
+	x, ok := program.GlobalTokenTable[structName]
+	if !ok {
+		fmt.Println("No such struct: " + structName)
+		os.Exit(1)
+	}
+	if x != lang.PStruct {
+		fmt.Println("Token " + structName + " is not a struct")
+	}
+	stcStruct := program.StcStruct[structName]
+	alloc := block.Ir.NewAlloca(stcStruct.IrType)
+
+	intPtr := block.Ir.NewPtrToInt(alloc, types.I64)
+	block.Ir.NewStore(intPtr, tok.Ir)
 }

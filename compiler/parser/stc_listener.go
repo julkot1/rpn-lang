@@ -23,6 +23,9 @@ type StcListener interface {
 	// EnterBlock is called when entering the block production.
 	EnterBlock(c *BlockContext)
 
+	// EnterNewStructAssign is called when entering the newStructAssign production.
+	EnterNewStructAssign(c *NewStructAssignContext)
+
 	// EnterNewOperator is called when entering the newOperator production.
 	EnterNewOperator(c *NewOperatorContext)
 
@@ -118,6 +121,9 @@ type StcListener interface {
 
 	// ExitBlock is called when exiting the block production.
 	ExitBlock(c *BlockContext)
+
+	// ExitNewStructAssign is called when exiting the newStructAssign production.
+	ExitNewStructAssign(c *NewStructAssignContext)
 
 	// ExitNewOperator is called when exiting the newOperator production.
 	ExitNewOperator(c *NewOperatorContext)
