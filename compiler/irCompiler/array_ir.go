@@ -181,7 +181,7 @@ func getElementAtIndex(block *lang.Block, scope util.Stack, program *lang.Progra
 		fmt.Printf("variable '%s' does not exist:\n \tline\n", index)
 		os.Exit(1)
 	}
-	block.Ir.NewCall(fun, indexValue, arrValue, indexType, arrTypeValue)
+	block.Ir.NewCall(fun, indexValue, arrValue.Ir, indexType, arrTypeValue)
 
 }
 
@@ -198,7 +198,7 @@ func getIndex(block *lang.Block, index string, program *lang.Program, scope util
 				fmt.Printf("variable '%s' does not exist:\n \tline\n", index)
 				os.Exit(1)
 			}
-			return loadValue, typeValue
+			return loadValue.Ir, typeValue
 		}
 
 	}
@@ -218,7 +218,7 @@ func AssignArrayElement(block *lang.Block, index parser.IArrayIndexContext, scop
 			fmt.Printf("variable '%s' does not exist:\n \tline\n", index.ArrayBase().GetText())
 			os.Exit(1)
 		}
-		block.Ir.NewCall(setFun, indexValue, param, args[0], indexType, typ, args[1])
+		block.Ir.NewCall(setFun, indexValue, param.Ir, args[0], indexType, typ, args[1])
 	} else {
 		block.Ir.NewCall(setFun, indexValue, arr, args[0], indexType, arrT, args[1])
 

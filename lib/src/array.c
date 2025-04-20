@@ -25,8 +25,6 @@ void stc_at(STC_I64 idx, STC_I64 array, STC_TYPE idx_typ, STC_TYPE array_typ)
 {
     STC_ARRAY_STRUCT *arr;
     STC_VAR_STRUCT var;
-               
-
 
     switch (array_typ) {
         case STC_STRING_TYPE:

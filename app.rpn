@@ -1,40 +1,15 @@
-struct Point {
+struct foo {
     x <I64>
     y <I64>
-    z <I64>
 }
-
-fun printL(x) {
-    x print '\n' print
+fun x(p<foo> c<Str>) {
+    p:x print
+    c print
 }
-fun newPoint {
-    new:Point p :=
-    2 p:x :=
-    4 p:y :=
-    5 p:z :=
-    p
-}
-
 fun main {
-    new:Point bar :=
-    12 bar:x := 
-    2 bar:y :=
-    232 bar:z :=
-    "point bar: " printL
-    bar:y printL
-    bar:x printL
-    bar:z printL
-
-    newPoint t<Point> :=
-    "point t: " printL
-    t:y printL
-    t:x printL
-    t:z printL
-    
-    t foo<Point> :=
-    "point foo: " printL
-    foo:y printL
-    foo:x printL
-    foo:z printL
-
+     new:foo p :=
+     4 p:x :=
+     p f<foo> :=
+     "df" f x
+    "sdsd\n" print
 }

@@ -14,10 +14,23 @@ func ParseToken(id *parser.IdentifierContext, block *lang.Block, fun *lang.Funct
 	identifier := GetIdentifier(id)
 	text := identifier.Base
 	if fun.IsParameter(text) {
-		param, paramType := fun.GetParam(id.GetText())
-		block.Ir.NewCall(program.Funcs[lang.PushT].IrFunc,
-			param,
-			paramType)
+		if len(identifier.References) == 0 {
+			param, paramType := fun.GetParam(id.ID(0).GetText())
+			block.Ir.NewCall(program.Funcs[lang.PushT].IrFunc,
+				param.Ir,
+				paramType)
+		} else {
+			param, _ := fun.GetParam(id.ID(0).GetText())
+			stcStruct := program.StcStruct[param.ComplexType]
+			idx := GetStructFieldIndex(identifier, param.ComplexType, program)
+			ptr := block.Ir.NewIntToPtr(param.Ir, types.NewPointer(stcStruct.IrType))
+			gep := block.Ir.NewGetElementPtr(stcStruct.IrType, ptr, constant.NewInt(types.I32, 0), constant.NewInt(types.I32, int64(idx)))
+			load2 := block.Ir.NewLoad(types.I64, gep)
+
+			block.Ir.NewCall(program.Funcs[lang.PushT].IrFunc,
+				load2,
+				constant.NewInt(types.I64, int64(stcStruct.Args[idx].Type)))
+		}
 		return
 	}
 
@@ -51,7 +64,7 @@ func PushIdentifier(text string, scope util.Stack, identifier *Identifier, progr
 		PushToken(token, block, program)
 	} else {
 		stcStruct := program.StcStruct[token.ComplexType]
-		idx := GetStructFieldIndex(identifier, token, program)
+		idx := GetStructFieldIndex(identifier, token.ComplexType, program)
 		load := block.Ir.NewLoad(types.I64, token.Ir)
 		ptr := block.Ir.NewIntToPtr(load, types.NewPointer(stcStruct.IrType))
 		gep := block.Ir.NewGetElementPtr(stcStruct.IrType, ptr, constant.NewInt(types.I32, 0), constant.NewInt(types.I32, int64(idx)))
@@ -62,9 +75,9 @@ func PushIdentifier(text string, scope util.Stack, identifier *Identifier, progr
 			constant.NewInt(types.I64, int64(stcStruct.Args[idx].Type)))
 	}
 }
-func GetStructFieldIndex(identifier *Identifier, token *lang.Var, program *lang.Program) int {
+func GetStructFieldIndex(identifier *Identifier, complexType string, program *lang.Program) int {
 	ref := identifier.References[0]
-	stcStruct := program.StcStruct[token.ComplexType]
+	stcStruct := program.StcStruct[complexType]
 	for i, s := range stcStruct.Args {
 		if s.Name == ref {
 			return i

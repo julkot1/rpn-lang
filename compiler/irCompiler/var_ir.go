@@ -111,7 +111,7 @@ func AssignVar(block *lang.Block, ctx *parser.VarAssignContext, stack util.Stack
 			os.Exit(1)
 		}
 		stcStruct := program.StcStruct[token.ComplexType]
-		idx := GetStructFieldIndex(id, token, program)
+		idx := GetStructFieldIndex(id, token.ComplexType, program)
 		load := block.Ir.NewLoad(types.I64, token.Ir)
 		ptr := block.Ir.NewIntToPtr(load, types.NewPointer(stcStruct.IrType))
 		gep := block.Ir.NewGetElementPtr(stcStruct.IrType, ptr, constant.NewInt(types.I32, 0), constant.NewInt(types.I32, int64(idx)))

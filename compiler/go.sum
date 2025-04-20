@@ -68,10 +68,5 @@ golang.org/x/xerrors v0.0.0-20191011141410-1b5146add898/go.mod h1:I/5z698sn9Ka8T
 golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
-github.com/antlr4-go/antlr v0.0.0-20230518091524-98b52378c522 h1:o+W7GDFUwWtVkN28CW/nhh/aCmHn6OJddUs3+8vMMjs=
-github.com/antlr4-go/antlr v0.0.0-20230518091524-98b52378c522/go.mod h1:srLVvW4JLxy+tCG9Nn2l8al77mUIMCwAOLQocfLDU2w=
-github.com/antlr4-go/antlr/v4 v4.13.1 h1:SqQKkuVZ+zWkMMNkjy5FZe5mr5WURWnlpmOuzYWrPrQ=
-github.com/antlr4-go/antlr/v4 v4.13.1/go.mod h1:GKmUxMtwp6ZgGwZSva4eWPC5mS6vUAmOABFgjdkM7Nw=
-golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67 h1:1UoZQm6f0P/ZO0w1Ri+f+ifG/gXhegadRdwBIXEFWDo=
-golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67/go.mod h1:qj5a5QZpwLU2NLQudwIN5koi3beDhSAlJwa67PuM98c=
-
+tinygo.org/x/go-llvm v0.0.0-20250119132755-9dca92dfb4f9 h1:rMvEzuCYjyiR+pmdiCVWTQw3L6VqiSIXoL19I3lYufE=
+tinygo.org/x/go-llvm v0.0.0-20250119132755-9dca92dfb4f9/go.mod h1:GFbusT2VTA4I+l4j80b17KFK+6whv69Wtny5U+T8RR0=

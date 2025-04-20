@@ -1,4 +1,4 @@
-// Code generated from Stc.g4 by ANTLR 4.13.2. DO NOT EDIT.
+// Code generated from Stc.g4 by ANTLR 4.13.0. DO NOT EDIT.
 
 package parser // Stc
 
@@ -56,7 +56,7 @@ func stcParserInit() {
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 43, 268, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 1, 43, 269, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
 		10, 2, 11, 7, 11, 2, 12, 7, 12, 2, 13, 7, 13, 2, 14, 7, 14, 2, 15, 7, 15,
 		2, 16, 7, 16, 2, 17, 7, 17, 2, 18, 7, 18, 2, 19, 7, 19, 2, 20, 7, 20, 2,
@@ -78,23 +78,23 @@ func stcParserInit() {
 		19, 1, 19, 1, 20, 1, 20, 3, 20, 200, 8, 20, 1, 21, 1, 21, 1, 21, 1, 21,
 		1, 22, 1, 22, 1, 22, 1, 23, 1, 23, 4, 23, 211, 8, 23, 11, 23, 12, 23, 212,
 		1, 23, 1, 23, 3, 23, 217, 8, 23, 1, 24, 1, 24, 1, 24, 1, 24, 1, 25, 1,
-		25, 1, 25, 3, 25, 226, 8, 25, 1, 26, 1, 26, 1, 27, 1, 27, 1, 27, 3, 27,
-		233, 8, 27, 1, 27, 1, 27, 1, 28, 1, 28, 1, 28, 1, 29, 1, 29, 1, 29, 1,
-		29, 1, 30, 1, 30, 1, 30, 1, 31, 1, 31, 1, 31, 4, 31, 250, 8, 31, 11, 31,
-		12, 31, 251, 3, 31, 254, 8, 31, 1, 32, 3, 32, 257, 8, 32, 1, 32, 1, 32,
-		1, 32, 4, 32, 262, 8, 32, 11, 32, 12, 32, 263, 3, 32, 266, 8, 32, 1, 32,
-		0, 0, 33, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32,
-		34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 0, 3, 2,
-		0, 33, 35, 37, 37, 1, 0, 12, 16, 1, 0, 21, 32, 285, 0, 68, 1, 0, 0, 0,
-		2, 74, 1, 0, 0, 0, 4, 90, 1, 0, 0, 0, 6, 103, 1, 0, 0, 0, 8, 112, 1, 0,
-		0, 0, 10, 120, 1, 0, 0, 0, 12, 126, 1, 0, 0, 0, 14, 130, 1, 0, 0, 0, 16,
-		134, 1, 0, 0, 0, 18, 137, 1, 0, 0, 0, 20, 145, 1, 0, 0, 0, 22, 150, 1,
-		0, 0, 0, 24, 153, 1, 0, 0, 0, 26, 159, 1, 0, 0, 0, 28, 168, 1, 0, 0, 0,
-		30, 172, 1, 0, 0, 0, 32, 174, 1, 0, 0, 0, 34, 176, 1, 0, 0, 0, 36, 193,
+		25, 1, 25, 3, 25, 226, 8, 25, 1, 26, 1, 26, 1, 26, 1, 27, 1, 27, 1, 27,
+		3, 27, 234, 8, 27, 1, 27, 1, 27, 1, 28, 1, 28, 1, 28, 1, 29, 1, 29, 1,
+		29, 1, 29, 1, 30, 1, 30, 1, 30, 1, 31, 1, 31, 1, 31, 4, 31, 251, 8, 31,
+		11, 31, 12, 31, 252, 3, 31, 255, 8, 31, 1, 32, 3, 32, 258, 8, 32, 1, 32,
+		1, 32, 1, 32, 4, 32, 263, 8, 32, 11, 32, 12, 32, 264, 3, 32, 267, 8, 32,
+		1, 32, 0, 0, 33, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28,
+		30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64,
+		0, 3, 2, 0, 33, 35, 37, 37, 1, 0, 12, 16, 1, 0, 21, 32, 286, 0, 68, 1,
+		0, 0, 0, 2, 74, 1, 0, 0, 0, 4, 90, 1, 0, 0, 0, 6, 103, 1, 0, 0, 0, 8, 112,
+		1, 0, 0, 0, 10, 120, 1, 0, 0, 0, 12, 126, 1, 0, 0, 0, 14, 130, 1, 0, 0,
+		0, 16, 134, 1, 0, 0, 0, 18, 137, 1, 0, 0, 0, 20, 145, 1, 0, 0, 0, 22, 150,
+		1, 0, 0, 0, 24, 153, 1, 0, 0, 0, 26, 159, 1, 0, 0, 0, 28, 168, 1, 0, 0,
+		0, 30, 172, 1, 0, 0, 0, 32, 174, 1, 0, 0, 0, 34, 176, 1, 0, 0, 0, 36, 193,
 		1, 0, 0, 0, 38, 195, 1, 0, 0, 0, 40, 199, 1, 0, 0, 0, 42, 201, 1, 0, 0,
 		0, 44, 205, 1, 0, 0, 0, 46, 208, 1, 0, 0, 0, 48, 218, 1, 0, 0, 0, 50, 222,
-		1, 0, 0, 0, 52, 227, 1, 0, 0, 0, 54, 232, 1, 0, 0, 0, 56, 236, 1, 0, 0,
-		0, 58, 239, 1, 0, 0, 0, 60, 243, 1, 0, 0, 0, 62, 246, 1, 0, 0, 0, 64, 256,
+		1, 0, 0, 0, 52, 227, 1, 0, 0, 0, 54, 233, 1, 0, 0, 0, 56, 237, 1, 0, 0,
+		0, 58, 240, 1, 0, 0, 0, 60, 244, 1, 0, 0, 0, 62, 247, 1, 0, 0, 0, 64, 257,
 		1, 0, 0, 0, 66, 69, 3, 2, 1, 0, 67, 69, 3, 14, 7, 0, 68, 66, 1, 0, 0, 0,
 		68, 67, 1, 0, 0, 0, 69, 70, 1, 0, 0, 0, 70, 68, 1, 0, 0, 0, 70, 71, 1,
 		0, 0, 0, 71, 72, 1, 0, 0, 0, 72, 73, 5, 0, 0, 1, 73, 1, 1, 0, 0, 0, 74,
@@ -157,23 +157,23 @@ func stcParserInit() {
 		217, 47, 1, 0, 0, 0, 218, 219, 5, 38, 0, 0, 219, 220, 5, 21, 0, 0, 220,
 		221, 5, 39, 0, 0, 221, 49, 1, 0, 0, 0, 222, 223, 5, 40, 0, 0, 223, 225,
 		3, 48, 24, 0, 224, 226, 3, 48, 24, 0, 225, 224, 1, 0, 0, 0, 225, 226, 1,
-		0, 0, 0, 226, 51, 1, 0, 0, 0, 227, 228, 5, 42, 0, 0, 228, 53, 1, 0, 0,
-		0, 229, 233, 3, 56, 28, 0, 230, 233, 3, 42, 21, 0, 231, 233, 3, 64, 32,
-		0, 232, 229, 1, 0, 0, 0, 232, 230, 1, 0, 0, 0, 232, 231, 1, 0, 0, 0, 233,
-		234, 1, 0, 0, 0, 234, 235, 5, 35, 0, 0, 235, 55, 1, 0, 0, 0, 236, 237,
-		3, 62, 31, 0, 237, 238, 3, 58, 29, 0, 238, 57, 1, 0, 0, 0, 239, 240, 5,
-		2, 0, 0, 240, 241, 3, 4, 2, 0, 241, 242, 5, 3, 0, 0, 242, 59, 1, 0, 0,
-		0, 243, 244, 5, 36, 0, 0, 244, 245, 3, 62, 31, 0, 245, 61, 1, 0, 0, 0,
-		246, 253, 5, 42, 0, 0, 247, 248, 5, 6, 0, 0, 248, 250, 5, 42, 0, 0, 249,
-		247, 1, 0, 0, 0, 250, 251, 1, 0, 0, 0, 251, 249, 1, 0, 0, 0, 251, 252,
-		1, 0, 0, 0, 252, 254, 1, 0, 0, 0, 253, 249, 1, 0, 0, 0, 253, 254, 1, 0,
-		0, 0, 254, 63, 1, 0, 0, 0, 255, 257, 5, 20, 0, 0, 256, 255, 1, 0, 0, 0,
-		256, 257, 1, 0, 0, 0, 257, 258, 1, 0, 0, 0, 258, 265, 5, 42, 0, 0, 259,
-		260, 5, 6, 0, 0, 260, 262, 5, 42, 0, 0, 261, 259, 1, 0, 0, 0, 262, 263,
-		1, 0, 0, 0, 263, 261, 1, 0, 0, 0, 263, 264, 1, 0, 0, 0, 264, 266, 1, 0,
-		0, 0, 265, 261, 1, 0, 0, 0, 265, 266, 1, 0, 0, 0, 266, 65, 1, 0, 0, 0,
-		25, 68, 70, 77, 87, 90, 103, 105, 110, 116, 141, 148, 155, 163, 168, 193,
-		199, 212, 216, 225, 232, 251, 253, 256, 263, 265,
+		0, 0, 0, 226, 51, 1, 0, 0, 0, 227, 228, 5, 42, 0, 0, 228, 229, 3, 58, 29,
+		0, 229, 53, 1, 0, 0, 0, 230, 234, 3, 56, 28, 0, 231, 234, 3, 42, 21, 0,
+		232, 234, 3, 64, 32, 0, 233, 230, 1, 0, 0, 0, 233, 231, 1, 0, 0, 0, 233,
+		232, 1, 0, 0, 0, 234, 235, 1, 0, 0, 0, 235, 236, 5, 35, 0, 0, 236, 55,
+		1, 0, 0, 0, 237, 238, 3, 62, 31, 0, 238, 239, 3, 58, 29, 0, 239, 57, 1,
+		0, 0, 0, 240, 241, 5, 2, 0, 0, 241, 242, 3, 4, 2, 0, 242, 243, 5, 3, 0,
+		0, 243, 59, 1, 0, 0, 0, 244, 245, 5, 36, 0, 0, 245, 246, 3, 62, 31, 0,
+		246, 61, 1, 0, 0, 0, 247, 254, 5, 42, 0, 0, 248, 249, 5, 6, 0, 0, 249,
+		251, 5, 42, 0, 0, 250, 248, 1, 0, 0, 0, 251, 252, 1, 0, 0, 0, 252, 250,
+		1, 0, 0, 0, 252, 253, 1, 0, 0, 0, 253, 255, 1, 0, 0, 0, 254, 250, 1, 0,
+		0, 0, 254, 255, 1, 0, 0, 0, 255, 63, 1, 0, 0, 0, 256, 258, 5, 20, 0, 0,
+		257, 256, 1, 0, 0, 0, 257, 258, 1, 0, 0, 0, 258, 259, 1, 0, 0, 0, 259,
+		266, 5, 42, 0, 0, 260, 261, 5, 6, 0, 0, 261, 263, 5, 42, 0, 0, 262, 260,
+		1, 0, 0, 0, 263, 264, 1, 0, 0, 0, 264, 262, 1, 0, 0, 0, 264, 265, 1, 0,
+		0, 0, 265, 267, 1, 0, 0, 0, 266, 262, 1, 0, 0, 0, 266, 267, 1, 0, 0, 0,
+		267, 65, 1, 0, 0, 0, 25, 68, 70, 77, 87, 90, 103, 105, 110, 116, 141, 148,
+		155, 163, 168, 193, 199, 212, 216, 225, 233, 252, 254, 257, 264, 266,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -4823,6 +4823,7 @@ type IArgumentContext interface {
 
 	// Getter signatures
 	ID() antlr.TerminalNode
+	VarType() IVarTypeContext
 
 	// IsArgumentContext differentiates from other interfaces.
 	IsArgumentContext()
@@ -4864,6 +4865,22 @@ func (s *ArgumentContext) ID() antlr.TerminalNode {
 	return s.GetToken(StcParserID, 0)
 }
 
+func (s *ArgumentContext) VarType() IVarTypeContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IVarTypeContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IVarTypeContext)
+}
+
 func (s *ArgumentContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -4895,6 +4912,10 @@ func (p *StcParser) Argument() (localctx IArgumentContext) {
 			// Recognition error - abort rule
 			goto errorExit
 		}
+	}
+	{
+		p.SetState(228)
+		p.VarType()
 	}
 
 errorExit:
@@ -5035,7 +5056,7 @@ func (p *StcParser) VarAssign() (localctx IVarAssignContext) {
 	localctx = NewVarAssignContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 54, StcParserRULE_varAssign)
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(232)
+	p.SetState(233)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -5044,19 +5065,19 @@ func (p *StcParser) VarAssign() (localctx IVarAssignContext) {
 	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 19, p.GetParserRuleContext()) {
 	case 1:
 		{
-			p.SetState(229)
+			p.SetState(230)
 			p.VarAssignIdentifier()
 		}
 
 	case 2:
 		{
-			p.SetState(230)
+			p.SetState(231)
 			p.ArrayIndex()
 		}
 
 	case 3:
 		{
-			p.SetState(231)
+			p.SetState(232)
 			p.Identifier()
 		}
 
@@ -5064,7 +5085,7 @@ func (p *StcParser) VarAssign() (localctx IVarAssignContext) {
 		goto errorExit
 	}
 	{
-		p.SetState(234)
+		p.SetState(235)
 		p.Match(StcParserASSIGN_OPERATOR)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -5189,11 +5210,11 @@ func (p *StcParser) VarAssignIdentifier() (localctx IVarAssignIdentifierContext)
 	p.EnterRule(localctx, 56, StcParserRULE_varAssignIdentifier)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(236)
+		p.SetState(237)
 		p.VarIdentifier()
 	}
 	{
-		p.SetState(237)
+		p.SetState(238)
 		p.VarType()
 	}
 
@@ -5297,7 +5318,7 @@ func (p *StcParser) VarType() (localctx IVarTypeContext) {
 	p.EnterRule(localctx, 58, StcParserRULE_varType)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(239)
+		p.SetState(240)
 		p.Match(StcParserT__1)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -5305,11 +5326,11 @@ func (p *StcParser) VarType() (localctx IVarTypeContext) {
 		}
 	}
 	{
-		p.SetState(240)
+		p.SetState(241)
 		p.Type_()
 	}
 	{
-		p.SetState(241)
+		p.SetState(242)
 		p.Match(StcParserT__2)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -5422,7 +5443,7 @@ func (p *StcParser) VarReference() (localctx IVarReferenceContext) {
 	p.EnterRule(localctx, 60, StcParserRULE_varReference)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(243)
+		p.SetState(244)
 		p.Match(StcParserREFERENCE_OPERATOR)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -5430,7 +5451,7 @@ func (p *StcParser) VarReference() (localctx IVarReferenceContext) {
 		}
 	}
 	{
-		p.SetState(244)
+		p.SetState(245)
 		p.VarIdentifier()
 	}
 
@@ -5529,14 +5550,14 @@ func (p *StcParser) VarIdentifier() (localctx IVarIdentifierContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(246)
+		p.SetState(247)
 		p.Match(StcParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(253)
+	p.SetState(254)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -5544,7 +5565,7 @@ func (p *StcParser) VarIdentifier() (localctx IVarIdentifierContext) {
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == StcParserT__5 {
-		p.SetState(249)
+		p.SetState(250)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -5553,7 +5574,7 @@ func (p *StcParser) VarIdentifier() (localctx IVarIdentifierContext) {
 
 		for ok := true; ok; ok = _la == StcParserT__5 {
 			{
-				p.SetState(247)
+				p.SetState(248)
 				p.Match(StcParserT__5)
 				if p.HasError() {
 					// Recognition error - abort rule
@@ -5561,7 +5582,7 @@ func (p *StcParser) VarIdentifier() (localctx IVarIdentifierContext) {
 				}
 			}
 			{
-				p.SetState(248)
+				p.SetState(249)
 				p.Match(StcParserID)
 				if p.HasError() {
 					// Recognition error - abort rule
@@ -5569,7 +5590,7 @@ func (p *StcParser) VarIdentifier() (localctx IVarIdentifierContext) {
 				}
 			}
 
-			p.SetState(251)
+			p.SetState(252)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
@@ -5678,7 +5699,7 @@ func (p *StcParser) Identifier() (localctx IIdentifierContext) {
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(256)
+	p.SetState(257)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -5687,7 +5708,7 @@ func (p *StcParser) Identifier() (localctx IIdentifierContext) {
 
 	if _la == StcParserSTACK_PREVENTION {
 		{
-			p.SetState(255)
+			p.SetState(256)
 			p.Match(StcParserSTACK_PREVENTION)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -5697,14 +5718,14 @@ func (p *StcParser) Identifier() (localctx IIdentifierContext) {
 
 	}
 	{
-		p.SetState(258)
+		p.SetState(259)
 		p.Match(StcParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(265)
+	p.SetState(266)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -5712,7 +5733,7 @@ func (p *StcParser) Identifier() (localctx IIdentifierContext) {
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == StcParserT__5 {
-		p.SetState(261)
+		p.SetState(262)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -5721,7 +5742,7 @@ func (p *StcParser) Identifier() (localctx IIdentifierContext) {
 
 		for ok := true; ok; ok = _la == StcParserT__5 {
 			{
-				p.SetState(259)
+				p.SetState(260)
 				p.Match(StcParserT__5)
 				if p.HasError() {
 					// Recognition error - abort rule
@@ -5729,7 +5750,7 @@ func (p *StcParser) Identifier() (localctx IIdentifierContext) {
 				}
 			}
 			{
-				p.SetState(260)
+				p.SetState(261)
 				p.Match(StcParserID)
 				if p.HasError() {
 					// Recognition error - abort rule
@@ -5737,7 +5758,7 @@ func (p *StcParser) Identifier() (localctx IIdentifierContext) {
 				}
 			}
 
-			p.SetState(263)
+			p.SetState(264)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit

@@ -5,25 +5,28 @@ import (
 	"github.com/llir/llvm/ir/types"
 )
 
+type FuncParam struct {
+	Name        string
+	Type        Type
+	ComplexType string
+	Size        int64
+	Ir          *ir.Param
+}
 type Function struct {
 	Name   string
 	Blocks []*Block
 	Ir     *ir.Func
-	params []*ir.Param
+	Params []*FuncParam
 }
 
-func (f *Function) Params(params []string) {
-	f.params = make([]*ir.Param, 0)
-	for _, param := range params {
-		paramIr := ir.NewParam(param, types.I64)
-		f.params = append(f.params, paramIr)
-	}
-}
-
-func NewFunction(name string, module *ir.Module, params []string) *Function {
+func NewFunction(name string, module *ir.Module, params []*FuncParam) *Function {
 	x := &Function{Name: name}
-	x.Params(params)
-	x.Ir = module.NewFunc(name, types.I64, x.params...)
+	x.Params = params
+	irParams := make([]*ir.Param, len(params))
+	for i, p := range params {
+		irParams[i] = p.Ir
+	}
+	x.Ir = module.NewFunc(name, types.I64, irParams...)
 	return x
 }
 
@@ -50,14 +53,14 @@ func (f *Function) IsParameter(text string) bool {
 	return false
 }
 
-func (f *Function) GetParam(text string) (*ir.Param, *ir.Param) {
-	var value *ir.Param
+func (f *Function) GetParam(text string) (*FuncParam, *ir.Param) {
+	var value *FuncParam
 	var valueTyp *ir.Param
-	for _, p := range f.params {
-		if p.Name() == text {
+	for _, p := range f.Params {
+		if p.Name == text {
 			value = p
-		} else if p.Name() == (text + ".typ") {
-			valueTyp = p
+		} else if p.Name == (text + ".typ") {
+			valueTyp = p.Ir
 		}
 		if value != nil && valueTyp != nil {
 			return value, valueTyp

@@ -104,7 +104,7 @@ arrayDescriber: ARRAY_OPEN NUMBER ARRAY_CLOSE;
 arrayNew: ARRAY_OPERATOR arrayDescriber arrayDescriber?;
 
 
-argument    : ID;
+argument    : ID varType;
 varAssign   : (varAssignIdentifier|arrayIndex|identifier) ASSIGN_OPERATOR;
 varAssignIdentifier : varIdentifier  varType;
 varType: '<'type'>';

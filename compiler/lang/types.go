@@ -34,7 +34,7 @@ func StringToType(s string, program *Program) Type {
 		return REF_T
 	case "Type":
 		return Type_T
-	case "Any":
+	case "?":
 		return ANY_T
 	}
 

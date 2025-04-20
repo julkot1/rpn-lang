@@ -3,6 +3,7 @@ package irCompiler
 import (
 	"fmt"
 	"github.com/antlr4-go/antlr/v4"
+	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/types"
 	"os"
@@ -57,20 +58,32 @@ func (w *TreeWalk) EnterFunctionDef(ctx *parser.FunctionDefContext) {
 		os.Exit(-1)
 	}
 
-	params := make([]string, 0)
+	params := make([]*lang.FuncParam, 0)
 	if ctx.Arguments() != nil {
 		args := ctx.Arguments().AllArgument()
 		for _, arg := range args {
-			params = append(params, arg.GetText())
+			param := &lang.FuncParam{}
+			param.Name = arg.ID().GetText()
+			param.Type = lang.StringToType(arg.VarType().GetText(), w.program)
+			param.Ir = ir.NewParam(param.Name, types.I64)
+			if param.Type == lang.Struct_T {
+				param.ComplexType = arg.VarType().Type_().GetText()
+			}
+			params = append(params, param)
 		}
-		ok, str := isUnique(params)
+
+		ok, str := isUniqueParam(params)
 		if !ok {
 			fmt.Printf("parametr is not unique: %s in function %s\n\t line %v:", str, ctx.ID().GetText(), ctx.GetStart().GetLine())
 			os.Exit(-1)
 		}
 
 		for _, arg := range args {
-			params = append(params, arg.GetText()+".typ")
+			param := &lang.FuncParam{}
+			param.Name = arg.ID().GetText() + ".typ"
+			param.Type = lang.StringToType(arg.VarType().GetText(), w.program)
+			param.Ir = ir.NewParam(param.Name, types.I64)
+			params = append(params, param)
 		}
 	}
 	w.functionStack.Push(lang.NewFunction(ctx.ID().GetText(), w.program.Module, params))
@@ -83,6 +96,16 @@ func isUnique(arr []string) (bool, string) {
 			return false, v // Duplicate found
 		}
 		seen[v] = true
+	}
+	return true, "" // All elements are unique
+}
+func isUniqueParam(arr []*lang.FuncParam) (bool, string) {
+	seen := make(map[string]bool)
+	for _, v := range arr {
+		if seen[v.Name] {
+			return false, v.Name // Duplicate found
+		}
+		seen[v.Name] = true
 	}
 	return true, "" // All elements are unique
 }

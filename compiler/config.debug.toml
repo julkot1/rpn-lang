@@ -1,6 +1,6 @@
 [Config]
 root_path = "/home/julian/GolandProjects/rpn-lang"
-clang_path = "/usr/lib/llvm14/bin/clang"
+clang_path = "clang"
 linker_path = "/usr/lib/llvm14/bin/llvm-link"
 llc_path =  "/usr/lib/llvm14/bin/llc"
 llc_dis_path =  "/usr/lib/llvm14/bin/llvm-dis"
