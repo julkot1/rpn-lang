@@ -2,7 +2,7 @@ struct foo {
     x <I64>
     y <I64>
 }
-fun x(p<foo> c<Str>) {
+fun x(p<foo> c) {
     p:x print
     c print
 }
@@ -10,6 +10,6 @@ fun main {
      new:foo p :=
      4 p:x :=
      p f<foo> :=
-     "df" f x
+     "df\n" f x
     "sdsd\n" print
 }

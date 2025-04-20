@@ -16,9 +16,16 @@ func ParseToken(id *parser.IdentifierContext, block *lang.Block, fun *lang.Funct
 	if fun.IsParameter(text) {
 		if len(identifier.References) == 0 {
 			param, paramType := fun.GetParam(id.ID(0).GetText())
-			block.Ir.NewCall(program.Funcs[lang.PushT].IrFunc,
-				param.Ir,
-				paramType)
+			if param.Type != lang.ANY_T {
+				block.Ir.NewCall(program.Funcs[lang.PushT].IrFunc,
+					param.Ir,
+					constant.NewInt(types.I64, int64(param.Type)))
+			} else {
+				block.Ir.NewCall(program.Funcs[lang.PushT].IrFunc,
+					param.Ir,
+					paramType)
+			}
+
 		} else {
 			param, _ := fun.GetParam(id.ID(0).GetText())
 			stcStruct := program.StcStruct[param.ComplexType]

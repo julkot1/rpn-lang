@@ -64,7 +64,11 @@ func (w *TreeWalk) EnterFunctionDef(ctx *parser.FunctionDefContext) {
 		for _, arg := range args {
 			param := &lang.FuncParam{}
 			param.Name = arg.ID().GetText()
-			param.Type = lang.StringToType(arg.VarType().GetText(), w.program)
+			if arg.VarType() == nil {
+				param.Type = lang.ANY_T
+			} else {
+				param.Type = lang.StringToType(arg.VarType().GetText(), w.program)
+			}
 			param.Ir = ir.NewParam(param.Name, types.I64)
 			if param.Type == lang.Struct_T {
 				param.ComplexType = arg.VarType().Type_().GetText()
@@ -81,7 +85,11 @@ func (w *TreeWalk) EnterFunctionDef(ctx *parser.FunctionDefContext) {
 		for _, arg := range args {
 			param := &lang.FuncParam{}
 			param.Name = arg.ID().GetText() + ".typ"
-			param.Type = lang.StringToType(arg.VarType().GetText(), w.program)
+			if arg.VarType() == nil {
+				param.Type = lang.ANY_T
+			} else {
+				param.Type = lang.StringToType(arg.VarType().GetText(), w.program)
+			}
 			param.Ir = ir.NewParam(param.Name, types.I64)
 			params = append(params, param)
 		}
