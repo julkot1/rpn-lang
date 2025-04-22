@@ -9,16 +9,21 @@ import (
 	"rpn/lang"
 )
 
+func inlineFunc(fun *ir.Func) *ir.Func {
+	fun.FuncAttrs = append(fun.FuncAttrs, enum.FuncAttrAlwaysInline)
+
+	return fun
+}
 func DefineFuncs(program *lang.Program) {
 
-	program.Funcs[lang.PushT] = &lang.DefaultFunc{IrFunc: DefinePushFunction(program)}
-	program.Funcs[lang.PopT] = &lang.DefaultFunc{IrFunc: DefinePopFunction(program)}
-	program.Funcs[lang.PopTypeT] = &lang.DefaultFunc{IrFunc: DefineTypePopFunction(program)}
+	program.Funcs[lang.PushT] = &lang.DefaultFunc{IrFunc: inlineFunc(DefinePushFunction(program))}
+	program.Funcs[lang.PopT] = &lang.DefaultFunc{IrFunc: inlineFunc(DefinePopFunction(program))}
+	program.Funcs[lang.PopTypeT] = &lang.DefaultFunc{IrFunc: inlineFunc(DefineTypePopFunction(program))}
 
-	program.Funcs[lang.DupT] = &lang.DefaultFunc{IrFunc: DefineDupFunc(program)}
-	program.Funcs[lang.SwapT] = &lang.DefaultFunc{IrFunc: DefineSwapFunction(program)}
-	program.Funcs[lang.RotT] = &lang.DefaultFunc{IrFunc: DefineRotFunction(program)}
-	program.Funcs[lang.OverT] = &lang.DefaultFunc{IrFunc: DefineOverFunction(program)}
+	program.Funcs[lang.DupT] = &lang.DefaultFunc{IrFunc: inlineFunc(DefineDupFunc(program))}
+	program.Funcs[lang.SwapT] = &lang.DefaultFunc{IrFunc: inlineFunc(DefineSwapFunction(program))}
+	program.Funcs[lang.RotT] = &lang.DefaultFunc{IrFunc: inlineFunc(DefineRotFunction(program))}
+	program.Funcs[lang.OverT] = &lang.DefaultFunc{IrFunc: inlineFunc(DefineOverFunction(program))}
 
 	program.Funcs[lang.TypeofT] = &lang.DefaultFunc{IrFunc: DefineTypeofFunction(program)}
 }
@@ -30,7 +35,9 @@ func DefineGlobals(m *ir.Module) map[string]*ir.Global {
 	globals := make(map[string]*ir.Global)
 
 	globals["stack"] = m.NewGlobalDef("vstack", constant.NewZeroInitializer(stackType))
+	globals["stack"].Section = ".data"
 	globals["type_stack"] = m.NewGlobalDef("tstack", constant.NewZeroInitializer(stackType))
+	globals["type_stack"].Section = ".data"
 	globals["top"] = m.NewGlobalDef("top", constant.NewInt(types.I64, 0))
 
 	formatStr := constant.NewCharArrayFromString("%d\n\x00")

@@ -80,8 +80,25 @@ func Compile(config config.TOMLConfig, path string, compilationCfg CompilationCo
 
 	Save(program, config)
 	LinkFiles(program, config)
-
+	Optimize(program, config)
 	BuildBinary(config, compilationCfg)
+}
+
+func Optimize(program *lang.Program, tomlConfig config.TOMLConfig) {
+	args := make([]string, 0)
+	args = append(args, "-always-inline", "-sroa", "-instcombine", "-reassociate", "-gvn", "-licm", "-simplifycfg", safeJoin(getCurrentDir(), "output.ll"))
+	args = append(args, "-o")
+	args = append(args, safeJoin(getCurrentDir(), "output.ll"))
+	cmd := exec.Command("opt-14", args...)
+
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
+	if err != nil {
+		fmt.Println("Error: Invalid opt process:", err.Error())
+		os.Exit(-1)
+	}
+
 }
 
 func BuildBinary(config config.TOMLConfig, cfg CompilationConfig) {

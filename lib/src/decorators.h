@@ -2,7 +2,7 @@
 #define CODE(x)
 #define NAME(x)
 #define CAN_PREVENT
-
+#define ALWAYS_INLINE
 
 
 /*

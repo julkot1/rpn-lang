@@ -71,7 +71,12 @@ func PushToken(variable *lang.Var, block *lang.Block, program *lang.Program) {
 
 func createVar(text string, typ lang.Type, typS string, block *lang.Block, scope *Scope, program *lang.Program) {
 	variableIr := block.Ir.NewAlloca(types.I64)
-	variable := &lang.Var{Name: text, Type: typ, Ir: variableIr, ComplexType: typS[1 : len(typS)-1]}
+	var variable *lang.Var
+	if typS == "" {
+		variable = &lang.Var{Name: text, Type: typ, Ir: variableIr, ComplexType: "I64"}
+	} else {
+		variable = &lang.Var{Name: text, Type: typ, Ir: variableIr, ComplexType: typS[1 : len(typS)-1]}
+	}
 	if typ == lang.Struct_T {
 		variable.Size = GetStructSize(variable.ComplexType, program)
 	}

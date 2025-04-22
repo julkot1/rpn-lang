@@ -2,14 +2,33 @@ struct foo {
     x <I64>
     y <I64>
 }
-fun x(p<foo> c) {
+fun x(p<foo>) {
+    "(x, y): (" print
     p:x print
-    c print
+    ", " print
+    p:y print
+    ")\n" print
+
+}
+fun hex(c<I64>){
+    c 0 !=  if {
+       c 16 / hex
+       c 16 % dup dup 10 >= if {
+            10 - 'a' + b<I8> := b print
+       }
+       10 <= if {
+            print
+       }
+    }
+}
+
+fun println(x){
+    x print "\n" print
+
 }
 fun main {
-     new:foo p :=
-     4 p:x :=
-     p f<foo> :=
-     "df\n" f x
-    "sdsd\n" print
+     100000000 repeat(i) {
+        100000000 1 i + % 0 == if {i 1 + println}
+     }
+
 }
